@@ -22,6 +22,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/sign-in" element={<SignInPage />} />
+            <Route path="/create-room" element={<CreateRoom />} />
+            <Route path="/join-room" element={<JoinRoom />} />
             {/* Add other routes as needed */}
           </Routes>
       </Auth0Provider>
