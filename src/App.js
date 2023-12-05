@@ -9,13 +9,17 @@ import { Auth0Provider } from '@auth0/auth0-react'; // Import Auth0Provider
 import './App.css';
 import JoinRoom from './component/JoinRoom';
 
+
+const domain = process.env.REACT_APP_AUTH0_DOMAIN
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID
+
 function App() {
   return (
     
     <Router>
       <Auth0Provider
-        domain="dev-rkjah3umfq8c82at.us.auth0.com"
-        clientId="xbeT4PtSPVwbkexbBRsCKmzveb3aNIE0"
+        domain={domain}
+        clientId={clientId}
         redirectUri={window.location.origin}
       >
         <Navbar />

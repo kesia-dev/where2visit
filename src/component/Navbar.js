@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const Navbar = () => {
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
 
   const handleSignIn = () => {
     // Redirect the user to the Auth0 login page
