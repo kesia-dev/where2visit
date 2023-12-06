@@ -1,91 +1,139 @@
+require("dotenv").config();
+const db = require('../connection');
 const usersDbQueries = require('../queries/user_query');
-
-// Rooms Model
-const rooms = [
-  {
-    id: 1,
-    roomId: 'XBSHMD78',
-    roomName: 'Room 1',
-    createdBy: 'user1',
-    createdAt: new Date(),
-    participants: ['user1'],
-  },
-  {
-    id: 2,
-    roomId: 'XBSHBD78',
-    roomName: 'Room 2',
-    createdBy: 'user2',
-    createdAt: new Date(),
-    participants: ['user2', 'user3'],
-  },
-  {
-    id: 3,
-    roomId: 'XBSHBD79',
-    roomName: 'Room 3',
-    createdBy: 'user3',
-    createdAt: new Date(),
-    participants: ['user3'],
-  },
-  {
-    id: 4,
-    roomId: 'XBSHBD78',
-    roomName: 'Decision Room 2',
-    createdBy: 'user2',
-    createdAt: new Date(),
-    participants: ['user2', 'user3'],
-  },
-];
 
 // query to create room
 const setRoomsDbQueries = (params) => {
-  return new Promise((resolve, reject) => {
+  const getRoomName = params.roomName;
+  const getCreatedBy = params.createdBy;
+  const getCreatedAt = new Date();
+  const getRoomId = generateRoomId();
 
-    // generate room id
-    const getRoomId = generateRoomId();
-    params.roomId = getRoomId;
+  // insert to rooms table
+  const postQuery = {
+    text: 'INSERT INTO rooms (roomId, roomName, createdBy, dateCreated) VALUES ($1, $2, $3, $4) RETURNING id, roomId, roomName, createdBy',
+    values: [getRoomId, getRoomName, getCreatedBy, getCreatedAt],
+  };
 
-    // mock data
-    const createNewRoom = params;
+  return db.query(postQuery)
+    .then((data) => {
+      const idGen = data.rows[0].id;
+      const roomIdGen = data.rows[0].roomid;
+      const roomNameGen = data.rows[0].roomname;
+      const createdByGen = data.rows[0].createdby;
 
-    rooms.push(createNewRoom);
+      // insert into user-room relationship table
+      const addToRelTable = addUserToRelTable(idGen, createdByGen)
+      .then(() => {
+        return {
+          roomId: roomIdGen,
+          roomName: roomNameGen,
+          createdBy: createdByGen
+        }
+      })
+      .catch ( error => {
+        throw error;
+      });
 
-    if (rooms.includes(createNewRoom)) {
-      // return room id
-      resolve(getRoomId);
-    } else {
-      reject(new Error('Room failed to create'));
-    }
-  });
+      return addToRelTable;
+    })
+};
+
+// query to select room by id
+const selectRoomByIdQuery = (id) => {
+  const getRoomId = id;
+
+  const getQuery = {
+    text: 'SELECT * FROM rooms WHERE roomId = $1',
+    values: [getRoomId],
+  };
+
+  return db.query(getQuery)
+    .then(data => {
+      return data.rows;
+    });
 };
 
 // query to join room
-const joinRoomsDbQueries = (params) => {
-  return new Promise((resolve, reject) => {
-    const getRoomId = params.roomId;
-    const getUserId = params.userId;
+const joinRoomsDbQueries = async (params) => {
+  const getRoomId = params.roomId;
+  const getUserId = params.userId;
 
-    // find room
-    const getRoom = rooms.find(room => room.roomId === getRoomId);
+  // get room from db
+  const checkRoomAvail = await selectRoomByIdQuery(getRoomId);
 
-    console.log('found room', getRoom);
-
-    // find user
-    const getUser = usersDbQueries.getUserByIdQueries(getUserId);
-
-    console.log('found user', getUser);
-
-    if (getRoom && getUser) {
-      // check if user is in room
-      if (!getRoom.participants.includes(getUser.userId)) {
-        getRoom.participants.push(getUser.userId);
-        resolve(`User ${getUser.username} has joined room ${getRoom.roomName}`);
-      } else {
-        resolve(`User ${getUser.username} already in room`);
-      }
-    } else {
-      reject(new Error('Adding user to room failed'));
-    };
+  // get user from db
+  const getUser = await usersDbQueries.getUserByIdQueries(getUserId)
+  .then((data) => {
+    return data.rows;
+  })
+  .catch(error => {
+    return 'An error occured while getting user';
   });
+
+  if ((checkRoomAvail.length > 0 && checkRoomAvail[0].roomid === getRoomId) && (getUser.length > 0 && getUser[0].id === getUserId)) {
+
+    // check if user is in room
+    const checkRelationship = checkRelationTable(getUserId, checkRoomAvail[0].id)
+      .then(isInRoom => {
+        if (isInRoom) {
+          return `User ${getUser[0].username} already in room`;
+        } else {
+          const addUserToRoom = addUserToRelTable(getUserId, getRoomId)
+            .then(() => {
+              return `User ${getUser[0].username} has joined room ${checkRoomAvail[0].roomname}`;
+            })
+            .catch(error => {
+              return 'An error occured while checking relationship';
+            });
+
+            return addUserToRoom;
+        }
+      })
+      .catch(error => {
+        return 'An error occured while creating relationship';
+      });
+
+    return checkRelationship;
+  } else {
+    return 'User or room does not exist';
+  }
+};
+
+// query to select relationship table
+const checkRelationTable = async (getUserId, getRoomId) => {
+  try {
+    const selectQuery = {
+      text: 'SELECT COUNT(*) AS relcount FROM  userroomrelationship WHERE userId = $1 AND roomId = $2',
+      values: [getUserId, getRoomId],
+    };
+
+    const getResult = await db.query(selectQuery);
+    const getCount = parseInt(getResult.rows[0].relcount);
+
+    if (getCount > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+// query userId and roomId to relationship table 
+const addUserToRelTable = async (getRoomId, getUserId) => {
+  try {
+    const postRelationQuery = {
+      text: 'INSERT INTO userroomrelationship (roomId, userId) VALUES ($1, $2)',
+      values: [getRoomId, getUserId],
+    };
+
+    return await db.query(postRelationQuery);
+    
+  } catch (error) {
+    throw error;
+  }
 };
 
 // generate room id

@@ -1,58 +1,40 @@
-// Users model
-const users = [
-  {
-    userId: 'user1',
-    username: 'Test1',
-    email: 'test@testkhdhgscexample.com',
-    roomsJoined: ['1'],
-  },
-  {
-    userId: 'user2',
-    username: 'Test2',
-    email: 'test2@testkhdhgscexample.com',
-    roomsJoined: ['2'],
-  },
-  {
-    userId: 'user3',
-    username: 'Test3',
-    email: 'test3@testkhdhgscexample.com',
-    roomsJoined: ['2'],
-  },
-  {
-    userId: 'user4',
-    username: 'Test4',
-    email: 'test4@testkhdhgscexample.com',
-    roomsJoined: ['1'],
-  },
-];
+require("dotenv").config();
+const db = require('../connection');
 
 // query to create user
-const setUserDbQueries = (params) => {
-  return new Promise((resolve, reject) => {
+const setUserDbQueries = async (params) => {
+  const getUsername = params.username;
+  const getEmail = params.email;
 
-    // mock data
-    const createNewUser = params;
+  try {
+    const postRelationQuery = {
+      text: 'INSERT INTO users ( username, email ) VALUES ( $1, $2 ) RETURNING id',
+      values: [getUsername, getEmail],
+    };
 
-    users.push(createNewUser);
+    return await db.query(postRelationQuery);
 
-    if (users.includes(createNewUser)) {
-      resolve(users);
-    } else {
-      reject(new Error('User failed to create'));
-    }
-  });
+  } catch (error) {
+    throw error;
+  }
 };
 
 // query to get user by id
-const getUserByIdQueries = (params) => {
-  console.log('got to user', params);
+const getUserByIdQueries = (userId) => {
+  try {
+    
+    const selectRelationQuery = {
+      text: 'SELECT * FROM users WHERE id = $1',
+      values: [userId],
+    };
 
-  // find user by id
-  const getUser = users.find(user => user.userId = params);
+    const resultUser = db.query(selectRelationQuery);
 
-  console.log('user is', getUser);
+    return resultUser;
 
-  return getUser;
+  } catch (error) {
+    throw error;
+  }
 };
 
 module.exports = { setUserDbQueries, getUserByIdQueries };

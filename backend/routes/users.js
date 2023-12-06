@@ -6,8 +6,8 @@ const router = express.Router();
 router.post('/api/create-user', async (req, res) => {
   
   roomsDbQueries.setUserDbQueries(req.body)
-  .then(response => {
-    res.json({ response });
+  .then(data => {
+    res.json({ response: data.rows[0] });
   })
   .catch(err => {
     res
