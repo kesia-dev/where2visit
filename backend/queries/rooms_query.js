@@ -22,6 +22,8 @@ const setRoomsDbQueries = (params) => {
       const roomNameGen = data.rows[0].roomname;
       const createdByGen = data.rows[0].createdby;
 
+      console.log("now in setRoomsDbQueries...");
+
       // insert into user-room relationship table
       const addToRelTable = addUserToRelTable(idGen, createdByGen)
       .then(() => {
