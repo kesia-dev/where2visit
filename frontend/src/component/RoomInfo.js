@@ -79,7 +79,7 @@ const RoomInfo = () => {
         <DialogTitle id="alert-dialog-title">{"Are you sure you want to close the room?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Closing the room will perform any necessary cleanup or notify the server.
+            Closing the room will log everyone out of the room.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
