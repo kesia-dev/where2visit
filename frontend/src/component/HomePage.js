@@ -1,41 +1,41 @@
+// HomePage.js
 import React from 'react';
-import { Container, Button, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Container, Grid } from '@mui/material';
+import '../styling/HomePage.css'; // Import the CSS file
+import HomeImage from './HomeImage';
+import ReadyToStartText from './ReadyToStartText';
+import CreatePlanButton from './CreatePlanButton';
+import LoginText from './LoginText';
+import JoinCompnents from './JoinComponents';
 
 const HomePage = () => {
   return (
     <Container>
       <Grid
         container
-        direction="row"
+        direction="column"
         justifyContent="center"
         alignItems="center"
-        height="90vh" // Set the height of the container to full viewport height
-        spacing={2}
+        height="100vh"
       >
         <Grid item>
-          <Button
-            component={Link}
-            to="/create-room"
-            variant="contained"
-            color="primary"
-            mt={2}
-          >
-            Create Room
-          </Button>
+          <HomeImage />
+        </Grid>
+        {/* Text "Ready to Start" */}
+        <Grid item>
+          <ReadyToStartText />
         </Grid>
         <Grid item>
-          <Button
-            component={Link}
-            to="/join-room"
-            variant="contained"
-            color="secondary" // Set a different color for the Join Room button
-            mt={2}
-          >
-            Join Room
-          </Button>
+          <CreatePlanButton />
+        </Grid>
+        <Grid item>
+          <LoginText />
+        </Grid>
+        <Grid item>
+          <JoinCompnents />
         </Grid>
       </Grid>
+
       {/* Add other content as needed */}
     </Container>
   );
