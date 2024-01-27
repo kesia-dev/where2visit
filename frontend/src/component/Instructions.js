@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Button, Box, TextField } from '@mui/material';
+import { CardContent, Typography, Button, Box, Input } from '@mui/material';
 
 const Instructions = () => {
   const steps = [
@@ -25,6 +25,10 @@ const Instructions = () => {
       text: 'Enter code:',
       buttonLabel2: 'Join a Plan',
       linkLabel: 'Already have an account? Login',
+      image1: './assets/user-steps.png',
+      text1: 'Find the latest trends',
+      image2: './assets/user-group.png',
+      text2: 'Connect with friends',
     },
   ];
 
@@ -39,95 +43,150 @@ const Instructions = () => {
   };
 
   return (
-    <Card>
-      <CardContent>
-        <Box display="flex" flexDirection="column" alignItems="center">
-          {/* Step Image */}
-          {step < 4 && <img src={steps[step].image} alt={`Step ${step + 1}`} style={{ maxWidth: '80%' }} />}
+    <CardContent>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        {/* Step Image */}
+        {step < 4 && <img src={steps[step].image} alt={`Step ${step + 1}`} style={{ maxWidth: '80%' }} />}
 
-          {/* Step Content */}
+        {/* Step Content */}
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          dangerouslySetInnerHTML={{ __html: steps[step].content }}
+          align="center"
+          marginTop={'10px'}
+          fontFamily={'Inter'}
+          fontWeight={400}
+          fontSize={'17px'}
+        />
+      </Box>
+
+      {/* Next Button */}
+      {step < 4 && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+          <Button variant="contained" color="primary" onClick={handleNext}>
+            Next
+          </Button>
+        </div>
+      )}
+
+      {/* Skip Instructions */}
+      {step < 4 && (
+        <Typography
+          variant="body2"
+          sx={{ textAlign: 'center', marginTop: 2, cursor: 'pointer' }}
+          onClick={handleSkip}
+          fontSize={'15px'}
+          fontFamily={'Inter'}
+          color="primary"
+        >
+          Skip Instructions
+        </Typography>
+      )}
+
+      {/* Display Buttons for Step 5 */}
+      {step === 4 && (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+
+          {/* Create a plan button for Step 5 */}
+          <Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+            {steps[step].buttonLabel1}
+          </Button>
+
+          {/* Link label for Step 5 */}
           <Typography
             variant="body2"
-            color="text.secondary"
-            dangerouslySetInnerHTML={{ __html: steps[step].content }}
-            align='center'
-            marginTop={'10px'}
-            fontFamily={'Inter'}
-            fontWeight={400}
-            fontSize={'17px'}
-          />
-        </Box>
-
-        {/* Next Button */}
-        {step < 4 && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-            <Button variant="contained" color="primary" onClick={handleNext}>
-              Next
-            </Button>
-          </div>
-        )}
-
-        {/* Skip Instructions */}
-        {step < 4 && (
-          <Typography
-            variant="body2"
-            sx={{ textAlign: 'center', marginTop: 2, cursor: 'pointer' }}
+            sx={{ textAlign: 'center', marginTop: 1, cursor: 'pointer' }}
             onClick={handleSkip}
             fontSize={'15px'}
             fontFamily={'Inter'}
             color="primary"
           >
-            Skip Instructions
+            {steps[step].linkLabel}
           </Typography>
-        )}
 
-        {/* Display Buttons for Step 5 */}
-        {step === 4 && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+          {/* Enter code text field for Step 5 */}
+          <Box
+  sx={{
+    width: '100%',
+    maxWidth: '9vw',
+    marginTop: '10vh',
+    height: '1.5vh',
+    padding: '16px 32px 16px 32px',
+    borderRadius: '20px',
+    border: '1px solid #1C1C1C',
+    background: 'linear-gradient(0deg, #C79E34, #C79E34), linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6))',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <Input
+    placeholder={steps[step].text}
+    disableUnderline
+    sx={{
+      fontFamily: 'Inter',
+      fontSize: '18px', // Adjust the font size as needed
+      fontWeight: 600,
+      color: 'black',
+      letterSpacing: '0.35px',
+      lineHeight: '21px',
+      width: '100%', // To fill the width of the Box
+    }}
+  />
+</Box>
+          <Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+            {steps[step].buttonLabel2}
+          </Button>
 
-             {/* Create a plan button for Step 5 */}
-            <Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', width: '15vw', height: '6.5vh', }}>
-              {steps[step].buttonLabel1}
-            </Button>
-
-            {/* Link label for Step 5 */}
+          {/* Additional images and texts for Step 5 */}
+          <Box style={{ marginTop: 50, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+            <img src={steps[step].image1} alt={`Graphics 1`} style={{ width: '100%' }} />
             <Typography
               variant="body2"
-              sx={{ textAlign: 'center', marginTop: 1, cursor: 'pointer' }}
-              onClick={handleSkip}
-              fontSize={'15px'}
-              fontFamily={'Inter'}
-              color="primary"
-            >
-              {steps[step].linkLabel}
-            </Typography>
-
-         {/* Enter code text field for Step 5 */}
-            <TextField
-              label={steps[step].text}
-              variant="filled"
-              sx={{ width: '15vw',     
-              marginTop: '10vh',
-              height: '6.5vh',
-              fontFamily: 'Inter',
-              fontSize:'10px',
-              background:
-              'linear-gradient(0deg, #C79E34, #C79E34), linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6))',borderRadius: '20px',
-              display: 'flex',
-              alignItems: 'center', 
-              justifyContent: 'center',
-             }}
-             InputProps={{
-                disableUnderline: true, // Remove underline
+              color="text.secondary"
+              align="center"
+              fontFamily="Inter"
+              fontWeight={700}
+              fontSize="28px"
+              lineHeight="34px"
+              letterSpacing="0.36px"
+              sx={{
+                width: '100%', // Set to 100%
+                height: '34px',
+                background: 'rgba(52, 146, 199, 1)',
+                color: 'white',
               }}
-            />
-            <Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', width: '15vw', height: '6.5vh', }}>
-              {steps[step].buttonLabel2}
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            >
+              {steps[step].text1}
+            </Typography>
+          </Box>
+
+          <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+            <img src={steps[step].image2} alt={`Graphics 2`} style={{ width: '100%' }} />
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              align="center"
+              fontFamily="Inter"
+              fontWeight={700}
+              fontSize="28px"
+              lineHeight="34px"
+              letterSpacing="0.36px"
+              sx={{
+                width: '100%',
+                height: '34px',
+                background: 'rgba(199, 158, 52, 1)',
+                color: 'white',
+              }}
+            >
+              {steps[step].text2}
+            </Typography>
+          </Box>
+
+        </div>
+      )}
+    </CardContent>
   );
 };
 

@@ -35,8 +35,6 @@ const HomePage = () => {
           <JoinCompnents />
         </Grid>
       </Grid>
-
-      {/* Add other content as needed */}
     </Container>
   );
 };
