@@ -1,2 +1,9 @@
-node_modules
-.env
+# Ignore node_modules directory
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore compiled files
+*.exe
+*.dll
