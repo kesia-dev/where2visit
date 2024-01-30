@@ -21,7 +21,6 @@ const HomePage = () => {
         <Grid item>
           <HomeImage />
         </Grid>
-        {/* Text "Ready to Start" */}
         <Grid item>
           <ReadyToStartText />
         </Grid>

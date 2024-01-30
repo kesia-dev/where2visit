@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CardContent, Typography, Button, Box, Input } from '@mui/material';
 import JoinPlan from './JoinPlan';
 import { useNavigate } from 'react-router-dom';
+import '../styling/Instructions.css';
 
 const Instructions = () => {
   const steps = [
@@ -22,7 +23,7 @@ const Instructions = () => {
       image: './assets/winner-cup.png',
     },
     {
-      content: '<Strong>Ready to Start?</ Strong>',
+      content: '<span style="fontFamily: Inter; fontSize: 22px; fontWeight: 700; lineHeight: 28px; letterSpacing: 0.35px; textAlign: center; color: black;"><strong>Ready to Start?</strong></span>',
       buttonLabel1: 'Create a Plan',
       text: 'Enter code:',
       buttonLabel2: 'Join Plan',
@@ -56,8 +57,9 @@ const Instructions = () => {
     navigate(`/join-plan/${enteredCode}`); // You can replace '/join-plan' with the actual route path
   };
 
+
   return (
-    <CardContent>
+    <CardContent className="customCardContent">
       <Box display="flex" flexDirection="column" alignItems="center">
         {/* Step Image */}
         {step < 4 && <img src={steps[step].image} alt={`Step ${step + 1}`} style={{ maxWidth: '80%' }} />}
@@ -100,7 +102,7 @@ const Instructions = () => {
 
       {/* Display Buttons for Step 5 */}
       {step === 4 && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2, overflowY: '0' }}>
 
           {/* Create a plan button for Step 5 */}
           <Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
@@ -129,7 +131,7 @@ const Instructions = () => {
               padding: '16px 32px 16px 32px',
               borderRadius: '20px',
               border: '1px solid #1C1C1C',
-              background: 'linear-gradient(0deg, #C79E34, #C79E34), linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6))',
+              background: '#C79E34',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -207,6 +209,7 @@ const Instructions = () => {
               {steps[step].text2}
             </Typography>
           </Box>
+
 
         </div>
       )}

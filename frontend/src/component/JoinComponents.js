@@ -49,8 +49,7 @@ const JoinComponents = () => {
             borderRadius: '20px',
             border: '1px solid #1C1C1C',
             gap: '12px',
-            background:
-              'linear-gradient(0deg, #C79E34, #C79E34), linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6))',
+            background:'#C79E34',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
