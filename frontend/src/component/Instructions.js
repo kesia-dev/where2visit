@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CardContent, Typography, Button, Box, Input } from '@mui/material';
+import JoinPlan from './JoinPlan';
+import { useNavigate } from 'react-router-dom';
 
 const Instructions = () => {
   const steps = [
@@ -33,6 +35,13 @@ const Instructions = () => {
   ];
 
   const [step, setStep] = React.useState(0);
+  const navigate = useNavigate();
+  const [enteredCode, setEnteredCode] = useState('');
+  const [isCodeValid, setIsCodeValid] = useState(false);
+
+  const handleCodeChange = (event) => {
+    setEnteredCode(event.target.value);
+  };
 
   const handleNext = () => {
     setStep((prevStep) => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
@@ -40,6 +49,11 @@ const Instructions = () => {
 
   const handleSkip = () => {
     setStep(4); // Skip to the last step
+  };
+
+  const handleJoinPlan = () => {
+    // Navigate to the JoinPlan component using React Router
+    navigate(`/join-plan/${enteredCode}`); // You can replace '/join-plan' with the actual route path
   };
 
   return (
@@ -107,36 +121,46 @@ const Instructions = () => {
 
           {/* Enter code text field for Step 5 */}
           <Box
-  sx={{
-    width: '100%',
-    maxWidth: '9vw',
-    marginTop: '10vh',
-    height: '1.5vh',
-    padding: '16px 32px 16px 32px',
-    borderRadius: '20px',
-    border: '1px solid #1C1C1C',
-    background: 'linear-gradient(0deg, #C79E34, #C79E34), linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6))',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}
->
-  <Input
-    placeholder={steps[step].text}
-    disableUnderline
-    sx={{
-      fontFamily: 'Inter',
-      fontSize: '18px', // Adjust the font size as needed
-      fontWeight: 600,
-      color: 'black',
-      letterSpacing: '0.35px',
-      lineHeight: '21px',
-      width: '100%', // To fill the width of the Box
-    }}
-  />
-</Box>
-          <Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+            sx={{
+              width: '100%',
+              maxWidth: '9vw',
+              marginTop: '10vh',
+              height: '1.5vh',
+              padding: '16px 32px 16px 32px',
+              borderRadius: '20px',
+              border: '1px solid #1C1C1C',
+              background: 'linear-gradient(0deg, #C79E34, #C79E34), linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6))',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Input
+              placeholder={steps[step].text}
+              disableUnderline
+              value={enteredCode}
+              onChange={handleCodeChange}
+              sx={{
+                fontFamily: 'Inter',
+                fontSize: '18px', // Adjust the font size as needed
+                fontWeight: 600,
+                color: 'black',
+                letterSpacing: '0.35px',
+                lineHeight: '21px',
+                width: '100%', // To fill the width of the Box
+              }}
+            />
+          </Box>
+          {/* Join Plan button for Step 5 */}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleJoinPlan}
+            sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}
+          >
             {steps[step].buttonLabel2}
+            {/* Conditionally render JoinPlan based on code validation */}
+            {isCodeValid && <JoinPlan enteredCode={enteredCode} />}
           </Button>
 
           {/* Additional images and texts for Step 5 */}
@@ -152,7 +176,7 @@ const Instructions = () => {
               lineHeight="34px"
               letterSpacing="0.36px"
               sx={{
-                width: '100%', // Set to 100%
+                width: '100%',
                 height: '34px',
                 background: 'rgba(52, 146, 199, 1)',
                 color: 'white',
