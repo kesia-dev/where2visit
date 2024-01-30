@@ -54,11 +54,11 @@ const Navbar = () => {
           onClose={handleMenuClose}
           sx={{ marginTop: isSmallScreen ? '0' : '5px' }} // Adjust the marginTop value
         >
-          <MenuItem onClick={handleMenuClose} component={Link} to="/create-room">
-            Create Room
+          <MenuItem onClick={handleMenuClose} component={Link} to="/create-plan">
+            Create a Plan
           </MenuItem>
-          <MenuItem onClick={handleMenuClose} component={Link} to="/join-room">
-            Join Room
+          <MenuItem onClick={handleMenuClose} component={Link} to="/join-plan">
+            Join a Plan
           </MenuItem>
         </Menu>
       </Toolbar>

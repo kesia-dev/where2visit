@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Box, Input, Button } from '@mui/material';
+import JoinPlan from './JoinPlan';
+import { useNavigate } from 'react-router-dom';
 
 const JoinComponents = () => {
+  const [enteredCode, setEnteredCode] = useState('');
+  const [isCodeValid, setIsCodeValid] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleCodeChange = (event) => {
+    setEnteredCode(event.target.value);
+  };
+
+  const handleJoinPlanClick = () => {
+    // Example validation logic (replace this with your actual validation)
+    const isValid = enteredCode.trim() !== ''; // Check if the code is not empty
+
+    if (isValid) {
+      // Navigate to the JoinPlanPage with the entered code as a parameter
+      navigate(`/join-plan/${enteredCode}`);
+    }
+  };
+
   return (
     <div>
       <Typography
@@ -38,6 +59,8 @@ const JoinComponents = () => {
           <Input
             placeholder="Enter Code"
             disableUnderline
+            value={enteredCode}
+            onChange={handleCodeChange}
             sx={{
               fontFamily: 'Inter',
               fontSize: '16px',
@@ -46,6 +69,8 @@ const JoinComponents = () => {
               alignItems: 'center',
               letterSpacing: '0.35px',
               lineHeight: '21px',
+              justifyContent: 'center',
+              alignContent: 'center'
             }}
           />
         </Box>
@@ -54,6 +79,7 @@ const JoinComponents = () => {
         <Button
           variant="contained"
           color="primary"
+          onClick={handleJoinPlanClick}
           sx={{
             width: '241px',
             height: '53px',
@@ -67,6 +93,9 @@ const JoinComponents = () => {
           Join Plan
         </Button>
       </div>
+
+      {/* Conditionally render JoinPlan based on code validation */}
+      {isCodeValid && <JoinPlan enteredCode={enteredCode} />}
     </div>
   );
 };

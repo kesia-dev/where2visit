@@ -23,7 +23,7 @@ const Instructions = () => {
       content: '<Strong>Ready to Start?</ Strong>',
       buttonLabel1: 'Create a Plan',
       text: 'Enter code:',
-      buttonLabel2: 'Join a Plan',
+      buttonLabel2: 'Join Plan',
       linkLabel: 'Already have an account? Login',
       image1: './assets/user-steps.png',
       text1: 'Find the latest trends',
