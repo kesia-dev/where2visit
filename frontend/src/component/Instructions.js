@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { CardContent, Typography, Button, Box, Input } from '@mui/material';
+import React, { useState } from 'react';
+import { CardContent, Typography, Button, Box, Input, MobileStepper } from '@mui/material';
 import JoinPlan from './JoinPlan';
 import { useNavigate } from 'react-router-dom';
 import '../styling/Instructions.css';
+
 
 const Instructions = () => {
   const steps = [
@@ -23,7 +24,7 @@ const Instructions = () => {
       image: './assets/winner-cup.png',
     },
     {
-      content: '<span style="fontFamily: Inter; fontSize: 22px; fontWeight: 700; lineHeight: 28px; letterSpacing: 0.35px; textAlign: center; color: black;"><strong>Ready to Start?</strong></span>',
+      text3: 'Ready to Start?',
       buttonLabel1: 'Create a Plan',
       text: 'Enter code:',
       buttonLabel2: 'Join Plan',
@@ -38,7 +39,7 @@ const Instructions = () => {
   const [step, setStep] = React.useState(0);
   const navigate = useNavigate();
   const [enteredCode, setEnteredCode] = useState('');
-  const [isCodeValid, setIsCodeValid] = useState(false);
+  const [isCodeValid] = useState(false);
 
   const handleCodeChange = (event) => {
     setEnteredCode(event.target.value);
@@ -58,8 +59,20 @@ const Instructions = () => {
   };
 
 
+
   return (
-    <CardContent className="customCardContent">
+    <CardContent className="customCardContent" style={{padding: '0px'}}>
+      {/* MobileStepper for navigation */}
+      <MobileStepper
+        variant="dots"
+        steps={steps.length}
+        position="static"
+        activeStep={step}
+        sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}
+        dotActiveStyle={{ backgroundColor: 'black' }}
+        dotStyle={{ backgroundColor: 'grey' }}
+      />
+
       <Box display="flex" flexDirection="column" alignItems="center">
         {/* Step Image */}
         {step < 4 && <img src={steps[step].image} alt={`Step ${step + 1}`} style={{ maxWidth: '80%' }} />}
@@ -100,9 +113,31 @@ const Instructions = () => {
         </Typography>
       )}
 
+
+
       {/* Display Buttons for Step 5 */}
       {step === 4 && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2, overflowY: '0' }}>
+
+            {/* Ready to start text */}
+            <Box style={{ marginTop: 1, alignItems: 'center', width: '100%' }}>
+            <Typography
+              color="text.secondary"
+              align="center"
+              fontFamily="Inter"
+              fontWeight={700}
+              fontSize="22px"
+              lineHeight="34px"
+              letterSpacing="0.36px"
+              sx={{
+                width: '100%',
+                height: '34px',
+                color: 'black',
+              }}
+            >
+              {steps[step].text3}
+            </Typography>
+          </Box>
 
           {/* Create a plan button for Step 5 */}
           <Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
@@ -124,10 +159,9 @@ const Instructions = () => {
           {/* Enter code text field for Step 5 */}
           <Box
             sx={{
-              width: '100%',
-              maxWidth: '9vw',
-              marginTop: '10vh',
-              height: '1.5vh',
+              width: '40%',
+              marginTop: '5vh',
+              height: '1vh',
               padding: '16px 32px 16px 32px',
               borderRadius: '20px',
               border: '1px solid #1C1C1C',
@@ -144,12 +178,12 @@ const Instructions = () => {
               onChange={handleCodeChange}
               sx={{
                 fontFamily: 'Inter',
-                fontSize: '18px', // Adjust the font size as needed
+                fontSize: '20px', 
                 fontWeight: 600,
                 color: 'black',
                 letterSpacing: '0.35px',
                 lineHeight: '21px',
-                width: '100%', // To fill the width of the Box
+                width: '100%', 
               }}
             />
           </Box>
@@ -158,7 +192,7 @@ const Instructions = () => {
             variant="contained"
             color="primary"
             onClick={handleJoinPlan}
-            sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}
+            sx={{ marginTop: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw', width: 'auto' }}
           >
             {steps[step].buttonLabel2}
             {/* Conditionally render JoinPlan based on code validation */}
