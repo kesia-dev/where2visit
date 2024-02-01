@@ -1,0 +1,14 @@
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper::-webkit-scrollbar {
+  margin: 80px;
+  display: none;
+}
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  margin: 80px;
+}
+
+.css-hz1bth-MuiDialog-container{
+  margin-top: 50px;
+}
