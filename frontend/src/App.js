@@ -9,6 +9,8 @@ import Planning1 from './component/Planning1';
 import Planning2 from './component/Planning2';
 import Planning3 from './component/Planning3';
 import Planning5 from './component/Planning5';
+import Planning6 from './component/Planning6';
+
 import PlanCreatedPage from './component/PlanCreatedPage';
 import Restaurant1Welcome from './component/Restaurant1Welcome';
 import Restaurants1 from './component/Restaurants1'; 
@@ -17,6 +19,7 @@ import Restaurants1Vote from './component/Restaurants1Vote';
 import Restaurants10ThankYou from './component/Restaurants10ThankYou';
 import WaitingPage from './component/WaitingPage';
 import FinalPolls from './component/FinalPolls'
+import ResultsPage from './component/ResultsPage';
 
 function App() {
   return (
@@ -35,6 +38,8 @@ function App() {
           <Route path="/Planning2" element={<Planning2 />} />
           <Route path="/Planning3" element={<Planning3 />} />
           <Route path="/Planning5" element={<Planning5 />} />
+          <Route path="/Planning6" element={<Planning6 />} />
+
           <Route path="/PlanCreatedPage" element={<PlanCreatedPage />} />
           <Route path="/Restaurant1Welcome" element={<Restaurant1Welcome />} />
           <Route path="/Restaurants1" element={<Restaurants1 />} />
@@ -43,6 +48,8 @@ function App() {
           <Route path="/Restaurants10ThankYou" element={<Restaurants10ThankYou />} />
           <Route path="/WaitingPage" element={<WaitingPage />} />
           <Route path="/FinalPolls" element={<FinalPolls />} />
+          <Route path="/ResultsPage" element={<ResultsPage />} />
+
 
         </Routes>
       </Auth0Provider>

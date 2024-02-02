@@ -13,20 +13,22 @@ const PlanCreatedPage = () => {
         justifyContent: 'space-between',
         minHeight: '100vh',
         backgroundColor: '#b3e0ff',
+        
       }}
     >
-      <AppBar
-        position="fixed"
-        style={{
-          background: 'rgba(230, 247, 255, 0.0)',
-          width: '100%',
-          margin: 0,
-        }}
-      >
+     <AppBar
+  position="fixed"
+  style={{
+    background: '#b3e0ff', // Set to the same color as the main background
+    width: '100%',
+    margin: 0,
+    boxShadow: 'none', 
+  }}
+>
         <Toolbar>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
-              <IconButton edge="start" color="inherit" aria-label="menu" style={{ color: '#000' }}>
+              <IconButton edge="start" color="inherit" aria-label="menu" style={{ color: '#000', fontSize: '2rem' }}>
                 <MenuIcon />
               </IconButton>
             </Grid>
@@ -43,7 +45,7 @@ const PlanCreatedPage = () => {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <Typography variant="h4" align="center" style={{ fontSize: '6rem', marginBottom: '40px', marginTop: '30vh' }}>
+      <Typography variant="h4" align="center" style={{ fontSize: '6rem', marginBottom: '40px', marginTop: '20vh' }}>
         Your plan is being created!
       </Typography>
       <Typography variant="body2" align="center" style={{ fontSize: '3.5rem', textAlign: 'center', marginBottom: '24px' }}>

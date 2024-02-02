@@ -1,17 +1,20 @@
 import React from 'react';
-import { Button, Typography, Container, Box, useMediaQuery, IconButton } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
+import { Button, Typography, Container, Box, useMediaQuery, IconButton, Stepper, Step, StepLabel } from '@mui/material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'; 
 import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
 const Planning1 = () => {
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const steps = ['', '', '', '', ''];
 
   const buttonStyle = {
     margin: '8px',
-    width: isSmallScreen ? '100%' : '48%',
-    height: '150px',
+    width: '100%',
+    height: '120px', 
     backgroundColor: '#b3e0ff',
     color: '#000',
     borderRadius: '12px',
@@ -19,25 +22,30 @@ const Planning1 = () => {
   };
 
   const darkBlueButtonStyle = {
-    width: isSmallScreen ? '100%' : '48%',
-    height: '150px',
+    width: isSmallScreen ? '110%' : '48%',
+    height: '120px', 
     backgroundColor: '#0000cd',
     color: '#fff',
     borderRadius: '12px',
     fontSize: '1.5rem',
     margin: '100px',
-  };
+  }
 
   const createPlanButtonStyle = {
     ...darkBlueButtonStyle,
-    marginTop: '300px',
-    marginBottom: '5px',
+    marginTop: '20px', 
+    marginBottom: '20px', 
+    width: '70%', 
+    borderRadius: '70px', 
+    backgroundColor: '#1C3CBB',
+    color: '#FFD700', 
   };
 
   const arrowBackStyle = {
     fontSize: '6rem',
     marginRight: '-90px',
-    marginTop: '266',
+    marginTop: '0px',
+    color: '#FFD700', // Gold color
   };
 
   const handleCreatePlanClick = () => {
@@ -51,6 +59,15 @@ const Planning1 = () => {
   return (
     <Layout>
       <Container>
+        <Box width="100%" display="flex" justifyContent="center" mt={2} mb={12}> {/* Centering the stepper horizontally */}
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </Box>
         <Box textAlign="center" mt={4}>
           <Typography variant="h4" style={{ fontWeight: 'bold', marginBottom: '16px', fontSize: '3rem' }}>
             What would you like to do?
@@ -103,18 +120,21 @@ const Planning1 = () => {
               Hotel and Travel
             </Button>
           </Box>
-          <IconButton onClick={handleBackClick} color="primary" size="large" style={{ marginBottom: '0px' }}>
-            <ArrowBack style={arrowBackStyle} />
-          </IconButton>
           <Button
             variant="contained"
             color="primary"
             size="large"
-            style={createPlanButtonStyle}
+            style={{ ...createPlanButtonStyle, marginTop: '320px', color: '#fff' }}
             onClick={handleCreatePlanClick}
           >
             Create a Plan
           </Button>
+          {/* <IconButton onClick={handleBackClick} color="primary" size="medium" style={{ marginBottom: '0px' }}>
+            <ArrowBackIosIcon style={{ ...arrowBackStyle, fontSize: '3rem' }} />
+          </IconButton>
+          <IconButton onClick={handleBackClick} color="primary" style={{ marginBottom: '0px', width: 'auto', height: 'auto', padding: 10 }}>
+            <ArrowBackIosIcon style={{ ...arrowBackStyle, fontSize: '3rem' }} />
+          </IconButton> */}
         </Box>
       </Container>
     </Layout>
@@ -122,3 +142,6 @@ const Planning1 = () => {
 };
 
 export default Planning1;
+
+
+
