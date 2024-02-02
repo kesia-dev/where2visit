@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+
+const TOKEN_SECRET = process.env.TOKEN_SECRET;
+
 exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -40,7 +43,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ userId: user._id }, 'irteza');
+    const token = jwt.sign({ userId: user._id }, TOKEN_SECRET);
 
     return res.status(200).json({ userId: user._id, "token": token });
   } catch (error) {
