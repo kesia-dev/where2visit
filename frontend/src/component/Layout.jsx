@@ -61,12 +61,12 @@ const Layout = ({ children }) => {
         }}
       >
 
-<Divider sx={{ marginTop: '100px', marginBottom: '100px' }} />
+        <Divider sx={{ marginTop: '100px', marginBottom: '100px' }} />
 
         {/* Footer */}
 
         <Grid container alignItems="center" justifyContent="flex-start">
-          
+
           <Avatar sx={{ bgcolor: '#1976D2', marginRight: '8px' }}> </Avatar>
           <Typography variant="h6" style={{ fontSize: '3rem', margin: '20px 0' }}>
             Where2Visit
@@ -97,7 +97,7 @@ const Layout = ({ children }) => {
             where2visit.com
           </Typography>
         </Box>
-        <Divider sx={{ height: '10px', width: '350px', backgroundColor: 'black', marginTop: '10px', margin: 'auto',  borderRadius: '10px' }} />
+        <Divider sx={{ height: '10px', width: '350px', backgroundColor: 'black', marginTop: '10px', margin: 'auto', borderRadius: '10px' }} />
       </Box>
     </div>
   );

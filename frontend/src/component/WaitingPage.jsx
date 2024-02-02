@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, CircularProgress, AppBar, Toolbar, IconButton, Avatar, Grid, Paper, Typography, Box } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MenuIcon from '@mui/icons-material/Menu';
-import ThumbUp from '@mui/icons-material/ThumbUp'; // Import ThumbUp icon
+import ThumbUp from '@mui/icons-material/ThumbUp';
 
 const WaitingPage = () => {
   return (

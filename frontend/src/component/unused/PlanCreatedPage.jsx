@@ -13,18 +13,18 @@ const PlanCreatedPage = () => {
         justifyContent: 'space-between',
         minHeight: '100vh',
         backgroundColor: '#b3e0ff',
-        
+
       }}
     >
-     <AppBar
-  position="fixed"
-  style={{
-    background: '#b3e0ff', // Set to the same color as the main background
-    width: '100%',
-    margin: 0,
-    boxShadow: 'none', 
-  }}
->
+      <AppBar
+        position="fixed"
+        style={{
+          background: '#b3e0ff',
+          width: '100%',
+          margin: 0,
+          boxShadow: 'none',
+        }}
+      >
         <Toolbar>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
@@ -40,7 +40,7 @@ const PlanCreatedPage = () => {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item xs={1} /> {/* Spacer */}
+            <Grid item xs={1} />
           </Grid>
         </Toolbar>
       </AppBar>
@@ -59,7 +59,7 @@ const PlanCreatedPage = () => {
           backgroundColor: '#fff',
           padding: '20px',
           color: '#000',
-          width: '100%', 
+          width: '100%',
           textAlign: 'center',
           marginTop: '40px',
         }}

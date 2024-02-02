@@ -14,7 +14,7 @@ const Planning5 = () => {
 
   const buttonStyle = {
     margin: '8px 8px', 
-    width: isSmallScreen ? '100%' : 'calc(25% - 16px)', // Adjusted width for four buttons on a line
+    width: isSmallScreen ? '100%' : 'calc(25% - 16px)', 
     height: '100px',
     backgroundColor: '#b3e0ff',
     color: '#000',
@@ -41,7 +41,7 @@ const Planning5 = () => {
   const arrowBackStyle = {
     fontSize: '6rem',
     marginRight: '-90px',
-    marginTop: '16px', // Adjusted margin
+    marginTop: '16px', 
   };
 
   const handleNextClick = () => {
@@ -149,7 +149,6 @@ const Planning5 = () => {
               No
             </Button>
           </Box>
-          
         </Box>
       </Container>
     </Layout>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Typography, Container, Box, useMediaQuery, IconButton, Stepper, Step, StepLabel } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'; 
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
@@ -14,7 +14,7 @@ const Planning1 = () => {
   const buttonStyle = {
     margin: '8px',
     width: '100%',
-    height: '120px', 
+    height: '120px',
     backgroundColor: '#b3e0ff',
     color: '#000',
     borderRadius: '12px',
@@ -23,7 +23,7 @@ const Planning1 = () => {
 
   const darkBlueButtonStyle = {
     width: isSmallScreen ? '110%' : '48%',
-    height: '120px', 
+    height: '120px',
     backgroundColor: '#0000cd',
     color: '#fff',
     borderRadius: '12px',
@@ -33,19 +33,19 @@ const Planning1 = () => {
 
   const createPlanButtonStyle = {
     ...darkBlueButtonStyle,
-    marginTop: '20px', 
-    marginBottom: '20px', 
-    width: '70%', 
-    borderRadius: '70px', 
+    marginTop: '20px',
+    marginBottom: '20px',
+    width: '70%',
+    borderRadius: '70px',
     backgroundColor: '#1C3CBB',
-    color: '#FFD700', 
+    color: '#FFD700',
   };
 
   const arrowBackStyle = {
     fontSize: '6rem',
     marginRight: '-90px',
     marginTop: '0px',
-    color: '#FFD700', // Gold color
+    color: '#FFD700',
   };
 
   const handleCreatePlanClick = () => {

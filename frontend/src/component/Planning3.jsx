@@ -1,7 +1,3 @@
-
-
-
-
 import React from 'react';
 import { Button, Typography, Container, Box, useMediaQuery, IconButton, Stepper, Step, StepLabel, TextField, Checkbox, FormControlLabel, Select, InputLabel, FormControl, MenuItem } from '@mui/material';
 import { ArrowBack, ArrowBackIos } from '@mui/icons-material'; // Add ArrowBackIos
@@ -290,7 +286,7 @@ const Planning3 = () => {
             size="large"
             style={{
               borderRadius: '30px',
-              padding: '12px 175px', // Adjusted width
+              padding: '12px 175px', 
               fontSize: '1.5rem',
               height: '120px',
               marginTop: '150px' 
@@ -300,13 +296,8 @@ const Planning3 = () => {
           >
             Next
           </Button>
-
         </Box>
-
-        
       </Container>
-
-      
     </Layout>
   );
 };

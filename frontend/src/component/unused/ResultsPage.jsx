@@ -11,7 +11,6 @@ const ResultsPage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/categories');
-        // Check if response is successful
         if (response.data.respCode === 200) {
           setCategories(response.data.respData);
         } else {
