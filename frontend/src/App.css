@@ -1,13 +1,13 @@
-* {
+/* * {
   box-sizing: none;
   margin: 0;
   padding: 0;
 }
 
 body {
-  margin: 0; /* Remove default margin to ensure the content reaches the edges */
+  margin: 0; 
   height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: white;
-}
+} */

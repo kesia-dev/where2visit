@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button, Typography, Container, Box, useMediaQuery, IconButton, Stepper, Step, StepLabel, TextField, Checkbox, FormControlLabel, Select, InputLabel, FormControl, MenuItem } from '@mui/material';
-import { ArrowBack, ArrowBackIos } from '@mui/icons-material'; // Add ArrowBackIos
+import { Button, Typography, Container, Box, useMediaQuery, Stepper, Step, StepLabel } from '@mui/material';
 import Layout from './Layout';
 import { useNavigate } from 'react-router-dom';
-
+import { buttonStyles, typographyStyles } from './PlanStyles'; 
 
 const Planning3 = () => {
   const navigate = useNavigate();
@@ -12,38 +11,6 @@ const Planning3 = () => {
   const [activeStep, setActiveStep] = React.useState(2);
 
   const steps = ['', '', '', '', ''];
-
-  const buttonStyle = {
-    margin: '8px',
-    width: isSmallScreen ? '100%' : '48%',
-    height: '120px',
-    backgroundColor: '#b3e0ff',
-    color: '#000',
-    borderRadius: '12px',
-    fontSize: '1.5rem',
-  };
-
-  const darkBlueButtonStyle = {
-    width: isSmallScreen ? '100%' : '48%',
-    height: '150px',
-    backgroundColor: '#0000cd',
-    color: '#fff',
-    borderRadius: '12px',
-    fontSize: '1.5rem',
-    margin: '100px',
-  };
-
-  const createPlanButtonStyle = {
-    ...darkBlueButtonStyle,
-    marginTop: '300px',
-    marginBottom: '5px',
-  };
-
-  const arrowBackStyle = {
-    fontSize: '6rem',
-    marginRight: '-90px',
-    marginTop: '266',
-  };
 
   const handleNextClick = () => {
     navigate('/planning5');
@@ -66,10 +33,10 @@ const Planning3 = () => {
           </Stepper>
         </Box>
         <Box textAlign="center">
-          <Typography variant="h4" style={{ fontWeight: 'bold', marginBottom: '15px', fontSize: '3rem' }}>
+          <Typography variant="h4" style={typographyStyles.title}>
             Set your preferences
           </Typography>
-          <Typography variant="body2" style={{ margin: '16px', fontSize: '2.5rem', marginBottom: '35px' }}>
+          <Typography variant="body2" style={typographyStyles.comingSoon}>
             Select all that apply
           </Typography>
         </Box>
@@ -83,10 +50,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             No Preference
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             French
           </Button>
         </Box>
@@ -97,10 +64,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Italian
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Chinese
           </Button>
         </Box>
@@ -111,10 +78,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Thai
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Greek
           </Button>
         </Box>
@@ -126,10 +93,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Mexican
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Japanese
           </Button>
         </Box>
@@ -140,30 +107,29 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Indian
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             American
           </Button>
         </Box>
 
         <Box
-            display="flex"
-            flexDirection={isSmallScreen ? 'column' : 'row'}
-            alignItems="center"
-            justifyContent="space-between"
-            mt={2}
-          >
-            <Button variant="contained" color="primary" size="large" style={buttonStyle}>
-              Local Attractions
-            </Button>
-            <Button variant="contained" color="primary" size="large" style={buttonStyle}>
-              Arts & Entertainment
-            </Button>
-          </Box>
+          display="flex"
+          flexDirection={isSmallScreen ? 'column' : 'row'}
+          alignItems="center"
+          justifyContent="space-between"
+          mt={2}
+        >
 
-        <Typography>View more</Typography>
+        </Box>
+
+        <Box textAlign="center" mt={4} mb={4}>
+          <Typography variant="body1" style={{ color: '#00bcd4', fontSize: '1.5rem' }}>
+            View more
+          </Typography>
+        </Box>
 
         <Typography variant="body2" style={{ margin: '16px', fontSize: '2.0rem', textAlign: 'left' }}>
           Dietary Restrictions (optional)
@@ -176,10 +142,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Keto
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Vegan
           </Button>
         </Box>
@@ -190,10 +156,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Paleo
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Kosher
           </Button>
         </Box>
@@ -204,10 +170,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Vegetarian
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Gluten Free
           </Button>
         </Box>
@@ -223,10 +189,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             $50
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             $50 - $100
           </Button>
         </Box>
@@ -237,10 +203,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             $100 - $150
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             $150+
           </Button>
         </Box>
@@ -256,10 +222,10 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             Any Rating
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             3+
           </Button>
         </Box>
@@ -270,28 +236,20 @@ const Planning3 = () => {
           justifyContent="space-between"
           mt={2}
         >
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             4+
           </Button>
-          <Button variant="contained" color="primary" size="large" style={buttonStyle}>
+          <Button variant="contained" color="primary" size="large" style={buttonStyles.choiceButton}>
             5
           </Button>
-          
         </Box>
 
-        <Box textAlign="center" mt={2} mb={4}>
+        <Box textAlign="center" mt={20} mb={10}>
           <Button
             variant="contained"
             color="primary"
             size="large"
-            style={{
-              borderRadius: '30px',
-              padding: '12px 175px', 
-              fontSize: '1.5rem',
-              height: '120px',
-              marginTop: '150px' 
-              
-            }}
+            style={buttonStyles.createPlan}
             onClick={handleNextClick}
           >
             Next
@@ -303,3 +261,4 @@ const Planning3 = () => {
 };
 
 export default Planning3;
+

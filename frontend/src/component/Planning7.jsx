@@ -5,9 +5,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'; // Importing th
 import Layout from './Layout';
 import { buttonStyles, typographyStyles } from './PlanStyles'; // Importing styles from PlanStyles
 
-const Planning1 = () => {
+const Planning7 = () => {
   const handleBackClick = () => {
-    
+    // Handle back button click event here
   };
 
   return (
@@ -35,36 +35,36 @@ const Planning1 = () => {
           <Box display="flex" justifyContent="center" mt={2}>
             <Box mr={2}>
               <Button variant="contained" color="primary" size="large" sx={buttonStyles.choiceButton}>
-                Local Attractions
+                Button 1
               </Button>
             </Box>
             <Box>
               <Button variant="contained" color="primary" size="large" sx={buttonStyles.choiceButton}>
-                Arts & Entertainment
+                Button 2
               </Button>
             </Box>
           </Box>
           <Box display="flex" justifyContent="center" mt={2}>
             <Box mr={2}>
               <Button variant="contained" color="primary" size="large" sx={buttonStyles.choiceButton}>
-                Shopping
+                Button 3
               </Button>
             </Box>
             <Box>
               <Button variant="contained" color="primary" size="large" sx={buttonStyles.choiceButton}>
-                Beauty & Spa
+                Button 4
               </Button>
             </Box>
           </Box>
           <Box display="flex" justifyContent="center" mt={2}>
             <Box mr={2}>
               <Button variant="contained" color="primary" size="large" sx={buttonStyles.choiceButton}>
-                Nightlife
+                Button 5
               </Button>
             </Box>
             <Box>
               <Button variant="contained" color="primary" size="large" sx={buttonStyles.choiceButton}>
-                Hotel & Travel
+                Button 6
               </Button>
             </Box>
           </Box>
@@ -89,9 +89,7 @@ const Planning1 = () => {
   );
 };
 
-export default Planning1;
-
-
+export default Planning7;
 
 
 

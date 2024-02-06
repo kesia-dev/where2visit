@@ -11,7 +11,7 @@ const Planning6 = () => {
         position="fixed"
         style={{
           background: '#b3e0ff',
-          width: '100%',
+          width: '99.1%', 
           margin: 0,
           boxShadow: 'none',
         }}
@@ -39,6 +39,7 @@ const Planning6 = () => {
         sx={{
           backgroundColor: '#b3e0ff',
           minHeight: '100vh',
+          width: '100vw', 
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -102,3 +103,8 @@ const Planning6 = () => {
 };
 
 export default Planning6;
+
+
+
+
+

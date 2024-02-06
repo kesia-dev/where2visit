@@ -10,6 +10,8 @@ import Planning2 from './component/Planning2';
 import Planning3 from './component/Planning3';
 import Planning5 from './component/Planning5';
 import Planning6 from './component/Planning6';
+import Planning7 from './component/Planning7';
+
 
 // import PlanCreatedPage from './component/PlanCreatedPage';
 // import Restaurant1Welcome from './component/Restaurant1Welcome';
@@ -39,6 +41,8 @@ function App() {
           <Route path="/Planning3" element={<Planning3 />} />
           <Route path="/Planning5" element={<Planning5 />} />
           <Route path="/Planning6" element={<Planning6 />} />
+          <Route path="/Planning7" element={<Planning7 />} />
+
 
           {/* <Route path="/PlanCreatedPage" element={<PlanCreatedPage />} />
           <Route path="/Restaurant1Welcome" element={<Restaurant1Welcome />} />

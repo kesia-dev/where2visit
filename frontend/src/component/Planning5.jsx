@@ -10,7 +10,7 @@ const Planning5 = () => {
 
   const [activeStep, setActiveStep] = React.useState(3);
 
-  const steps = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5'];
+  const steps = ['', '', '', '', ''];
 
   const buttonStyle = {
     margin: '8px 8px', 
@@ -84,7 +84,7 @@ const Planning5 = () => {
           <Box
             display="flex"
             flexDirection={isSmallScreen ? 'column' : 'row'}
-            flexWrap="wrap" // Allow buttons to wrap onto the next line
+            flexWrap="wrap" 
             alignItems="center"
             justifyContent="space-between"
             mt={2}
@@ -116,7 +116,7 @@ const Planning5 = () => {
           <Box
             display="flex"
             flexDirection={isSmallScreen ? 'column' : 'row'}
-            flexWrap="wrap" // Allow buttons to wrap onto the next line
+            flexWrap="wrap" 
             alignItems="center"
             justifyContent="space-between"
             mt={2}
@@ -136,7 +136,7 @@ const Planning5 = () => {
           </Box>
 
           <Box style={{ marginTop: '196px' }}>
-            <Typography variant="h4" style={{ fontWeight: 'bold', marginBottom: '96px', marginTop: '66px', fontSize: '3rem' }}>
+            <Typography variant="h4" style={{ fontWeight: 'bold', marginBottom: '96px', marginTop: '66px', fontSize: '2rem' }}>
               Do you want to save this search to your account?           
               </Typography>
           </Box>
