@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Typography, Box, Input, Button } from '@mui/material';
+import { Typography, Box, Input, Button, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import JoinPlan from './JoinPlan';
 import { useNavigate } from 'react-router-dom';
 
 const JoinComponents = () => {
   const [enteredCode, setEnteredCode] = useState('');
   const [isCodeValid, setIsCodeValid] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const navigate = useNavigate();
 
@@ -20,7 +22,15 @@ const JoinComponents = () => {
     if (isValid) {
       // Navigate to the JoinPlanPage with the entered code as a parameter
       navigate(`/join-plan/${enteredCode}`);
+    } else {
+      // Open the Snackbar to alert the user if the entered code is not valid
+      setOpenSnackbar(true);
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    // Close the Snackbar
+    setOpenSnackbar(false);
   };
 
   return (
@@ -49,7 +59,7 @@ const JoinComponents = () => {
             borderRadius: '20px',
             border: '1px solid #1C1C1C',
             gap: '12px',
-            background:'#C79E34',
+            background: '#C79E34',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -95,6 +105,23 @@ const JoinComponents = () => {
 
       {/* Conditionally render JoinPlan based on code validation */}
       {isCodeValid && <JoinPlan enteredCode={enteredCode} />}
+
+      {/* Snackbar for alerting the user */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseSnackbar}
+          severity="error"
+        >
+          Please enter a valid code before joining the plan.
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

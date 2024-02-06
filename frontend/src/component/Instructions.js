@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { CardContent, Typography, Button, Box, Input, MobileStepper } from '@mui/material';
+import { CardContent, Typography, Button, Box, Input, MobileStepper, Snackbar } from '@mui/material';
 import JoinPlan from './JoinPlan';
 import { useNavigate } from 'react-router-dom';
+import MuiAlert from '@mui/material/Alert';
 import '../styling/Instructions.css';
 
 
@@ -39,7 +40,8 @@ const Instructions = () => {
   const [step, setStep] = React.useState(0);
   const navigate = useNavigate();
   const [enteredCode, setEnteredCode] = useState('');
-  const [isCodeValid] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false); 
+  const [isCodeValid, setIsCodeValid] = useState(false);
 
   const handleCodeChange = (event) => {
     setEnteredCode(event.target.value);
@@ -53,11 +55,22 @@ const Instructions = () => {
     setStep(4); // Skip to the last step
   };
 
-  const handleJoinPlan = () => {
-    // Navigate to the JoinPlan component using React Router
-    navigate(`/join-plan/${enteredCode}`); // You can replace '/join-plan' with the actual route path
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
+  const handleJoinPlan = () => {
+    // Example validation logic (replace this with your actual validation)
+    const isValid = enteredCode.trim() !== ''; // Check if the code is not empty
+
+    if (isValid) {
+      // Navigate to the JoinPlanPage with the entered code as a parameter
+      navigate(`/join-plan/${enteredCode}`);
+    } else {
+      // Open the Snackbar to alert the user if the entered code is not valid
+      setOpenSnackbar(true);
+    }
+  };
 
 
   return (
@@ -69,8 +82,8 @@ const Instructions = () => {
         position="static"
         activeStep={step}
         sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}
-        dotActiveStyle={{ backgroundColor: 'black' }}
-        dotStyle={{ backgroundColor: 'grey' }}
+        dotactivestyle={{ backgroundColor: 'black' }}
+        dotstyle={{ backgroundColor: 'grey' }}
       />
 
       <Box display="flex" flexDirection="column" alignItems="center">
@@ -198,6 +211,23 @@ const Instructions = () => {
             {/* Conditionally render JoinPlan based on code validation */}
             {isCodeValid && <JoinPlan enteredCode={enteredCode} />}
           </Button>
+          
+           {/* Snackbar for alerting the user */}
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={3000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={handleCloseSnackbar}
+              severity="error"
+            >
+              Please enter a valid code before joining the plan.
+            </MuiAlert>
+          </Snackbar>
 
           {/* Additional images and texts for Step 5 */}
           <Box style={{ marginTop: 50, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
@@ -243,8 +273,6 @@ const Instructions = () => {
               {steps[step].text2}
             </Typography>
           </Box>
-
-
         </div>
       )}
     </CardContent>

@@ -50,6 +50,16 @@ const JoinPlan = () => {
     }
   };
 
+    // Function to handle joining the plan
+    const handleJoinPlanClick = () => {
+      // Check if the user has entered a valid code
+      if (!code) {
+        alert('Please enter a valid code before joining the plan.');
+        return;
+      }
+      console.log('User code:', code);
+    };
+
   return (
     <Container component="main" maxWidth="md">
       <Paper elevation={3} sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px' }}>
@@ -160,6 +170,7 @@ const JoinPlan = () => {
               textTransform: 'none',
               marginTop: '20px',
             }}
+            onClick={handleJoinPlanClick}
           >
             Join Plan
           </Button>
