@@ -3,7 +3,7 @@ import { Card, CardContent, Typography } from '@mui/material';
 
 const PlanDetailsCard = ({ roomName, hostName, dateOfEvent, location }) => {
   return (
-    <Card variant="outlined" sx={{ marginBottom: '20px', backgroundColor: '#f5f5f5' }}>
+    <Card variant="outlined" sx={{ marginBottom: '20px', alignItems: 'center', justifyContent: 'center', background: '#C79E34', color: 'black' }}>
       <CardContent>
         <Typography variant="h6" gutterBottom sx={{ color: '#333' }}>
           Plan Details
