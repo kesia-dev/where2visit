@@ -11,7 +11,7 @@ const validateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token.replace('Bearer ', ''), TOKEN_SECRET);
-    req.user = decoded.user;
+    req.user = decoded.userId;
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Invalid token, authorization denied' });
