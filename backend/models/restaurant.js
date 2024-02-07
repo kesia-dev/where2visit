@@ -21,6 +21,20 @@ const restaurantSchema = new mongoose.Schema({
         type: [photoSchema],
         default: [],
     },
+    voteCount: {
+        type: Number,
+        default: 0
+    },
+    positiveVotes:
+        [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
+    negativeVotes:
+        [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }]
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
