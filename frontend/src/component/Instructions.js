@@ -72,6 +72,10 @@ const Instructions = () => {
     }
   };
 
+  const handleCreatePlan = () => {
+    navigate('/create-plan');
+  }
+
 
   return (
     <CardContent className="customCardContent" style={{padding: '0px'}}>
@@ -153,7 +157,7 @@ const Instructions = () => {
           </Box>
 
           {/* Create a plan button for Step 5 */}
-          <Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+          <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
             {steps[step].buttonLabel1}
           </Button>
 
