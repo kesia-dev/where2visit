@@ -60,7 +60,6 @@ const Instructions = () => {
   };
 
   const handleJoinPlan = () => {
-    // Example validation logic (replace this with your actual validation)
     const isValid = enteredCode.trim() !== ''; // Check if the code is not empty
 
     if (isValid) {
