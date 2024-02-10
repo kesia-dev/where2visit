@@ -2,9 +2,10 @@ const getPlan = require('../models/create-plan');
 
 exports.getPlanById = async (req, res) => {
   try {
-    const planId = req.params.id;
+    const planCode = req.body.planCode;
+    console.log('plan code', planCode);
 
-    const plan = await getPlan.findById(planId);
+    const plan = await getPlan.findOne({ roomId: planCode });
 
     if (!plan) {
       return res.status(404).json({

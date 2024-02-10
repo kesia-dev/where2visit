@@ -25,16 +25,14 @@ const restaurantSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    positiveVotes:
-        [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }],
-    negativeVotes:
-        [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }]
+    positiveVotes: {
+        type: [String],
+        required: true
+    },
+    negativeVotes: {
+        type: [String],
+        required: true
+    }
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
