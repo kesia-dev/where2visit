@@ -1,0 +1,9 @@
+.inputForm {
+  margin: 10px;
+}
+
+.formCheckbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
