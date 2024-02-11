@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Paper, MobileStepper, Box, Typography, Button } from '@mui/material';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
-import "../styling/Planning.css"
+import "../styling/Planning.css";
+import PlanningForm from './PlanningForm';
+import RestaurantOptions from './RestaurantOptions';
 
 const PlanningCard = () => {
   const steps = [
@@ -49,13 +51,18 @@ const PlanningCard = () => {
     !selection.includes(newSelection) ? setSelection([...selection, newSelection]) : setSelection(prevSelection => (prevSelection));
   };
 
-  const firstSelection = (selection) => {
+  const firstStepSelection = (selection) => {
     handleSelection(selection);
     handleNext();
   };
 
-  const goBack = () => {
+  // Function will take user back to the last visited page
+  const goBackHistory = () => {
     navigate(-1);
+  };
+
+  const handlePrevious = () => {
+    setStep(prevStep => (prevStep > 0 ? prevStep - 1 : prevStep));
   };
 
   return (
@@ -73,11 +80,11 @@ const PlanningCard = () => {
             dotstyle={{ backgroundColor: 'grey' }}
           />
 
-
           <Box display="flex" flexDirection="column" alignItems="center">
             {/* Step Title */}
             <Typography
               color="text.secondary"
+              noWrap={true}
               align="center"
               fontFamily="Inter"
               fontWeight={700}
@@ -96,7 +103,7 @@ const PlanningCard = () => {
             {step === 0 && (
               <>
                 {/* Step 1 Content */}
-                <Button variant="contained" onClick={prev => firstSelection(steps[step].buttonLabel1)} color="primary" sx={{ margin: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                <Button variant="contained" onClick={event => firstStepSelection(steps[step].buttonLabel1)} color="primary" sx={{ margin: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
                   {steps[step].buttonLabel1}
                 </Button>
 
@@ -137,11 +144,10 @@ const PlanningCard = () => {
                   </div>
                 </Box>
 
+                <div style={{ display: 'flex', alignItems: 'center' }} >
+                  <KeyboardDoubleArrowLeftIcon className='backArrows' />
 
-                <div style={{ display: 'flex', alignItems: 'center' }} >            
-                  <KeyboardDoubleArrowLeftIcon color='action' />
-
-                  <Button variant="contained" color="primary" onClick={goBack} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                  <Button variant="contained" color="primary" onClick={goBackHistory} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
                     Create a Plan
                   </Button>
                 </div>
@@ -150,14 +156,73 @@ const PlanningCard = () => {
           </Box>
 
           {step === 1 && (
-            <div>
-              Hello!
-            </div>
+            <>
+              <PlanningForm />
+              <div style={{ display: 'flex', alignItems: 'center' }} >
+                <button onClick={handlePrevious} className='backArrows'>
+                  <KeyboardDoubleArrowLeftIcon />
+                </button>
+
+
+                <Button variant="contained" color="primary" onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                  Next
+                </Button>
+              </div>
+            </>
           )}
 
+          {step === 2 && (
+            <>
+              <Typography
+                variant="p"
+                noWrap={false}
+                dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
+                align="center"
+                marginTop={'2px'}
+                fontFamily={'Inter'}
+                fontWeight={400}
+                fontSize={'14px'}
+              />
+
+            <RestaurantOptions />
+
+              <div style={{ display: 'flex', alignItems: 'center' }} >
+                <button onClick={handlePrevious} className='backArrows'>
+                  <KeyboardDoubleArrowLeftIcon />
+                </button>
+
+                <Button variant="contained" color="primary" onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                  Next
+                </Button>
+              </div>
+            </>
+          )}
+
+          {step > 2 && (
+            <>
+              <Typography
+                variant="p"
+                noWrap={false}
+                dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
+                align="center"
+                marginTop={'2px'}
+                fontFamily={'Inter'}
+                fontWeight={400}
+                fontSize={'14px'}
+              />
+              <div style={{ display: 'flex', alignItems: 'center' }} >
+                <button onClick={handlePrevious} className='backArrows'>
+                  <KeyboardDoubleArrowLeftIcon />
+                </button>
+
+                <Button variant="contained" color="primary" onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                  Next
+                </Button>
+              </div>
+            </>
+          )}
 
         </Paper>
-
       </Container>
     </>
   );

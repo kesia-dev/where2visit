@@ -1,3 +1,6 @@
-.MuiSvgIcon-colorAction {
-  color: #c79e34
+.backArrows {
+  border: none;
+  background: none;
+  color: #c79e34;
+  cursor: pointer;
 }
