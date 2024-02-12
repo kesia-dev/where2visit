@@ -3,6 +3,7 @@ const getUser = require('../models/user');
 const voteRestaurant = require('../models/restaurant');
 
 exports.vote = async (req, res) => {
+  const userId = req.user;
   const payload = req.body; // Payload containing planId, restaurantId and voteType
 
   try {
@@ -26,9 +27,9 @@ exports.vote = async (req, res) => {
       });
     }
 
-
+    const getUserName = await getUser.findById(userId);
     // Check if user has already voted for positive or negative
-    if (restaurant.positiveVotes.includes(payload.voterName) || restaurant.negativeVotes.includes(payload.voterName)) {
+    if (restaurant.positiveVotes.includes(getUserName.username) || restaurant.negativeVotes.includes(getUserName.username)) {
       return res.status(400).json({
         error: 'User has already voted'
       });
@@ -52,7 +53,7 @@ exports.vote = async (req, res) => {
     }
 
     // Update to positive or negative user and vote count
-    restaurant[getVoteField].push(payload.voterName);
+    restaurant[getVoteField].push(getUserName.username);
     restaurant.voteCount += incrementVote; // voteCount is a number field
     await plan.save();
 

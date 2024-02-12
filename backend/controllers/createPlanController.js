@@ -58,7 +58,10 @@ exports.createPlan = async (req, res) => {
     await newPlan.save();
 
 
-    return res.status(201).json({ message: 'Plan registered successfully' });
+    return res.status(201).json({ 
+      message: 'Plan registered successfully', 
+      roomId: getRoomId 
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
