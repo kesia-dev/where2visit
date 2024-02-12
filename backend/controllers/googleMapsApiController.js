@@ -22,7 +22,7 @@ exports.getNearestRestaurants = async (req, res) => {
     // Set a baseUrl for the Google Maps Places API to make the request url more readable:
     const baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
     // Construct the url with the query parameters:
-    const url = `${baseUrl}?keyword=${keyword}&location=${location}&radius=${radius}&type=${type}&key=${key}`;
+    const url = `${baseUrl}?location=${location}&radius=${radius}&type=${type}&key=${key}`;
     console.log(
         "Keyword is: ", keyword, "\n",
         "Location is: ", location, "\n",
@@ -33,8 +33,14 @@ exports.getNearestRestaurants = async (req, res) => {
         "Number of restaurants is: ", filters.numberOfRestaurants, "\n",
     );
     // If any of the required parameters are missing, return an error:
-    if (!keyword || !location || !radius || !type) {
+    if (!location || !radius || !type || !key) {
         return res.status(400).json({ error: 'Missing required parameters.' });
+    }
+    // If the user has selected a cuisine type (aka keyword), add it to the url:
+    if (keyword) {
+        url += `&keyword=${keyword}`;
+    } else {
+        console.log('No keyword/ cuisine type was provided by user selection.');
     }
     // Get request to get response data from Google Maps Places API:
     try {
@@ -59,13 +65,13 @@ exports.getNearestRestaurants = async (req, res) => {
             console.log(`Found ${filteredResults.length} restaurants: ` + '\n');
             filteredResults.forEach((restaurant, restaurantIndex) => {
                 console.log(`${restaurantIndex + 1}: ${restaurant.name}\n` +
+                `Ratings Count: ${restaurant.user_ratings_total || 'N/A'}\n` +
                 `Rating: ${restaurant.rating || 'N/A'}\n` + 
                 `Price Level: ${restaurant.price_level || 'N/A'}\n` +
                 `Address: ${restaurant.vicinity || 'N/A'}\n` +
                 `Map URL: ${restaurant.staticMapUrl || 'N/A'}\n` +
                 `Website: ${restaurant.website || 'N/A'}\n` +
-                `Distance from you: ${restaurant.distance.toFixed(2)} km\n` +
-                `Ratings Count: ${restaurant.user_ratings_total || 'N/A'}\n`
+                `Distance from you: ${restaurant.distance.toFixed(2)} km\n`
                 );
                 // Check if the place has photos:
                 if (restaurant.photos && restaurant.photos.length > 0) {
