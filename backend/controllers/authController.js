@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const sendMailController = require('../controllers/sendMailController');
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
@@ -25,6 +26,14 @@ exports.register = async (req, res) => {
     });
 
     await user.save();
+
+    // lets send the email for verification
+
+    const verificationUrl = `http://localhost:${process.env.PORT}/verify/${verificationLink}`;
+    const emailSubject = "Where2Visit - Email Verification";
+    const emailBody = `Click the following link to verify your email: ${verificationUrl}`;
+
+    await sendMailController.sendMail(user.email, emailSubject, emailBody);
 
     return res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
