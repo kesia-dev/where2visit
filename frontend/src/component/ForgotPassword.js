@@ -13,7 +13,7 @@ const ForgotPassword = () => {
       const emailInfo = {
         email
       };
-      const response = await fetch('http://localhost:3200/auth/forgot-password', {
+      const response = await fetch('http://localhost:4200/auth/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

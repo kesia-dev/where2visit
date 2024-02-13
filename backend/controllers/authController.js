@@ -23,6 +23,8 @@ exports.register = async (req, res) => {
       emailVerified: false,
       password: hashedPassword,
       emailVerificationLink: verificationLink,
+      resetLink: null,
+      resetLinkExpiration: null
     });
 
     await user.save();
@@ -95,9 +97,9 @@ exports.forgotPassword = async (req, res) => {
     user.resetLinkExpiration = Date.now() + 86400000 // 1 day for now;
     await user.save();
 
-    const resetLink = `http://localhost:${process.env.PORT}/auth/reset-password/${resetLink}`;
+    const resetUrl = `http://localhost:${process.env.PORT}/auth/reset-password/${resetCode}`;
     const emailSubject = `Where2Visit - Password Reset`;
-    const emailBody = `Click the following link to reset your password: ${verificationUrl}`;;
+    const emailBody = `Click the following link to reset your password: ${resetUrl}`;;
 
     await sendMailController.sendMail(user.email, emailSubject, emailBody);
 
