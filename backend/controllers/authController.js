@@ -64,3 +64,18 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { verificationCode } = req.params;
+    // find user by verificationCode
+    const user = await User.findOne({ emailVerificationLink: verificationCode });
+    if (!user) return res.status(404).json({ error: 'Invalid Verification Code' });
+    // update the user
+    user.emailVerified = true;
+    user.emailVerificationLink = null;
+    await user.save();
+    return res.status(200).json({ message: 'User Email verified successfully' });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
