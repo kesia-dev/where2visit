@@ -47,6 +47,12 @@ const setUserDbQueries = (params) => {
   });
 };
 
+const getUserByUsernameAndEmail = (params) => {
+  const user = users.find(user => user.username === params.username && user.email === params.email);
+  if (!user) throw new Error('User not found.');
+  return user;
+};
+
 // query to get user by id
 const getUserByIdQueries = (params) => {
   console.log('got to user', params);
@@ -59,4 +65,4 @@ const getUserByIdQueries = (params) => {
   return getUser;
 };
 
-module.exports = { setUserDbQueries, getUserByIdQueries };
+module.exports = { setUserDbQueries, getUserByUsernameAndEmail, getUserByIdQueries };
