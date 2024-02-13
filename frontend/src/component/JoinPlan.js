@@ -8,38 +8,35 @@ import {
   Paper,
   Box,
   Grid,
+  Snackbar,
 } from '@mui/material';
 import copy from 'clipboard-copy';
 import PlanDetails from './PlanDetails';
 import axios from 'axios';
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-
 
 const JoinPlan = () => {
   const { planCode, planName, hostName, dateOfEvent, timeOfEvent, location } = useParams();
   const [userName, setUserName] = useState('');
-  const [copyFeedback, setCopyFeedback] = useState('');
-  const [planDetails, setPlanDetails] = useState(null); // State to store plan details
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [planDetails, setPlanDetails] = useState(null);
+  const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
+  const [joinSnackbarOpen, setJoinSnackbarOpen] = useState(false);
 
-const handleCloseSnackbar = () => {
-  setSnackbarOpen(false);
-};
+  const handleCloseCopySnackbar = () => {
+    setCopySnackbarOpen(false);
+  };
 
+  const handleCloseJoinSnackbar = () => {
+    setJoinSnackbarOpen(false);
+  };
 
   const handleCopyClick = () => {
     try {
       copy(planCode);
-      setCopyFeedback('Plan code copied to clipboard!');
+      setCopySnackbarOpen(true);
     } catch (error) {
       console.error('Error copying to clipboard:', error);
-      setCopyFeedback('Error copying to clipboard');
     }
-
-    setTimeout(() => {
-      setCopyFeedback('');
-    }, 2000);
   };
 
   const handleShareClick = () => {
@@ -59,16 +56,14 @@ const handleCloseSnackbar = () => {
 
   const handleJoinPlanClick = () => {
     if (!userName) {
-      // Show Snackbar if username is not entered
-      setSnackbarOpen(true);
+      setJoinSnackbarOpen(true);
       return;
     } else {
       console.log('Navigating to voting page');
     }
   };
-  
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchPlanDetails = async () => {
       if (!planCode) {
         alert('Please enter a valid planCode before joining the plan.');
@@ -100,7 +95,6 @@ const handleCloseSnackbar = () => {
           location: data.location,
         });
 
-        // Code is valid, you can navigate to the plan details page
         console.log('Plan details:', data.planName);
       } catch (error) {
         console.error('Error checking code:', error);
@@ -108,9 +102,8 @@ const handleCloseSnackbar = () => {
       }
     };
 
-    fetchPlanDetails(); // Call the function when the component mounts
+    fetchPlanDetails();
   }, [planCode, planName, hostName, dateOfEvent, timeOfEvent, location]);
-  
 
   return (
     <Container component="main" maxWidth="md">
@@ -161,7 +154,6 @@ const handleCloseSnackbar = () => {
           width={'80%'}
         >
           <Grid item xs={12} md={6}>
-            {/* Invite message */}
             <Box
               sx={{
                 display: 'flex',
@@ -182,7 +174,6 @@ const handleCloseSnackbar = () => {
                 <br /> Tap dotted box to copy your plan code
               </Typography>
 
-              {/* Yellow box with code details */}
               <Box
                 onClick={handleCopyClick}
                 sx={{
@@ -206,7 +197,6 @@ const handleCloseSnackbar = () => {
                   {planCode}
                 </Typography>
               </Box>
-              {/* Share button inside the box */}
               <Button
                 variant="outlined"
                 style={{
@@ -223,15 +213,23 @@ const handleCloseSnackbar = () => {
           </Grid>
         </Grid>
 
-        {copyFeedback && (
-          <Typography
-            variant="body2"
-            sx={{ fontSize: '14px', color: 'black', mt: 1 }}
+        <Snackbar
+          open={copySnackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseCopySnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleCloseCopySnackbar}
+            severity="success"
+            sx={{ width: '100%' }}
           >
-            {copyFeedback}
-          </Typography>
-        )}
-        {/* Text box for the user to enter their name */}
+            Plan code copied to clipboard!
+          </MuiAlert>
+        </Snackbar>
+
         <TextField
           label="Enter Your Name"
           variant="outlined"
@@ -268,22 +266,22 @@ const handleCloseSnackbar = () => {
           </Button>
         </div>
 
-      {/* Snackbar for alerting the user */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={handleCloseSnackbar}
-          severity="error"
+        <Snackbar
+          open={joinSnackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseJoinSnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          Please enter user name before joining the plan.
-        </MuiAlert>
-      </Snackbar>
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleCloseJoinSnackbar}
+            severity="error"
+            sx={{ width: '100%' }}
+          >
+            Please enter user name before joining the plan.
+          </MuiAlert>
+        </Snackbar>
 
         <Button
           variant="text"
