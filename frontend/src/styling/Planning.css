@@ -4,3 +4,26 @@
   color: #c79e34;
   cursor: pointer;
 }
+
+.skipPreferences {
+  position: absolute;
+  right: 50px;
+  top: 102px
+}
+
+@media (min-width: 600px) {
+  .MuiButtonBase-root.MuiButton-root.MuiButton-outlined.MuiButton-outlinedPrimary.MuiButton-sizeMedium.MuiButton-outlinedSizeMedium.MuiButton-root.MuiButton-outlined.MuiButton-outlinedPrimary.MuiButton-sizeMedium.MuiButton-outlinedSizeMedium.css-kffwc5-MuiButtonBase-root-MuiButton-root {
+    margin: 10px;
+    border-radius: 10px;
+    text-transform: none;
+    min-width: 15vw;
+    min-height: 5vh;
+  }
+
+  .skipPreferences {
+    position: absolute;
+    right: 230px;
+    top: 110px
+  }
+
+}

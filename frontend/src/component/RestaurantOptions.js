@@ -15,14 +15,15 @@ const RestaurantOptions = () => {
   const renderButtons = (items) => {
     return items.map((item, index) => (
       <Button
-        key={index}
-        variant="contained"
-        color="primary"
+      key={index}
+        variant="outlined"
+        style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }}
         sx={{
           marginTop: 2,
-          borderRadius: '100px',
+          borderRadius: '10px',
           textTransform: 'none',
-          minWidth: '15vw',
+          maxWidth: '40vw',
+          minHeight: '5vh'
         }}
       >
         {item}
@@ -72,7 +73,7 @@ const RestaurantOptions = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" style={{ margin: '15px 100px' }}>
+    <Box display="flex" flexDirection="column" alignItems="center" >
       <Grid container spacing={2}>
         {renderCategory("Cuisine", options.cuisine)}
         {renderCategory("Dietary Restrictions (Optional)", options.dietaryRestrictions)}

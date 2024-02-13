@@ -29,11 +29,20 @@ const PlanningCard = () => {
     },
     {
       title: "How many results do you want?",
-      subtitle: "Results refer to the number of options you would like to choose from."
+      subtitle: "Results refer to the number of options you would like to choose from.",
+      buttonLabel1: "3",
+      buttonLabel2: "5",
+      buttonLabel3: "10",
+      buttonLabel4: "15+",
+
     },
     {
       title: "How many matches do you want?",
-      subtitle: "Matches refer to the number of restaurants your group has agreed on."
+      subtitle: "Matches refer to the number of restaurants your group has agreed on.",
+      buttonLabel1: "1",
+      buttonLabel2: "3",
+      buttonLabel3: "5",
+      buttonLabel4: "Custom"
     },
 
   ];
@@ -44,6 +53,10 @@ const PlanningCard = () => {
 
   const handleNext = () => {
     setStep(prevStep => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
+  };
+
+  const handleSkip = () => {
+    setStep(3); // Skip to the last step
   };
 
   // Function will add user's selections to the selection array
@@ -68,14 +81,14 @@ const PlanningCard = () => {
   return (
     <>
       <Container component="main" maxWidth="md">
-        <Paper elevation={3} sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px' }}>
+        <Paper elevation={3} sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px', minHeight: '80vh' }}>
           {/* MobileStepper for navigation */}
           <MobileStepper
             variant="dots"
             steps={steps.length}
             position="static"
             activeStep={step}
-            sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}
+            sx={{ alignItems: 'center', justifyContent: 'center' }}
             dotactivestyle={{ backgroundColor: 'black' }}
             dotstyle={{ backgroundColor: 'grey' }}
           />
@@ -103,7 +116,7 @@ const PlanningCard = () => {
             {step === 0 && (
               <>
                 {/* Step 1 Content */}
-                <Button variant="contained" onClick={event => firstStepSelection(steps[step].buttonLabel1)} color="primary" sx={{ margin: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                <Button variant="outlined" onClick={event => firstStepSelection(steps[step].buttonLabel1)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }} >
                   {steps[step].buttonLabel1}
                 </Button>
 
@@ -120,25 +133,25 @@ const PlanningCard = () => {
 
                 <Box display="flex" alignItems="center">
                   <div style={{ display: 'flex', flexDirection: 'column', margin: 15 }}>
-                    <Button variant="contained" color="primary" sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel2}
                     </Button>
-                    <Button variant="contained" color="primary" sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel3}
                     </Button>
-                    <Button variant="contained" color="primary" sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel4}
                     </Button>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', margin: 15 }}>
-                    <Button variant="contained" color="primary" sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel5}
                     </Button>
-                    <Button variant="contained" color="primary" sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel6}
                     </Button>
-                    <Button variant="contained" color="primary" sx={{ marginTop: 2, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel7}
                     </Button>
                   </div>
@@ -147,81 +160,110 @@ const PlanningCard = () => {
                 <div style={{ display: 'flex', alignItems: 'center' }} >
                   <KeyboardDoubleArrowLeftIcon className='backArrows' />
 
-                  <Button variant="contained" color="primary" onClick={goBackHistory} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={goBackHistory} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
                     Create a Plan
                   </Button>
                 </div>
               </>
             )}
+
+
+            {step === 1 && (
+              <>
+                <PlanningForm />
+                <div style={{ display: 'flex', alignItems: 'center' }} >
+                  <button onClick={handlePrevious} className='backArrows'>
+                    <KeyboardDoubleArrowLeftIcon />
+                  </button>
+
+
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                    Next
+                  </Button>
+                </div>
+              </>
+            )}
+
+            {step === 2 && (
+              <>
+                <Typography
+                  variant="body2"
+                  sx={{ textAlign: 'center', marginTop: 2, cursor: 'pointer' }}
+                  onClick={handleSkip}
+                  fontSize={'15px'}
+                  fontFamily={'Inter'}
+                  color="primary"
+                  className='skipPreferences'
+                >
+                  Skip
+                </Typography>
+
+                <Typography
+                  variant="p"
+                  noWrap={false}
+                  dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
+                  align="center"
+                  marginTop={'2px'}
+                  fontFamily={'Inter'}
+                  fontWeight={400}
+                  fontSize={'14px'}
+                />
+
+                <RestaurantOptions />
+
+                <div style={{ display: 'flex', alignItems: 'center' }} >
+                  <button onClick={handlePrevious} className='backArrows'>
+                    <KeyboardDoubleArrowLeftIcon />
+                  </button>
+
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                    Next
+                  </Button>
+                </div>
+              </>
+            )}
+
+            {step > 2 && (
+              <>
+                <Typography
+                  variant="p"
+                  noWrap={false}
+                  dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
+                  align="center"
+                  marginTop={'2px'}
+                  fontFamily={'Inter'}
+                  fontWeight={400}
+                  fontSize={'14px'}
+                />
+
+                <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
+                <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  {steps[step].buttonLabel1}
+                </Button>
+                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  {steps[step].buttonLabel2}
+                </Button>
+                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  {steps[step].buttonLabel3}
+                </Button>
+                <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  {steps[step].buttonLabel4}
+                </Button>
+                </div>
+
+
+                <div style={{ display: 'flex', alignItems: 'center' }} >
+                  <button onClick={handlePrevious} className='backArrows'>
+                    <KeyboardDoubleArrowLeftIcon />
+                  </button>
+
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                    Next
+                  </Button>
+                </div>
+              </>
+            )}
           </Box>
-
-          {step === 1 && (
-            <>
-              <PlanningForm />
-              <div style={{ display: 'flex', alignItems: 'center' }} >
-                <button onClick={handlePrevious} className='backArrows'>
-                  <KeyboardDoubleArrowLeftIcon />
-                </button>
-
-
-                <Button variant="contained" color="primary" onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
-                  Next
-                </Button>
-              </div>
-            </>
-          )}
-
-          {step === 2 && (
-            <>
-              <Typography
-                variant="p"
-                noWrap={false}
-                dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
-                align="center"
-                marginTop={'2px'}
-                fontFamily={'Inter'}
-                fontWeight={400}
-                fontSize={'14px'}
-              />
-
-            <RestaurantOptions />
-
-              <div style={{ display: 'flex', alignItems: 'center' }} >
-                <button onClick={handlePrevious} className='backArrows'>
-                  <KeyboardDoubleArrowLeftIcon />
-                </button>
-
-                <Button variant="contained" color="primary" onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
-                  Next
-                </Button>
-              </div>
-            </>
-          )}
-
-          {step > 2 && (
-            <>
-              <Typography
-                variant="p"
-                noWrap={false}
-                dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
-                align="center"
-                marginTop={'2px'}
-                fontFamily={'Inter'}
-                fontWeight={400}
-                fontSize={'14px'}
-              />
-              <div style={{ display: 'flex', alignItems: 'center' }} >
-                <button onClick={handlePrevious} className='backArrows'>
-                  <KeyboardDoubleArrowLeftIcon />
-                </button>
-
-                <Button variant="contained" color="primary" onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '15vw' }}>
-                  Next
-                </Button>
-              </div>
-            </>
-          )}
-
         </Paper>
       </Container>
     </>
