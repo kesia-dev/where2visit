@@ -5,6 +5,8 @@ const authRouter = require('./routes/authRoute');
 const createPlan = require('./routes/createPlanRoute');
 const getPlanById = require('./routes/getPlanByIdRoute');
 const restaurants = require('./routes/googleMapsApiRoute');
+const restaurantsSearchFromYelp = require('./routes/yelpSearchApiRoute');
+const restaurantsDetailsFromYelp = require('./routes/yelpBusinessDetailsApiRoute');
 const voteRestaurant = require('./routes/votingRoute');
 
 const app = express();
@@ -23,6 +25,8 @@ app.use('/plan', createPlan);
 app.use('/plan', getPlanById);
 app.use('/plan', voteRestaurant);
 app.use('/maps', restaurants);
+app.use('/yelp', restaurantsSearchFromYelp);
+app.use('/yelp', restaurantsDetailsFromYelp);
 
 
 
