@@ -8,7 +8,7 @@ const sendMail = async (to, subject, body) => {
       from: nodemailerConfig.auth.user,
       to,
       subject,
-      body
+      text: body
     };
     await transporter.sendMail(emailOptions);
     console.log('Email sent successfully');
