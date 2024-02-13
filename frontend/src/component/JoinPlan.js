@@ -14,7 +14,8 @@ import PlanDetails from './PlanDetails';
 
 const roomName = 'Party Room';
 const hostName = 'Karen';
-const dateOfEvent = 'December 7, 2023 @ 8PM';
+const dateOfEvent = 'December 7, 2023';
+const timeOfEvent = '8 : 00 PM';
 const location = 'Current Location';
 
 const JoinPlan = () => {
@@ -256,6 +257,7 @@ const JoinPlan = () => {
     roomName={roomName}
     hostName={hostName}
     dateOfEvent={dateOfEvent}
+    timeOfEvent={timeOfEvent}
     location={location}
     sx={{
       backgroundColor: 'black', // Background color for PlanDetails
