@@ -13,8 +13,27 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleLoginAttempt = () => {
-    console.log(`Attempting Login on Email ${email} and password ${password}`);
+  const handleLoginAttempt = async () => {
+    try {
+      // check if all fields are present
+      if (!email || !password) throw new Error('Please fill in all the fields.');
+
+      const loginData = {
+        email,
+        password
+      };
+
+      const response = await fetch('http://localhost:4200/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+      });
+      console.log(response);
+    } catch(error) {
+      console.log(error);
+    }
   };
 
   return (
