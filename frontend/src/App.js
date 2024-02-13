@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import { Auth0Provider } from '@auth0/auth0-react'; // Import Auth0Provider
 import './App.css';
 import JoinRoom from './component/JoinRoom';
+import SignUpPage from './component/SignUpPage.js';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/sign-in" element={<SignInPage />} />
+            <Route path="/sign-up" element={<SignUpPage />} />
             <Route path="/create-room" element={<CreateRoom />} />
             <Route path="/join-room" element={<JoinRoom />} />
             {/* Add other routes as needed */}
