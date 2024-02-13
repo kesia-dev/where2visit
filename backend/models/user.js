@@ -22,6 +22,15 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true, // leaving this for now, issues with duplicate keys if turned off? unclear.
       unique: false
+    },
+    resetLink: {
+      type: String,
+      required: false,
+      unique: false
+    },
+    resetLinkExpiration: {
+      type: Date,
+      required: false
     }
   });
   module.exports=mongoose.model('User', userSchema);
