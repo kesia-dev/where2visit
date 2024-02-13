@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setAuthData } = useAuth();
+  const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -33,6 +34,7 @@ const Login = () => {
       });
       const responseData = await response.json();
       setAuthData(responseData); // insert responseData into applicationContext for ease-of-use
+      navigate(`/`);
     } catch (error) {
       console.log(error);
     }

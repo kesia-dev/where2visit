@@ -1,11 +1,14 @@
 // Navbar.js
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useMediaQuery, useTheme } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
+  const { isLoggedIn, clearAuthData } = useAuth();
+  const navigate = useNavigate();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -38,17 +41,30 @@ const Navbar = () => {
           component={Link}
           to="/"
           sx={{ textDecoration: 'none', color: 'black', textTransform: 'none' }}
-          
+
         >
           Where2Visit
         </Typography>
-        <Button 
-        component={Link}
-        to="/login"
-        color="inherit"
-        sx={{textTransform: 'none'}}
-        
-        >Login</Button>
+        {!isLoggedIn() ?
+          <Button
+            component={Link}
+            to="/login"
+            color="inherit"
+            sx={{ textTransform: 'none' }}
+
+          >Login</Button>
+          :
+          <Button
+          color="inherit"
+          sx={{ textTransform: 'none' }}
+          onClick={() => {
+            clearAuthData()
+            navigate(`/`);
+          }}
+          >
+            Logout
+          </Button>
+        }
         <Menu
           id="menu"
           anchorEl={anchorEl}
