@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react'; // Import Auth0Provider
 import './App.css';
 import JoinPlan from './component/JoinPlan.js';
+import Login from './component/Login.js';
 
 
 //const domain = process.env.REACT_APP_AUTH0_DOMAIN
@@ -27,6 +28,7 @@ function App() {
         <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/join-plan/:planCode" element={<JoinPlan />} />
             {/* Add other routes as needed */}
           </Routes>

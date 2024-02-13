@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   Typography,
   Button,
@@ -235,6 +235,8 @@ const JoinPlan = () => {
           </Button>
         </div>
         <Button
+          component={Link}
+          to="/login"
           variant="text"
           align="center"
           className="login"

@@ -14,5 +14,14 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    emailVerified: {
+      type: Boolean,
+      required: true
+    },
+    emailVerificationLink: {
+      type: String,
+      required: false,
+      unique: true,
+    }
   });
   module.exports=mongoose.model('User', userSchema);

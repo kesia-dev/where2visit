@@ -43,6 +43,8 @@ const Navbar = () => {
           Where2Visit
         </Typography>
         <Button 
+        component={Link}
+        to="/login"
         color="inherit"
         sx={{textTransform: 'none'}}
         
