@@ -4,6 +4,7 @@ import JoinPlan from './JoinPlan';
 import { useNavigate } from 'react-router-dom';
 import MuiAlert from '@mui/material/Alert';
 import '../styling/Instructions.css';
+import axios from 'axios';
 
 
 const Instructions = () => {
@@ -42,6 +43,8 @@ const Instructions = () => {
   const [enteredCode, setEnteredCode] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false); 
   const [isCodeValid, setIsCodeValid] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [planDetails, setPlanDetails] = useState(null);
 
   const handleCodeChange = (event) => {
     setEnteredCode(event.target.value);
@@ -59,18 +62,47 @@ const Instructions = () => {
     setOpenSnackbar(false);
   };
 
-  const handleJoinPlan = () => {
-    const isValid = enteredCode.trim() !== ''; // Check if the code is not empty
+  const handleJoinPlan = async () => {
+    try {
+      setLoading(true);
 
-    if (isValid) {
-      // Navigate to the JoinPlanPage with the entered code as a parameter
-      navigate(`/join-plan/${enteredCode}`);
-    } else {
-      // Open the Snackbar to alert the user if the entered code is not valid
+      // Make an asynchronous request to your server to get plan details
+      const response = await axios.get('http://localhost:4200/plan/get-plan', {
+        params: {
+          planCode: enteredCode,
+        },
+      });
+
+      if (response.status === 200) {
+        const data = response.data;
+          // If the code is valid, set isCodeValid to true
+          setIsCodeValid(true);
+
+          console.log('res:', response.data)
+
+          // Set the plan details to be passed to the JoinPlan component
+          setPlanDetails({
+            planName: data.planName,
+            hostName: data.hostName,
+            dateOfEvent: data.dateOfEvent,
+            timeOfEvent: data.timeOfEvent,
+            location: data.location,
+          });
+
+          // Navigate to the JoinPlanPage with the entered code as a parameter
+          navigate(`/join-plan/${enteredCode}`);
+  
+      } else {
+        console.error('Error fetching plan details:', response.statusText);
+        setOpenSnackbar(true);
+      }
+    } catch (error) {
+      console.error('Error fetching plan details:', error);
       setOpenSnackbar(true);
+    } finally {
+      setLoading(false);
     }
   };
-
 
   return (
     <CardContent className="customCardContent" style={{padding: '0px'}}>
