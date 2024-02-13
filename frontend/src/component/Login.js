@@ -30,8 +30,10 @@ const Login = () => {
         },
         body: JSON.stringify(loginData)
       });
+      const responseData = await response.json();
+      localStorage.setItem('userData', JSON.stringify(responseData));
       console.log(response);
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
   };
