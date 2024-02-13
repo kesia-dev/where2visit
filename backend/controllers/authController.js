@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
 
     // lets send the email for verification
 
-    const verificationUrl = `http://localhost:${process.env.PORT}/verify/${verificationLink}`;
+    const verificationUrl = `http://localhost:${process.env.PORT}/auth/verify/${verificationLink}`;
     const emailSubject = "Where2Visit - Email Verification";
     const emailBody = `Click the following link to verify your email: ${verificationUrl}`;
 
@@ -72,7 +72,7 @@ exports.verifyEmail = async (req, res) => {
     if (!user) return res.status(404).json({ error: 'Invalid Verification Code' });
     // update the user
     user.emailVerified = true;
-    user.emailVerificationLink = null;
+    //user.emailVerificationLink = null; //ideally would've liked to remove this, but not removing the verification link for now as it's causing schema issues. Inquire about later.
     await user.save();
     return res.status(200).json({ message: 'User Email verified successfully' });
   } catch (error) {

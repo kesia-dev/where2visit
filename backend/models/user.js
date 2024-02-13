@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     },
     emailVerificationLink: {
       type: String,
-      required: true,
+      required: true, // leaving this for now, issues with duplicate keys if turned off? unclear.
       unique: false
     }
   });
