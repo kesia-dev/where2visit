@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setAuthData } = useAuth();
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -22,7 +24,6 @@ const Login = () => {
         email,
         password
       };
-
       const response = await fetch('http://localhost:4200/auth/login', {
         method: 'POST',
         headers: {
@@ -31,8 +32,7 @@ const Login = () => {
         body: JSON.stringify(loginData)
       });
       const responseData = await response.json();
-      localStorage.setItem('userData', JSON.stringify(responseData));
-      console.log(response);
+      setAuthData(responseData); // insert responseData into applicationContext for ease-of-use
     } catch (error) {
       console.log(error);
     }
