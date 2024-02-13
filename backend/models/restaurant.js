@@ -21,6 +21,18 @@ const restaurantSchema = new mongoose.Schema({
         type: [photoSchema],
         default: [],
     },
+    voteCount: {
+        type: Number,
+        default: 0
+    },
+    positiveVotes: {
+        type: [String],
+        required: true
+    },
+    negativeVotes: {
+        type: [String],
+        required: true
+    }
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);

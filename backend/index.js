@@ -4,7 +4,8 @@ const connectToDatabase = require('./config/db');
 const authRouter = require('./routes/authRoute');
 const createPlan = require('./routes/createPlanRoute');
 const getPlanById = require('./routes/getPlanByIdRoute');
-const  restaurants = require('./routes/googleMapsApiRoute');
+const restaurants = require('./routes/googleMapsApiRoute');
+const voteRestaurant = require('./routes/votingRoute');
 
 const app = express();
 const cors = require('cors');
@@ -20,6 +21,7 @@ connectToDatabase();
 app.use('/auth', authRouter);
 app.use('/plan', createPlan);
 app.use('/plan', getPlanById);
+app.use('/plan', voteRestaurant);
 app.use('/maps', restaurants);
 
 

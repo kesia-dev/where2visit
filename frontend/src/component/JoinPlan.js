@@ -18,13 +18,13 @@ const dateOfEvent = 'December 7, 2023 @ 8PM';
 const location = 'Current Location';
 
 const JoinPlan = () => {
-  const { code } = useParams();
+  const { planCode } = useParams();
   const [userName, setUserName] = useState('');
   const [copyFeedback, setCopyFeedback] = useState('');
 
   const handleCopyClick = () => {
     try {
-      copy(code);
+      copy(planCode);
       setCopyFeedback('Plan code copied to clipboard!');
     } catch (error) {
       console.error('Error copying to clipboard:', error);
@@ -41,23 +41,46 @@ const JoinPlan = () => {
       navigator
         .share({
           title: 'Join the Party',
-          text: `Join the party with code: ${code}`,
+          text: `Join the party with planCode: ${planCode}`,
           url: window.location.href,
         })
         .then(() => console.log('Successfully shared'))
         .catch((error) => console.error('Error sharing:', error));
     } else {
-      alert(`Share the code: ${code}`);
+      alert(`Share the planCode: ${planCode}`);
     }
   };
 
-  const handleJoinPlanClick = () => {
-    if (!code) {
-      alert('Please enter a valid code before joining the plan.');
+  const handleJoinPlanClick = async () => {
+    if (!planCode) {
+      alert('Please enter a valid planCode before joining the plan.');
       return;
     }
-    console.log('User code:', code);
-  };
+
+    try {
+      const response = await fetch(`http://localhost:4200/api/checkplanCode/${planCode}`);
+
+      if (response.ok) {
+        const data = await response.json();
+
+        if (data.isValid) {
+          // Code is valid, you can navigate to the plan details page
+          console.log('User code:', planCode);
+          console.log('Plan details:', data.planDetails);
+        } else {
+          // Code is not valid, handle accordingly
+          alert('Invalid code. Please enter a valid code.');
+        }
+      } else {
+        // Handle non-OK response status
+        console.error('Error checking code:', response.statusText);
+        alert('An error occurred while checking the code.');
+      }
+    } catch (error) {
+      console.error('Error checking code:', error);
+      alert('An error occurred while checking the code.');
+    }
+  }
 
   return (
     <Container component="main" maxWidth="md">
@@ -100,7 +123,7 @@ const JoinPlan = () => {
           </Typography>
         </Box>
 
-        <Grid container spacing={1} justifyContent="center" alignItems="center">
+        <Grid container spacing={2} justifyContent="center" alignItems="center" width={'80%'}>
   <Grid item xs={12} md={6}>
     {/* Invite message */}
     <Box
@@ -133,16 +156,18 @@ const JoinPlan = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          width: '50%', // Use 90% of width
+          width: '30%',
+          height: '30px',
           border: '2px dashed #333',
           cursor: 'pointer',
+          margin: '10px'
         }}
       >
         <Typography
           variant="h6"
           sx={{ fontWeight: 600, color: '#333' }}
         >
-          {code}
+          {planCode}
         </Typography>
         
       </Box>
