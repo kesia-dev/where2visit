@@ -36,6 +36,11 @@ export const AuthProvider = ({ children }) => {
     return !!userData?.token || false;
   };
 
+  // returns whether the user has verified their email
+  const isVerifiedUser = () => {
+    return !!userData?.verified || false;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -44,7 +49,8 @@ export const AuthProvider = ({ children }) => {
         clearAuthData,
         getTokenInfo,
         getUserInfo,
-        isLoggedIn
+        isLoggedIn,
+        isVerifiedUser
       }}
     >
       {children}
