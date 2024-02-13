@@ -79,3 +79,54 @@ exports.verifyEmail = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { nanoid } = await import('nanoid'); // to generate short unique IDs
+    const { email } = req.body;
+
+    // find user by email
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const resetCode = nanoid();
+    // update the user with resetCode
+    user.resetLink = resetCode;
+    user.resetLinkExpiration = Date.now() + 86400000 // 1 day for now;
+    await user.save();
+
+    const resetLink = `http://localhost:${process.env.PORT}/auth/reset-password/${resetLink}`;
+    const emailSubject = `Where2Visit - Password Reset`;
+    const emailBody = `Click the following link to reset your password: ${verificationUrl}`;;
+
+    await sendMailController.sendMail(user.email, emailSubject, emailBody);
+
+    return res.status(200).json({ message: 'Password reset email sent successfully.' });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { resetCode } = req.params;
+    const { newPassword } = req.body;
+
+    //find user by resetCode (resetLink property on schema)
+    const user = await User.findOne({ resetLink: resetCode });
+    if (!user || user.resetLinkExpiration < Date.now()) return res.status(404).json({ error: 'Invalid or expired reset code' });
+
+    // hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // update user
+    user.password = hashedPassword;
+    user.resetLink = null;
+    user.resetLinkExpiration = null;
+    await user.save();
+
+    return res.status(200).json({ message: 'Password reset successful.' });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
