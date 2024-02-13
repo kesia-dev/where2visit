@@ -61,11 +61,11 @@ const PlanningCard = () => {
 
   // Function will add user's selections to the selection array
   const handleSelection = (newSelection) => {
-    !selection.includes(newSelection) ? setSelection([...selection, newSelection]) : setSelection(prevSelection => (prevSelection));
+    selection.includes(newSelection) ? selection.filter((item) => item !== newSelection) : setSelection([...selection, newSelection]);
   };
 
-  const firstStepSelection = (selection) => {
-    handleSelection(selection);
+  const firstStepSelection = (newSelection) => {
+    handleSelection(newSelection);
     handleNext();
   };
 
@@ -209,7 +209,7 @@ const PlanningCard = () => {
                   fontSize={'14px'}
                 />
 
-                <RestaurantOptions />
+                <RestaurantOptions selection={selection} handleSelection={handleSelection} />
 
                 <div style={{ display: 'flex', alignItems: 'center' }} >
                   <button onClick={handlePrevious} className='backArrows'>
@@ -223,7 +223,7 @@ const PlanningCard = () => {
               </>
             )}
 
-            {step > 2 && (
+            {step === 3 && (
               <>
                 <Typography
                   variant="p"
@@ -237,18 +237,18 @@ const PlanningCard = () => {
                 />
 
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
-                <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                  {steps[step].buttonLabel1}
-                </Button>
                   <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                  {steps[step].buttonLabel2}
-                </Button>
+                    {steps[step].buttonLabel1}
+                  </Button>
                   <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                  {steps[step].buttonLabel3}
-                </Button>
-                <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                  {steps[step].buttonLabel4}
-                </Button>
+                    {steps[step].buttonLabel2}
+                  </Button>
+                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                    {steps[step].buttonLabel3}
+                  </Button>
+                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                    {steps[step].buttonLabel4}
+                  </Button>
                 </div>
 
 
@@ -263,6 +263,46 @@ const PlanningCard = () => {
                 </div>
               </>
             )}
+
+            {step === 4 && (
+              <>
+                <Typography
+                  variant="p"
+                  noWrap={false}
+                  dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
+                  align="center"
+                  marginTop={'2px'}
+                  fontFamily={'Inter'}
+                  fontWeight={400}
+                  fontSize={'14px'}
+                />
+
+                <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
+                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                    {steps[step].buttonLabel1}
+                  </Button>
+                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                    {steps[step].buttonLabel2}
+                  </Button>
+                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                    {steps[step].buttonLabel3}
+                  </Button>
+                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                    {steps[step].buttonLabel4}
+                  </Button>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }} >
+                  <button onClick={handlePrevious} className='backArrows'>
+                    <KeyboardDoubleArrowLeftIcon />
+                  </button>
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                    Create Plan
+                  </Button>
+                </div>
+
+              </>
+            )}
           </Box>
         </Paper>
       </Container>
@@ -272,3 +312,4 @@ const PlanningCard = () => {
 
 export default PlanningCard;
 
+ 

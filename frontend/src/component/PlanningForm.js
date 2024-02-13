@@ -21,17 +21,10 @@ const PlanningForm = () => {
       value: 0,
       label: '0 km',
     },
-    {
-      value: 5,
-      label: '5 km',
-    },
+    
     {
       value: 10,
       label: '10 km',
-    },
-    {
-      value: 15,
-      label: '15 km',
     },
     {
       value: 20,
@@ -55,18 +48,18 @@ const PlanningForm = () => {
 
         <FormControl defaultValue="" required className='inputForm'>
           <Label>Host Name</Label>
-          <StyledInput placeholder="Write your name here" />
+          <StyledInput />
           <HelperText />
         </FormControl>
 
         <FormControl defaultValue="" required className='inputForm'>
           <Label>Date of Event</Label>
-          <FormGroup>
+          {/* <FormGroup>
             <span className='formCheckbox'>
             <FormControlLabel control={<Checkbox  size="small" />} label="Now" />
             </span>
-          </FormGroup>
-          <DatePicker/>
+          </FormGroup> */}
+          <DatePicker className='dateTimePicker' onChange={onChange} placeholder='' />
           <HelperText />
         </FormControl>
 
@@ -74,17 +67,17 @@ const PlanningForm = () => {
           <Label>Time of Event</Label>
           <FormGroup>
             <span className='formCheckbox'>
-            <FormControlLabel control={<Checkbox  size="small" />} label="Now" />
+            {/* <FormControlLabel control={<Checkbox  size="small" />} label="Now" /> */}
             <FormControlLabel control={<Checkbox  size="small" />} label="All Day" />
             </span>
           </FormGroup>
-          <TimePicker use12Hours format="h:mm a" onChange={onChange} />
+          <TimePicker className='dateTimePicker' use12Hours format="h:mm a" onChange={onChange} placeholder='' />
           <HelperText />
         </FormControl>
         
         <FormControl defaultValue="" required className='inputForm'>
           <Label>Location</Label>
-          <StyledInput placeholder="Current Location" />
+          <StyledInput />
           <HelperText />
         </FormControl>
 

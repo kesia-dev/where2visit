@@ -3,7 +3,7 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 
 import "../styling/RestaurantOptions.css";
 
-const RestaurantOptions = () => {
+const RestaurantOptions = ({ selection, handleSelection }) => {
 
   const options = {
     cuisine: ["No preference", "French", "Italian", "Chinese", "Thai", "Greek", "Mexican", "Japanese", "Indian", "American"],
@@ -12,12 +12,18 @@ const RestaurantOptions = () => {
     rating: ["Any star rating", "⭐3+", "⭐4+", "⭐5"]
   };
 
+  const isSelected = (item) => selection.includes(item);
+
   const renderButtons = (items) => {
     return items.map((item, index) => (
       <Button
-      key={index}
+        key={index}
         variant="outlined"
-        style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }}
+        style={{
+          backgroundColor: isSelected(item) ? '#153a50' : '#aed3e9',
+          color: isSelected(item) ? '#aed3e9' : '#153a50',
+          border: 'none'
+        }}
         sx={{
           marginTop: 2,
           borderRadius: '10px',
@@ -25,6 +31,7 @@ const RestaurantOptions = () => {
           maxWidth: '40vw',
           minHeight: '5vh'
         }}
+        onClick={event => handleSelection(item)}
       >
         {item}
       </Button>
