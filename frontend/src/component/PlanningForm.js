@@ -7,6 +7,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import React from 'react';
+import { DatePicker, TimePicker } from 'antd';
 import '../styling/PlanningForm.css';
 
 const PlanningForm = () => {
@@ -38,6 +39,10 @@ const PlanningForm = () => {
     },
   ];
 
+  const onChange = (time, timeString) => {
+    console.log(time, timeString);
+  };
+
   return (
     <>
       <Box display="flex" flexDirection="column" alignItems="center" marginTop={3}>
@@ -61,7 +66,7 @@ const PlanningForm = () => {
             <FormControlLabel control={<Checkbox  size="small" />} label="Now" />
             </span>
           </FormGroup>
-          <StyledInput placeholder="dd/mm/yyyy" />
+          <DatePicker/>
           <HelperText />
         </FormControl>
 
@@ -73,7 +78,7 @@ const PlanningForm = () => {
             <FormControlLabel control={<Checkbox  size="small" />} label="All Day" />
             </span>
           </FormGroup>
-          <StyledInput placeholder="hh:mm" />
+          <TimePicker use12Hours format="h:mm a" onChange={onChange} />
           <HelperText />
         </FormControl>
         

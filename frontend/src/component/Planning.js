@@ -116,7 +116,7 @@ const PlanningCard = () => {
             {step === 0 && (
               <>
                 {/* Step 1 Content */}
-                <Button variant="outlined" onClick={event => firstStepSelection(steps[step].buttonLabel1)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }} >
+                <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel1)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }} >
                   {steps[step].buttonLabel1}
                 </Button>
 
