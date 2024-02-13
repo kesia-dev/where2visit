@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
@@ -92,6 +92,25 @@ const Login = () => {
           }}
         >
           Not a member yet? Sign-up
+        </Button>
+        <Button
+          component={Link}
+          to="/forgot-password"
+          variant="text"
+          align="center"
+          className="login"
+          sx={{
+            fontFamily: 'Inter',
+            fontSize: '16px',
+            fontWeight: 600,
+            lineHeight: '21px',
+            letterSpacing: '-0.32px',
+            textAlign: 'center',
+            color: '#3492C7',
+            textTransform: 'none'
+          }}
+        >
+          Actually, I forgot my password
         </Button>
       </Box>
     </Container>
