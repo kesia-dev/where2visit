@@ -4,24 +4,28 @@ const users = [
     userId: 'user1',
     username: 'Test1',
     email: 'test@testkhdhgscexample.com',
+    isVerified: true,
     roomsJoined: ['1'],
   },
   {
     userId: 'user2',
     username: 'Test2',
     email: 'test2@testkhdhgscexample.com',
+    isVerified: true,
     roomsJoined: ['2'],
   },
   {
     userId: 'user3',
     username: 'Test3',
     email: 'test3@testkhdhgscexample.com',
+    isVerified: true,
     roomsJoined: ['2'],
   },
   {
     userId: 'user4',
     username: 'Test4',
     email: 'test4@testkhdhgscexample.com',
+    isVerified: true,
     roomsJoined: ['1'],
   },
 ];
