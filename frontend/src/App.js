@@ -9,6 +9,7 @@ import Login from './component/Login.js';
 import SignUp from './component/SignUp.js';
 import { AuthProvider } from './context/AuthContext.js';
 import ForgotPassword from './component/ForgotPassword.js';
+import ResetPassword from './component/ResetPassword.js';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:resetCode" element={<ResetPassword />} />
           <Route path="/join-plan/:planCode" element={<JoinPlan />} />
           {/* Add other routes as needed */}
         </Routes>

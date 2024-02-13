@@ -97,7 +97,7 @@ exports.forgotPassword = async (req, res) => {
     user.resetLinkExpiration = Date.now() + 86400000 // 1 day for now;
     await user.save();
 
-    const resetUrl = `http://localhost:${process.env.PORT}/auth/reset-password/${resetCode}`;
+    const resetUrl = `http://localhost:3000/reset-password/${resetCode}`; // figure out a better way to point to the front-end app.
     const emailSubject = `Where2Visit - Password Reset`;
     const emailBody = `Click the following link to reset your password: ${resetUrl}`;;
 
@@ -112,14 +112,15 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   try {
     const { resetCode } = req.params;
-    const { newPassword } = req.body;
+    const { password } = req.body;
 
     //find user by resetCode (resetLink property on schema)
     const user = await User.findOne({ resetLink: resetCode });
     if (!user || user.resetLinkExpiration < Date.now()) return res.status(404).json({ error: 'Invalid or expired reset code' });
+    console.log("Found user:", user);
 
     // hash new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // update user
     user.password = hashedPassword;
