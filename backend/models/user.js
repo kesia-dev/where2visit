@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
     },
     emailVerificationLink: {
       type: String,
-      required: false,
-      unique: true,
+      required: true,
+      unique: false
     }
   });
   module.exports=mongoose.model('User', userSchema);

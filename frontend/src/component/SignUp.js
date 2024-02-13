@@ -17,8 +17,32 @@ const SignUp = () => {
     setPassword(event.target.value);
   };
 
-  const handleLoginAttempt = () => {
-    console.log(`Attempting SignUp on Username ${userName}, Email ${email}, and password ${password}`);
+  const handleSignUpAttempt = async () => {
+    try {
+      // check if all fields are present
+      if (!userName || !email || !password) {
+        throw new Error('Please fill in all fields.');
+      }
+
+      const signUpData = {
+        username: userName,
+        email,
+        password
+      };
+
+      const response = await fetch('http://localhost:4200/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(signUpData)
+      });
+
+      console.log(response);
+
+    } catch (error) {
+      console.log(`Error: ${error}`);
+    }
   };
 
   return (
@@ -38,7 +62,7 @@ const SignUp = () => {
             <TextField
               label="Username"
               margin="normal"
-              value={email}
+              value={userName}
               onChange={handleUserNameChange}
             />
           </Grid>
@@ -59,8 +83,8 @@ const SignUp = () => {
               onChange={handlePasswordChange}
             />
           </Grid>
-          <Button variant="contained" color="primary" onClick={handleLoginAttempt} mt={2}>
-            Login!
+          <Button variant="contained" color="primary" onClick={handleSignUpAttempt} mt={2}>
+            Sign-up!
           </Button>
         </Grid>
         <Button

@@ -7,17 +7,21 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET;
 exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    const { nanoid } = await import('nanoid'); // to generate short unique IDs for email verification links
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
       return res.status(409).json({ error: 'User already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationLink = nanoid();
 
     const user = new User({
       username,
       email,
-      password: hashedPassword
+      emailVerified: false,
+      password: hashedPassword,
+      emailVerificationLink: verificationLink,
     });
 
     await user.save();
