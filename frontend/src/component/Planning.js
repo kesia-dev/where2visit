@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTerm } from '../features/userOptions/optionsSlice';
 import { useNavigate } from 'react-router-dom';
 import { Container, Paper, MobileStepper, Box, Typography, Button } from '@mui/material';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
@@ -44,12 +46,12 @@ const PlanningCard = () => {
       buttonLabel3: "5",
       buttonLabel4: "Custom"
     },
-
   ];
 
+  // const term = useSelector(state => state.options.term);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = React.useState(0);
-  const [selection, setSelection] = useState([]);
 
   const handleNext = () => {
     setStep(prevStep => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
@@ -59,13 +61,9 @@ const PlanningCard = () => {
     setStep(3); // Skip to the last step
   };
 
-  // Function will add user's selections to the selection array
-  const handleSelection = (newSelection) => {
-    selection.includes(newSelection) ? selection.filter((item) => item !== newSelection) : setSelection([...selection, newSelection]);
-  };
 
   const firstStepSelection = (newSelection) => {
-    handleSelection(newSelection);
+    dispatch(addTerm(newSelection));
     handleNext();
   };
 
@@ -133,25 +131,25 @@ const PlanningCard = () => {
 
                 <Box display="flex" alignItems="center">
                   <div style={{ display: 'flex', flexDirection: 'column', margin: 15 }}>
-                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
+                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel2)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel2}
                     </Button>
-                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
+                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel3)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel3}
                     </Button>
-                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
+                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel4)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel4}
                     </Button>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', margin: 15 }}>
-                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
+                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel5)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel5}
                     </Button>
-                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
+                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel6)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel6}
                     </Button>
-                    <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
+                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel7)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
                       {steps[step].buttonLabel7}
                     </Button>
                   </div>
@@ -209,7 +207,7 @@ const PlanningCard = () => {
                   fontSize={'14px'}
                 />
 
-                <RestaurantOptions selection={selection} handleSelection={handleSelection} />
+                <RestaurantOptions />
 
                 <div style={{ display: 'flex', alignItems: 'center' }} >
                   <button onClick={handlePrevious} className='backArrows'>
@@ -291,7 +289,7 @@ const PlanningCard = () => {
                     {steps[step].buttonLabel4}
                   </Button>
                 </div>
-                
+
                 <div style={{ display: 'flex', alignItems: 'center' }} >
                   <button onClick={handlePrevious} className='backArrows'>
                     <KeyboardDoubleArrowLeftIcon />
@@ -312,4 +310,3 @@ const PlanningCard = () => {
 
 export default PlanningCard;
 
- 

@@ -1,44 +1,87 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addCuisine, addPrice, addRating } from "../features/userOptions/optionsSlice";
 import { Box, Button, Grid, Typography } from "@mui/material";
 
 import "../styling/RestaurantOptions.css";
 
-const RestaurantOptions = ({ selection, handleSelection }) => {
+const RestaurantOptions = () => {
+
+  const dispatch = useDispatch();
 
   const options = {
     cuisine: ["No preference", "French", "Italian", "Chinese", "Thai", "Greek", "Mexican", "Japanese", "Indian", "American"],
-    dietaryRestrictions: ["Keto", "Vegan", "Paleo", "Kosher", "Vegetarian", "Gluten Free"],
+    // dietaryRestrictions: ["Keto", "Vegan", "Paleo", "Kosher", "Vegetarian", "Gluten Free"],
     priceRange: ["< $50", "$50 - $100", "$100 - $150", "$150+"],
     rating: ["Any star rating", "⭐3+", "⭐4+", "⭐5"]
   };
 
-  const isSelected = (item) => selection.includes(item);
-
-  const renderButtons = (items) => {
-    return items.map((item, index) => (
-      <Button
-        key={index}
-        variant="outlined"
-        style={{
-          backgroundColor: isSelected(item) ? '#153a50' : '#aed3e9',
-          color: isSelected(item) ? '#aed3e9' : '#153a50',
-          border: 'none'
-        }}
-        sx={{
-          marginTop: 2,
-          borderRadius: '10px',
-          textTransform: 'none',
-          maxWidth: '40vw',
-          minHeight: '5vh'
-        }}
-        onClick={event => handleSelection(item)}
-      >
-        {item}
-      </Button>
-    ));
+  const states = {
+    cuisine: useSelector(state => state.options.cuisine),
+    price: useSelector(state => state.options.priceRange),
+    rating: useSelector(state => state.options.rating),
   };
 
-  const renderTwoColumns = (items) => {
+  console.log(states);
+
+  const renderButtons = (items, category) => {
+    const stateKeys = {
+      "Cuisine": "cuisine",
+      "Price Range (per person)": "price",
+      "Rating (Optional)": "rating",
+    };
+
+    //Add state according to category
+    const handleClick = (value) => {
+
+      const key = stateKeys[category]
+
+      switch (category) {
+        case "Cuisine":
+          dispatch(addCuisine(value));
+          break;
+        case "Price Range (per person)":
+          dispatch(addPrice(value));
+          break;
+        case "Rating (Optional)":
+          dispatch(addRating(value));
+          break;
+        default:
+          break;
+      }
+    };
+
+    return items.map((item, index) => {
+
+      const key = stateKeys[category];
+      const isAdded = Array.isArray(states[key]) ? states[key].includes(item) : states[key] === item;
+
+      return (
+        <Button
+          key={index}
+          variant="outlined"
+          style={{
+            backgroundColor: isAdded ? '#153a50' : '#aed3e9',
+            color: isAdded ? '#aed3e9' : '#153a50',
+            border: 'none'
+          }}
+          sx={{
+            marginTop: 2,
+            borderRadius: '10px',
+            textTransform: 'none',
+            maxWidth: '40vw',
+            minHeight: '5vh'
+          }}
+          onClick={() => handleClick(item)}
+        >
+          {item}
+        </Button>
+      );
+    });
+  };
+
+  //Render buttons in two columns
+  const renderTwoColumns = (items, category) => {
     const halfLength = Math.ceil(items.length / 2);
     const firstColumn = items.slice(0, halfLength);
     const secondColumn = items.slice(halfLength);
@@ -47,12 +90,12 @@ const RestaurantOptions = ({ selection, handleSelection }) => {
       <>
         <Grid item xs={6}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {renderButtons(firstColumn)}
+            {renderButtons(firstColumn, category)}
           </div>
         </Grid>
         <Grid item xs={6}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {renderButtons(secondColumn)}
+            {renderButtons(secondColumn, category)}
           </div>
         </Grid>
       </>
@@ -74,7 +117,7 @@ const RestaurantOptions = ({ selection, handleSelection }) => {
           </Typography>
         </Grid>
 
-        {renderTwoColumns(items)}
+        {renderTwoColumns(items, title)}
       </>
     );
   };
@@ -83,7 +126,7 @@ const RestaurantOptions = ({ selection, handleSelection }) => {
     <Box display="flex" flexDirection="column" alignItems="center" >
       <Grid container spacing={2}>
         {renderCategory("Cuisine", options.cuisine)}
-        {renderCategory("Dietary Restrictions (Optional)", options.dietaryRestrictions)}
+        {/* {renderCategory("Dietary Restrictions (Optional)", options.dietaryRestrictions)} */}
         {renderCategory("Price Range (per person)", options.priceRange)}
         {renderCategory("Rating (Optional)", options.rating)}
       </Grid>
