@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Typography,
@@ -8,33 +8,35 @@ import {
   Paper,
   Box,
   Grid,
+  Snackbar,
 } from '@mui/material';
 import copy from 'clipboard-copy';
 import PlanDetails from './PlanDetails';
-
-const roomName = 'Party Room';
-const hostName = 'Karen';
-const dateOfEvent = 'December 7, 2023';
-const timeOfEvent = '8 : 00 PM';
-const location = 'Current Location';
+import axios from 'axios';
+import MuiAlert from '@mui/material/Alert';
 
 const JoinPlan = () => {
-  const { planCode } = useParams();
+  const { planCode, planName, hostName, dateOfEvent, timeOfEvent, location } = useParams();
   const [userName, setUserName] = useState('');
-  const [copyFeedback, setCopyFeedback] = useState('');
+  const [planDetails, setPlanDetails] = useState(null);
+  const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
+  const [joinSnackbarOpen, setJoinSnackbarOpen] = useState(false);
+
+  const handleCloseCopySnackbar = () => {
+    setCopySnackbarOpen(false);
+  };
+
+  const handleCloseJoinSnackbar = () => {
+    setJoinSnackbarOpen(false);
+  };
 
   const handleCopyClick = () => {
     try {
       copy(planCode);
-      setCopyFeedback('Plan code copied to clipboard!');
+      setCopySnackbarOpen(true);
     } catch (error) {
       console.error('Error copying to clipboard:', error);
-      setCopyFeedback('Error copying to clipboard');
     }
-
-    setTimeout(() => {
-      setCopyFeedback('');
-    }, 2000);
   };
 
   const handleShareClick = () => {
@@ -52,36 +54,56 @@ const JoinPlan = () => {
     }
   };
 
-  const handleJoinPlanClick = async () => {
-    if (!planCode) {
-      alert('Please enter a valid planCode before joining the plan.');
+  const handleJoinPlanClick = () => {
+    if (!userName) {
+      setJoinSnackbarOpen(true);
       return;
+    } else {
+      console.log('Navigating to voting page');
     }
+  };
 
-    try {
-      const response = await fetch(`http://localhost:4200/api/checkplanCode/${planCode}`);
+  useEffect(() => {
+    const fetchPlanDetails = async () => {
+      if (!planCode) {
+        alert('Please enter a valid planCode before joining the plan.');
+        return;
+      }
 
-      if (response.ok) {
-        const data = await response.json();
+      try {
+        const response = await axios.get('http://localhost:4200/plan/get-plan', {
+          params: {
+            planCode: planCode,
+            planName: planName,
+            hostName: hostName,
+            dateOfEvent: dateOfEvent,
+            timeOfEvent: timeOfEvent,
+            location: location,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-        if (data.isValid) {
-          // Code is valid, you can navigate to the plan details page
-          console.log('User code:', planCode);
-          console.log('Plan details:', data.planDetails);
-        } else {
-          // Code is not valid, handle accordingly
-          alert('Invalid code. Please enter a valid code.');
-        }
-      } else {
-        // Handle non-OK response status
-        console.error('Error checking code:', response.statusText);
+        const data = response.data;
+
+        setPlanDetails({
+          planName: data.planName,
+          hostName: data.hostName,
+          dateOfEvent: data.dateOfEvent,
+          timeOfEvent: data.timeOfEvent,
+          location: data.location,
+        });
+
+        console.log('Plan details:', data.planName);
+      } catch (error) {
+        console.error('Error checking code:', error);
         alert('An error occurred while checking the code.');
       }
-    } catch (error) {
-      console.error('Error checking code:', error);
-      alert('An error occurred while checking the code.');
-    }
-  }
+    };
+
+    fetchPlanDetails();
+  }, [planCode, planName, hostName, dateOfEvent, timeOfEvent, location]);
 
   return (
     <Container component="main" maxWidth="md">
@@ -114,91 +136,100 @@ const JoinPlan = () => {
             variant="body1"
             sx={{ fontSize: '16px', color: '#333' }}
           >
-            <strong>Last Min Plansss</strong> hosted by Karen
+            <strong>{planDetails?.planName}</strong> hosted by {planDetails?.hostName}
           </Typography>
           <Typography
             variant="body2"
             sx={{ fontSize: '14px', color: '#666' }}
           >
-            December 7, 2023 @ 8PM
+            {planDetails?.dateOfEvent} @ {planDetails?.timeOfEvent}
           </Typography>
         </Box>
 
-        <Grid container spacing={2} justifyContent="center" alignItems="center" width={'80%'}>
-  <Grid item xs={12} md={6}>
-    {/* Invite message */}
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        textAlign: 'left',
-      }}
-    >
-      <Typography
-        variant="body2"
-        sx={{
-          fontSize: '12px',
-          color: 'black',
-        }}
-      >
-        <strong>Invite your friends!</strong>
-        <br />
-        <br /> Tap dotted box to copy your plan code
-      </Typography>
-
-      {/* Yellow box with code details */}
-      <Box
-        onClick={handleCopyClick}
-        sx={{
-          backgroundColor: '#C79E34',
-          padding: '5px',
-          borderRadius: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          width: '30%',
-          height: '30px',
-          border: '2px dashed #333',
-          cursor: 'pointer',
-          margin: '10px'
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 600, color: '#333' }}
+        <Grid
+          container
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
+          width={'80%'}
         >
-          {planCode}
-        </Typography>
-        
-      </Box>
-        {/* Share button inside the box */}
-        <Button
-          variant="outlined"
-          style={{
-            color: '#3492C7',
-            textTransform: 'none',
-            border: 'none',
-            marginTop: '10px', 
-          }}
-          onClick={handleShareClick}
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                textAlign: 'left',
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: '12px',
+                  color: 'black',
+                }}
+              >
+                <strong>Invite your friends!</strong>
+                <br />
+                <br /> Tap dotted box to copy your plan code
+              </Typography>
+
+              <Box
+                onClick={handleCopyClick}
+                sx={{
+                  backgroundColor: '#C79E34',
+                  padding: '5px',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  width: '30%',
+                  height: '30px',
+                  border: '2px dashed #333',
+                  cursor: 'pointer',
+                  margin: '10px',
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: '#333' }}
+                >
+                  {planCode}
+                </Typography>
+              </Box>
+              <Button
+                variant="outlined"
+                style={{
+                  color: '#3492C7',
+                  textTransform: 'none',
+                  border: 'none',
+                  marginTop: '10px',
+                }}
+                onClick={handleShareClick}
+              >
+                Share
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Snackbar
+          open={copySnackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseCopySnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          Share
-        </Button>
-    </Box>
-  </Grid>
-</Grid>
-
-
-        {copyFeedback && (
-          <Typography
-            variant="body2"
-            sx={{ fontSize: '14px', color: 'black', mt: 1 }}
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleCloseCopySnackbar}
+            severity="success"
+            sx={{ width: '100%' }}
           >
-            {copyFeedback}
-          </Typography>
-        )}
-        {/* Text box for the user to enter their name */}
+            Plan code copied to clipboard!
+          </MuiAlert>
+        </Snackbar>
+
         <TextField
           label="Enter Your Name"
           variant="outlined"
@@ -206,7 +237,7 @@ const JoinPlan = () => {
           onChange={(e) => setUserName(e.target.value)}
           sx={{
             mb: 2,
-            width: '50%',
+            width: '40%',
             marginTop: '20px',
             '& label': {
               color: 'black',
@@ -234,6 +265,24 @@ const JoinPlan = () => {
             Join Plan
           </Button>
         </div>
+
+        <Snackbar
+          open={joinSnackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseJoinSnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleCloseJoinSnackbar}
+            severity="error"
+            sx={{ width: '100%' }}
+          >
+            Please enter user name before joining the plan.
+          </MuiAlert>
+        </Snackbar>
+
         <Button
           variant="text"
           align="center"
@@ -254,18 +303,12 @@ const JoinPlan = () => {
         </Button>
 
         <PlanDetails
-    roomName={roomName}
-    hostName={hostName}
-    dateOfEvent={dateOfEvent}
-    timeOfEvent={timeOfEvent}
-    location={location}
-    sx={{
-      backgroundColor: 'black', // Background color for PlanDetails
-      padding: '15px',
-      borderRadius: '8px',
-      marginTop: '20px',
-    }}
-  />
+          planName={planDetails?.planName}
+          hostName={planDetails?.hostName}
+          dateOfEvent={planDetails?.dateOfEvent}
+          timeOfEvent={planDetails?.timeOfEvent}
+          location={planDetails?.location}
+        />
       </Paper>
     </Container>
   );
