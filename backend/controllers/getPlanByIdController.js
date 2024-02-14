@@ -20,7 +20,7 @@ exports.getPlanById = async (req, res) => {
       });
     }
 
-    const { planName, hostName, dateOfEvent, timeOfEvent, location } = plan;
+    const { planName, hostName, dateOfEvent, timeOfEvent, location, radius, cuisine, rating, priceRange, numberOfResults, numberOfMatches, restaurants } = plan;
 
     return res.json({
       planName,
@@ -28,6 +28,13 @@ exports.getPlanById = async (req, res) => {
       dateOfEvent,
       timeOfEvent,
       location,
+      radius,
+      cuisine,
+      rating,
+      priceRange,
+      numberOfResults,
+      numberOfMatches,
+      restaurants,
     });
   } catch (error) {
     return res.status(500).json({
