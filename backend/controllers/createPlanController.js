@@ -1,4 +1,5 @@
 const createPlan = require('../models/create-plan');
+const { fetchYelpRestaurants } = require('../services/yelpService');
 
 // generate room id
 const generateRoomId = () => {
@@ -33,19 +34,26 @@ exports.createPlan = async (req, res) => {
       rating,
       priceRange,
       numberOfResults,
-      numberOfMatches,
-      restaurants
+      numberOfMatches
     } = req.body;
-    const { latitude, longitude } = location;
+
+    // Fetch restaurant from Yelp based on user's input:
+    const restaurants = await fetchYelpRestaurants({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      radius,
+      categories: [cuisine],
+      limit: numberOfResults,
+      price: priceRange,
+      minRating: rating
+    });
+
     const newPlan = new createPlan({
       planName,
       hostName,
       dateOfEvent,
       timeOfEvent,
-      location: {
-        latitude,
-        longitude,
-      },
+      location,
       radius,
       cuisine,
       rating,
@@ -55,8 +63,8 @@ exports.createPlan = async (req, res) => {
       restaurants,
       roomId: getRoomId
     });
-    await newPlan.save();
 
+    await newPlan.save();
 
     return res.status(201).json({ 
       message: 'Plan registered successfully', 
