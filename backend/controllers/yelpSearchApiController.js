@@ -2,6 +2,7 @@ const axios = require('axios');
 require('dotenv').config();
 const { yelpFilterRestaurants } = require('../services/yelpRestaurantsFilterService');
 const { calculateDistance } = require('../services/distanceService');
+const { getGoogleStaticMap } = require('../services/mapService');
 
 const YELP_API_KEY = process.env.YELP_API_KEY;
 
@@ -47,17 +48,22 @@ exports.getYelpNearestRestaurants = async (req, res) => {
                 const restaurantLat = restaurant.coordinates.latitude;
                 const restaurantLng = restaurant.coordinates.longitude;
                 const distance = calculateDistance(userLat, userLng, restaurantLat, restaurantLng);
-            
+                const googleStaticMapUrl = getGoogleStaticMap(restaurantLat, restaurantLng, process.env.GOOGLE_MAPS_API_KEY);
+                const restaurantCategories = restaurant.categories.map(category => category.title);
+
                 return { 
                     id: restaurant.id,
                     name: restaurant.name,
-                    image_url: restaurant.image_url,
+                    mainImage_url: restaurant.image_url,
+                    googleStaticMapUrl,
                     rating: restaurant.rating,
                     review_count: restaurant.review_count,
                     price: restaurant.price,
+                    categories: restaurantCategories,
                     location: restaurant.location.address1,
                     city: restaurant.location.city,
                     distance: `${distance.toFixed(2)} km`,
+                    restaurantUrl: restaurant.url
                 };
             });
 
@@ -69,9 +75,12 @@ exports.getYelpNearestRestaurants = async (req, res) => {
                 `- Rating: ${restaurant.rating}\n` +
                 `- Review Count: ${restaurant.review_count}\n` +
                 `- Price Level: ${restaurant.price || 'N/A'}\n` +
+                `- Categories: ${restaurant.categories.join(', ')}\n` +
                 `- Address: ${restaurant.location}, ${restaurant.city}\n` +
                 `- Distance From You: ${restaurant.distance}\n` +
-                `- Restaurant Image URL: ${restaurant.image_url}\n`
+                `- Restaurant Image URL: ${restaurant.image_url}\n` +
+                `- Yelp Restaurant URL: ${restaurant.restaurantUrl}\n` +
+                `- Google Static Map URL: ${restaurant.googleStaticMapUrl}\n`
             );
         });
         // Return the results as JSON to the frontend in a structural format.
@@ -92,10 +101,12 @@ exports.getYelpNearestRestaurants = async (req, res) => {
             restaurants: results.map(restaurant => ({
                 id: restaurant.id,
                 name: restaurant.name,
-                image_url: restaurant.image_url,
+                mainImage_url: restaurant.image_url,
                 rating: restaurant.rating,
                 review_count: restaurant.review_count,
                 price: restaurant.price,
+                categories: restaurant.categories,
+                restaurantUrl: restaurant.restaurantUrl,
                 location: { 
                     address: restaurant.location.address1,
                     city: restaurant.location.city,
