@@ -1,5 +1,5 @@
 * {
-  box-sizing: none;
+  box-sizing: content-box;
   margin: 0;
   padding: 0;
 }
@@ -11,4 +11,5 @@ body {
   flex-direction: column;
   background: linear-gradient(179.94deg, rgba(0, 0, 0, 0) -0.4%, rgba(0, 0, 0, 0.6) 72.52%), linear-gradient(0deg, #3492C7, #3492C7);
   width: 100%;
+  overflow: scroll;
 }
