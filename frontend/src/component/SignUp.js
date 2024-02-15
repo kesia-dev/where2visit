@@ -54,7 +54,20 @@ const SignUp = () => {
         justifyContent="center"
         height="90vh" // Set the height of the container to full viewport height
       >
-        <Typography variant="h4" align="center" mt={3}>
+        <Typography
+          variant="h5"
+          align="center"
+          sx={{
+            fontFamily: 'Inter',
+            fontSize: '22px',
+            fontWeight: 700,
+            lineHeight: '28px',
+            letterSpacing: '0.35px',
+            textAlign: 'center',
+            color: 'white',
+            marginTop: '20px',
+          }}
+        >
           Sign-Up
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
@@ -83,10 +96,23 @@ const SignUp = () => {
               onChange={handlePasswordChange}
             />
           </Grid>
-          <Button variant="contained" color="primary" onClick={handleSignUpAttempt} mt={2}>
-            Sign-up!
-          </Button>
         </Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSignUpAttempt}
+          sx={{
+            width: '241px',
+            height: '53px',
+            marginTop: '15px',
+            padding: '16px 32px 16px 32px',
+            borderRadius: '100px',
+            gap: '20px',
+            textTransform: 'none',
+          }}
+        >
+          Sign-up!
+        </Button>
         <Button
           component={Link}
           to="/login"

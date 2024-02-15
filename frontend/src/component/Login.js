@@ -108,9 +108,6 @@ const Login = () => {
               onChange={handlePasswordChange}
             />
           </Grid>
-          {/* <Button variant="contained" color="primary" onClick={handleLoginAttempt} mt={2}>
-            Login!
-          </Button> */}
         </Grid>
         <Button
           variant="contained"
