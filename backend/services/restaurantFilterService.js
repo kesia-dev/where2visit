@@ -30,6 +30,10 @@ exports.filterRestaurants = (restaurants, { numberOfRestaurants, starRating, pri
     const meetsPriceLevel = priceLevelThreshold !== null ? restaurant.price_level <= priceLevelThreshold : true;
     return meetsRating && meetsPriceLevel;
   });
+
+  // Sort the restaurants based on the user's ratings count from highest to lowest. This is to ensure that the restaurants with the highest ratings count are returned first:
+  filteredRestaurants.sort((a, b) => b.user_ratings_total - a.user_ratings_total);
+
   // If the user selects a number of restaurants, return the number of restaurants based on the user's selection. Otherwise, return the default number of restaurants:
   if (numberOfRestaurants) {
     filteredRestaurants = filteredRestaurants.slice(0, maxNumberOfRestaurants);
