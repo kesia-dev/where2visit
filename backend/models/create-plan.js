@@ -40,7 +40,7 @@ const createPlanSchema = new mongoose.Schema({
     },
     rating: {
         type: Number,
-        required: true,
+        required: false,
     },
     priceRange: {
         type: String,
@@ -55,7 +55,10 @@ const createPlanSchema = new mongoose.Schema({
         required: true,
     },
     restaurants: [restaurantSchema],
-
+    roomId: {
+        type: String,
+        required: true,
+    }
 });
 
 module.exports = mongoose.model('Create-Plan', createPlanSchema);

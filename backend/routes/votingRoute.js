@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const createPlanController = require('../controllers/createPlanController');
+const votePlanController = require('../controllers/votingController');
 const authenticateToken = require('../middleware/tokenValidation');
 
-router.post('/create-plan', createPlanController.createPlan);
+router.post('/vote-restaurant', authenticateToken, votePlanController.vote);
 module.exports = router;
