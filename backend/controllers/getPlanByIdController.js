@@ -4,7 +4,7 @@ exports.getPlanById = async (req, res) => {
   try {
     const planCode = req.query.planCode;
 
-    console.log('plan code', planCode);
+    console.log('Fetching plan with code: ', planCode);
 
     if (!planCode) {
       return res.status(400).json({
@@ -22,6 +22,22 @@ exports.getPlanById = async (req, res) => {
 
     const { planName, hostName, dateOfEvent, timeOfEvent, location, radius, cuisine, rating, priceRange, numberOfResults, numberOfMatches, restaurants } = plan;
 
+    console.log(`Plan fetched successfully:`, {
+      planName,
+      hostName,
+      dateOfEvent,
+      timeOfEvent,
+      location,
+      radius,
+      cuisine,
+      rating,
+      priceRange,
+      numberOfResults,
+      numberOfMatches,
+      restaurants,
+      roomId: planCode,
+    });
+
     return res.json({
       planName,
       hostName,
@@ -35,8 +51,10 @@ exports.getPlanById = async (req, res) => {
       numberOfResults,
       numberOfMatches,
       restaurants,
+      roomId: planCode,
     });
   } catch (error) {
+    console.error(`Error fetching plan with code ${planCode}:`, error.message);
     return res.status(500).json({
       error: error.message,
     });
