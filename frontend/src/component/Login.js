@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
+import { Container, Box, Typography, Grid, TextField, Button, Snackbar, Alert } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 const Login = () => {
+  const alertInfoInitialState = { open: false, variant: "", info: "" }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [alertInfo, setAlertInfo] = useState(alertInfoInitialState);
   const { setAuthData } = useAuth();
   const navigate = useNavigate();
 
@@ -14,6 +16,22 @@ const Login = () => {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
+  };
+
+  const handleAlertChange = (info, variant) => {
+    if (!info && !variant) return setAlertInfo(alertInfoInitialState);
+    setAlertInfo({
+      open: true,
+      variant,
+      info
+    });
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    handleAlertChange();
   };
 
   const handleLoginAttempt = async () => {
@@ -33,10 +51,17 @@ const Login = () => {
         body: JSON.stringify(loginData)
       });
       const responseData = await response.json();
-      setAuthData(responseData); // insert responseData into applicationContext for ease-of-use
-      navigate(`/`);
+      console.log("responseData", responseData);
+      console.log("Response", response);
+      if (response.ok) {
+        handleAlertChange(`Welcome, ${responseData.userName}`, "success");
+        setAuthData(responseData); // insert responseData into applicationContext for ease-of-use
+        navigate(`/`);
+        return;
+      }
+      handleAlertChange(responseData.error, "error");
     } catch (error) {
-      console.log(error);
+      handleAlertChange(`${error}`, "error");
     }
   };
 
@@ -49,8 +74,21 @@ const Login = () => {
         justifyContent="center"
         height="90vh" // Set the height of the container to full viewport height
       >
-        <Typography variant="h4" align="center" mt={3}>
-          Sign-in
+        <Typography
+          variant="h5"
+          align="center"
+          sx={{
+            fontFamily: 'Inter',
+            fontSize: '22px',
+            fontWeight: 700,
+            lineHeight: '28px',
+            letterSpacing: '0.35px',
+            textAlign: 'center',
+            color: 'white',
+            marginTop: '20px',
+          }}
+        >
+          Sign-In
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
           <Grid item xs={8} sm={2}>
@@ -70,10 +108,26 @@ const Login = () => {
               onChange={handlePasswordChange}
             />
           </Grid>
-          <Button variant="contained" color="primary" onClick={handleLoginAttempt} mt={2}>
+          {/* <Button variant="contained" color="primary" onClick={handleLoginAttempt} mt={2}>
             Login!
-          </Button>
+          </Button> */}
         </Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleLoginAttempt}
+          sx={{
+            width: '241px',
+            height: '53px',
+            marginTop: '15px',
+            padding: '16px 32px 16px 32px',
+            borderRadius: '100px',
+            gap: '20px',
+            textTransform: 'none',
+          }}
+        >
+          Login
+        </Button>
         <Button
           component={Link}
           to="/sign-up"
@@ -113,6 +167,20 @@ const Login = () => {
           Actually, I forgot my password
         </Button>
       </Box>
+      <Snackbar
+        open={alertInfo.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ "vertical": "bottom", "horizontal": "center" }}>
+        <Alert
+          onClose={handleClose}
+          severity={alertInfo.variant}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {alertInfo.info}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
