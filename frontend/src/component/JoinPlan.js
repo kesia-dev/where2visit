@@ -95,7 +95,6 @@ const JoinPlan = () => {
           location: data.location,
         });
 
-        console.log('Plan details:', data.planName);
       } catch (error) {
         console.error('Error checking code:', error);
         alert('An error occurred while checking the code.');
@@ -106,11 +105,11 @@ const JoinPlan = () => {
   }, [planCode, planName, hostName, dateOfEvent, timeOfEvent, location]);
 
   return (
-    <Container component="main" maxWidth="md">
+    <Container component="main" width ="100%">
       <Paper
         elevation={3}
         sx={{
-          padding: '20px',
+          paddingTop: '20px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -125,22 +124,24 @@ const JoinPlan = () => {
             mb: 2,
             fontFamily: 'Inter',
             fontWeight: 700,
+            fontSize: '28px',
+            letterSpacing: '0.36px',
             color: 'rgba(52, 146, 199, 1)',
           }}
         >
           <strong>Welcome to the party!</strong>
         </Typography>
 
-        <Box mb={2}>
+        <Box mb={2} sc={{ width: '100%', textAlign: 'left' }}>
           <Typography
             variant="body1"
-            sx={{ fontSize: '16px', color: '#333' }}
+            sx={{ fontSize: '16px', color: '#333', width: '100%', textAlign: 'left', letterSpacing: '2px',  }}
           >
             <strong>{planDetails?.planName}</strong> hosted by {planDetails?.hostName}
           </Typography>
           <Typography
             variant="body2"
-            sx={{ fontSize: '14px', color: '#666' }}
+            sx={{ fontSize: '14px', color: '#666', letterSpacing: '0.5px', }}
           >
             {planDetails?.dateOfEvent} @ {planDetails?.timeOfEvent}
           </Typography>
@@ -177,7 +178,7 @@ const JoinPlan = () => {
               <Box
                 onClick={handleCopyClick}
                 sx={{
-                  backgroundColor: '#C79E34',
+                  backgroundColor: '#E9D8A3',
                   padding: '5px',
                   borderRadius: '8px',
                   display: 'flex',
@@ -217,14 +218,14 @@ const JoinPlan = () => {
           open={copySnackbarOpen}
           autoHideDuration={3000}
           onClose={handleCloseCopySnackbar}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
           <MuiAlert
             elevation={6}
             variant="filled"
             onClose={handleCloseCopySnackbar}
             severity="success"
-            sx={{ width: '100%' }}
+            sx={{ width: '80%' }}
           >
             Plan code copied to clipboard!
           </MuiAlert>
@@ -232,18 +233,14 @@ const JoinPlan = () => {
 
         <TextField
           label="Enter Your Name"
-          variant="outlined"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           sx={{
             mb: 2,
-            width: '40%',
+            width: '80%',
             marginTop: '20px',
             '& label': {
               color: 'black',
-            },
-            '& fieldset': {
-              borderColor: 'black',
             },
           }}
         />
@@ -253,12 +250,12 @@ const JoinPlan = () => {
             variant="contained"
             color="primary"
             sx={{
-              width: '100%',
               height: '53px',
               padding: '16px 32px 16px 32px',
               borderRadius: '100px',
               textTransform: 'none',
               marginTop: '20px',
+              width: '241px'
             }}
             onClick={handleJoinPlanClick}
           >

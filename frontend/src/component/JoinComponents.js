@@ -33,9 +33,6 @@ const JoinComponents = () => {
         const data = response.data;
           // If the code is valid, set isCodeValid to true
           setIsCodeValid(true);
-
-          console.log('res:', response.data)
-
           // Set the plan details to be passed to the JoinPlan component
           setPlanDetails({
             planName: data.planName,
@@ -91,7 +88,7 @@ const JoinComponents = () => {
             borderRadius: '20px',
             border: '1px solid #1C1C1C',
             gap: '12px',
-            background: '#C79E34',
+            background: '#E9D8AE',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
