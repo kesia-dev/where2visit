@@ -5,23 +5,25 @@ import { styled } from '@mui/system';
 import clsx from 'clsx';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
-import React from 'react';
 import { DatePicker, TimePicker } from 'antd';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
+
+import React, { useState } from 'react';
+import axios from 'axios'
 import '../styling/PlanningForm.css';
 
-const PlanningForm = () => {
+const PlanningForm = ({ formData, setFormData }) => {
 
-  function valuetext(value) {
+  const radiusValue = (value) => {
     return `${value} km`;
-  }
+  };
 
   const marks = [
     {
       value: 0,
       label: '0 km',
     },
-    
+
     {
       value: 10,
       label: '10 km',
@@ -32,9 +34,33 @@ const PlanningForm = () => {
     },
   ];
 
-  const onChange = (time, timeString) => {
-    console.log(time, timeString);
+  const [ city, setCity ] = useState('')
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(getCoordinates);
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
   };
+
+  const getCoordinates = (position) => {
+    setFormData({
+      ...formData, location: {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      }
+    });
+    getCity(position.coords);
+  };
+
+  const getCity = (coordinates) => {
+    const lat = coordinates.latitude;
+    const lon = coordinates.longitude;
+
+    axios(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&language=en&result_type=locality&key=AIzaSyBZRmFvwMfu5UEmA2QEUID_PHsuBJcIJMk`)
+      .then((response => setCity(response.data.results[0].formatted_address)));      
+  }
 
   return (
     <>
@@ -42,13 +68,13 @@ const PlanningForm = () => {
 
         <FormControl defaultValue="" required className='inputForm'>
           <Label>Plan Name</Label>
-          <StyledInput />
+          <StyledInput onChange={(e) => setFormData({ ...formData, planName: e.target.value })} />
           <HelperText />
         </FormControl>
 
         <FormControl defaultValue="" required className='inputForm'>
           <Label>Host Name</Label>
-          <StyledInput />
+          <StyledInput onChange={(e) => setFormData({ ...formData, hostName: e.target.value })} />
           <HelperText />
         </FormControl>
 
@@ -59,7 +85,7 @@ const PlanningForm = () => {
             <FormControlLabel control={<Checkbox  size="small" />} label="Now" />
             </span>
           </FormGroup> */}
-          <DatePicker className='dateTimePicker' onChange={onChange} placeholder='' />
+          <DatePicker className='dateTimePicker' onChange={(date, dateString) => setFormData({ ...formData, date: dateString })} placeholder='' />
           <HelperText />
         </FormControl>
 
@@ -67,18 +93,21 @@ const PlanningForm = () => {
           <Label>Time of Event</Label>
           <FormGroup>
             <span className='formCheckbox'>
-            {/* <FormControlLabel control={<Checkbox  size="small" />} label="Now" /> */}
-            <FormControlLabel control={<Checkbox  size="small" />} label="All Day" />
+              {/* <FormControlLabel control={<Checkbox  size="small" />} label="Now" /> */}
+              <FormControlLabel control={<Checkbox size="small" />} label="All Day" />
             </span>
           </FormGroup>
-          <TimePicker className='dateTimePicker' use12Hours format="h:mm a" onChange={onChange} placeholder='' />
+          <TimePicker className='dateTimePicker' use12Hours format="h:mm a" onChange={(time, timeString) => setFormData({ ...formData, time: timeString })} placeholder='' />
           <HelperText />
         </FormControl>
-        
-        <FormControl defaultValue="" required className='inputForm'>
+
+        <FormControl defaultValue="" required className='inputForm' value={city}>
           <Label>Location</Label>
-          <StyledInput />
+          <StyledInput onChange={(e) => setFormData({ ...formData, location: e.target.value })}  />
           <HelperText />
+          <button type="button" className='locationButton' onClick={getLocation}>
+            <MyLocationIcon />
+          </button>
         </FormControl>
 
         <FormControl defaultValue="" required className='inputForm'>
@@ -86,8 +115,8 @@ const PlanningForm = () => {
           <Slider
             aria-label="Distance Radius"
             defaultValue={5}
-            getAriaValueText={valuetext}
-            valueLabelDisplay="auto"            
+            getAriaValueText={radiusValue}
+            valueLabelDisplay="auto"
             step={5}
             marks={marks}
             min={0}
@@ -95,10 +124,13 @@ const PlanningForm = () => {
             sx={{
               width: 350
             }}
-          />     
+            onChange={(e, value) => setFormData({ ...formData, radius: value })}
+          />
         </FormControl>
 
       </Box>
+
+
     </>
   );
 };

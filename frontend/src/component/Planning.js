@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTerm } from '../features/userOptions/optionsSlice';
+import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius } from '../features/userOptions/optionsSlice';
 import { useNavigate } from 'react-router-dom';
 import { Container, Paper, MobileStepper, Box, Typography, Button } from '@mui/material';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
@@ -48,7 +48,9 @@ const PlanningCard = () => {
     },
   ];
 
-  // const term = useSelector(state => state.options.term);
+  //Term is the first selection the user makes
+  const term = useSelector(state => state.options.term);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = React.useState(0);
@@ -61,6 +63,10 @@ const PlanningCard = () => {
     setStep(3); // Skip to the last step
   };
 
+  // Function to check if a button is selected
+  const isAdded = (state, buttonLabel) => {
+    return state === buttonLabel;
+  };
 
   const firstStepSelection = (newSelection) => {
     dispatch(addTerm(newSelection));
@@ -75,6 +81,33 @@ const PlanningCard = () => {
   const handlePrevious = () => {
     setStep(prevStep => (prevStep > 0 ? prevStep - 1 : prevStep));
   };
+
+  const handleResults = (value) => dispatch(addNumberOfResults(value));
+  const handleMatches = (value) => dispatch(addNumberOfMatches(value));
+
+  const results = (state => state.options.results);
+  const matches = (state => state.options.matches);
+
+  const [formData, setFormData] = useState({
+    planName: '',
+    hostName: '',
+    date: '',
+    time: '',
+    location: '',
+    radius: 5,
+  });
+
+  const handleClickNextButtonForm = () => {
+    dispatch(addPlanName(formData.planName));
+    dispatch(addHostName(formData.hostName));
+    dispatch(addDate(formData.date));
+    dispatch(addTime(formData.time));
+    dispatch(addLocation(formData.location));
+    dispatch(addRadius(formData.radius * 1000)); // value multiplied by 1000 to convert from km to m
+    handleNext();
+    console.log('Next button clicked: ', formData);
+  };
+
 
   return (
     <>
@@ -114,7 +147,12 @@ const PlanningCard = () => {
             {step === 0 && (
               <>
                 {/* Step 1 Content */}
-                <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel1)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }} >
+                <Button
+                  variant="outlined"
+                  onClick={() => firstStepSelection(steps[step].buttonLabel1)}
+                  style={{ backgroundColor: isAdded(term, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50', border: 'none' }}
+                  sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                >
                   {steps[step].buttonLabel1}
                 </Button>
 
@@ -129,31 +167,40 @@ const PlanningCard = () => {
                   fontSize={'17px'}
                 />
 
-                <Box display="flex" alignItems="center">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', margin: 15 }}>
-                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel2)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
-                      {steps[step].buttonLabel2}
-                    </Button>
-                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel3)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
-                      {steps[step].buttonLabel3}
-                    </Button>
-                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel4)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
-                      {steps[step].buttonLabel4}
-                    </Button>
+                    {Object.keys(steps[step])
+                      .filter(key => key.startsWith('buttonLabel') && key !== 'buttonLabel1')
+                      .slice(0, 3)
+                      .map(key => (
+                        <Button
+                          key={key}
+                          variant="outlined"
+                          // onClick={() => firstStepSelection(steps[step][key])}
+                          style={{ backgroundColor: isAdded(steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(steps[step][key]) ? '#aed3e9' : '#153a50', border: 'none' }}
+                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                        >
+                          {steps[step][key]}
+                        </Button>
+                      ))}
                   </div>
-
                   <div style={{ display: 'flex', flexDirection: 'column', margin: 15 }}>
-                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel5)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
-                      {steps[step].buttonLabel5}
-                    </Button>
-                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel6)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
-                      {steps[step].buttonLabel6}
-                    </Button>
-                    <Button variant="outlined" onClick={() => firstStepSelection(steps[step].buttonLabel7)} style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minWidth: '40vw', minHeight: '5vh' }}>
-                      {steps[step].buttonLabel7}
-                    </Button>
+                    {Object.keys(steps[step])
+                      .filter(key => key.startsWith('buttonLabel'))
+                      .slice(4)
+                      .map(key => (
+                        <Button
+                          key={key}
+                          variant="outlined"
+                          // onClick={() => firstStepSelection(steps[step][key])}
+                          style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }}
+                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                        >
+                          {steps[step][key]}
+                        </Button>
+                      ))}
                   </div>
-                </Box>
+                </div>
 
                 <div style={{ display: 'flex', alignItems: 'center' }} >
                   <KeyboardDoubleArrowLeftIcon className='backArrows' />
@@ -168,7 +215,10 @@ const PlanningCard = () => {
 
             {step === 1 && (
               <>
-                <PlanningForm />
+                <PlanningForm
+                  formData={formData}
+                  setFormData={setFormData}
+                />
                 <div style={{ display: 'flex', alignItems: 'center' }} >
                   <button onClick={handlePrevious} className='backArrows'>
                     <KeyboardDoubleArrowLeftIcon />
@@ -214,7 +264,7 @@ const PlanningCard = () => {
                     <KeyboardDoubleArrowLeftIcon />
                   </button>
 
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleClickNextButtonForm} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
                     Next
                   </Button>
                 </div>
@@ -235,16 +285,16 @@ const PlanningCard = () => {
                 />
 
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
-                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  <Button variant="outlined" onClick={() => handleResults(steps[step].buttonLabel1)} style={{ backgroundColor: isAdded(results, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9', color: isAdded(results, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
                     {steps[step].buttonLabel1}
                   </Button>
-                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  <Button variant="outlined" onClick={() => handleResults(steps[step].buttonLabel2)} style={{ backgroundColor: isAdded(results, steps[step].buttonLabel2) ? '#153a50' : '#aed3e9', color: isAdded(results, steps[step].buttonLabel2) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
                     {steps[step].buttonLabel2}
                   </Button>
-                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  <Button variant="outlined" onClick={() => handleResults(steps[step].buttonLabel3)} style={{ backgroundColor: isAdded(results, steps[step].buttonLabel3) ? '#153a50' : '#aed3e9', color: isAdded(results, steps[step].buttonLabel3) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
                     {steps[step].buttonLabel3}
                   </Button>
-                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  <Button variant="outlined" onClick={() => handleResults(steps[step].buttonLabel4)} style={{ backgroundColor: isAdded(results, steps[step].buttonLabel4) ? '#153a50' : '#aed3e9', color: isAdded(results, steps[step].buttonLabel4) ? '#aed3e9' : '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
                     {steps[step].buttonLabel4}
                   </Button>
                 </div>
@@ -276,16 +326,28 @@ const PlanningCard = () => {
                 />
 
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
-                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  <Button variant="outlined" onClick={() => handleMatches(steps[step].buttonLabel1)}
+                    style={{
+                      backgroundColor: isAdded(matches, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9',
+                      color: isAdded(matches, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50',
+                      border: 'none',
+                      marginRight: '10px'
+                    }}
+                    sx={{
+                      marginTop: 2,
+                      borderRadius: '10px',
+                      textTransform: 'none',
+                      minHeight: '5vh'
+                    }}>
                     {steps[step].buttonLabel1}
                   </Button>
-                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  <Button variant="outlined" onClick={() => handleMatches(steps[step].buttonLabel2)} style={{ backgroundColor: isAdded(matches, steps[step].buttonLabel2) ? '#153a50' : '#aed3e9', color: isAdded(matches, steps[step].buttonLabel2) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
                     {steps[step].buttonLabel2}
                   </Button>
-                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  <Button variant="outlined" onClick={() => handleMatches(steps[step].buttonLabel3)} style={{ backgroundColor: isAdded(matches, steps[step].buttonLabel3) ? '#153a50' : '#aed3e9', color: isAdded(matches, steps[step].buttonLabel3) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
                     {steps[step].buttonLabel3}
                   </Button>
-                  <Button variant="outlined" style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
+                  <Button variant="outlined" onClick={() => handleMatches(steps[step].buttonLabel4)} style={{ backgroundColor: isAdded(matches, steps[step].buttonLabel4) ? '#153a50' : '#aed3e9', color: isAdded(matches, steps[step].buttonLabel4) ? '#aed3e9' : '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
                     {steps[step].buttonLabel4}
                   </Button>
                 </div>

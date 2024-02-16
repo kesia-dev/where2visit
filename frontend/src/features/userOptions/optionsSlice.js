@@ -8,7 +8,7 @@ const initialState = {
   timeOfEvent: 0,
   location: {
     latitude: 0,
-    longitute: 0
+    longitude: 0
   },
   radius: 0,
   cuisine: [],
@@ -45,6 +45,7 @@ const optionsSlice = createSlice({
     },
     addCuisine: (state, action) => {
       state.cuisine = [action.payload];
+
     },
     addRating: (state, action) => {
       state.rating = action.payload;

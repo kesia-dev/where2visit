@@ -33,9 +33,6 @@ const RestaurantOptions = () => {
 
     //Add state according to category
     const handleClick = (value) => {
-
-      const key = stateKeys[category]
-
       switch (category) {
         case "Cuisine":
           dispatch(addCuisine(value));
