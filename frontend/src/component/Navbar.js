@@ -1,19 +1,31 @@
 // Navbar.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar, Popover } from '@mui/material';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
+import useAlert from '../hook/useAlert';
 
 const Navbar = () => {
   const { isLoggedIn, clearAuthData, userData } = useAuth();
+  const { handleAlertChange, AlertComponent } = useAlert();
+  const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const alertInfo = queryParams.get('alert_info');
+    const alertType = queryParams.get('alert_type');
+
+    if (alertInfo && alertType) {
+      handleAlertChange(alertInfo, alertType);
+    }
+  }, [location.search]);
 
   const handleMenuIconClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -116,6 +128,7 @@ const Navbar = () => {
             Join a Plan
           </MenuItem>
         </Menu>
+        { AlertComponent }
       </Toolbar>
     </AppBar>
   );
