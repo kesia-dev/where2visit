@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
+import useAlert from '../hook/useAlert';
 const SignUp = () => {
+
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { handleAlertChange, AlertComponent } = useAlert();
+  const navigate = useNavigate();
 
   const handleUserNameChange = (event) => {
     setUserName(event.target.value);
@@ -38,10 +42,13 @@ const SignUp = () => {
         body: JSON.stringify(signUpData)
       });
 
-      console.log(response);
+      if (response.ok) {
+        handleAlertChange(`Welcome, ${userName}! You will be redirected to the login page now.`);
+        setTimeout(() => { navigate('/login') }, 2000)
+      }
 
     } catch (error) {
-      console.log(`Error: ${error}`);
+      handleAlertChange(`${error}`, "error");
     }
   };
 
@@ -133,6 +140,7 @@ const SignUp = () => {
           Already a member? Log-in instead!
         </Button>
       </Box>
+      {AlertComponent}
     </Container>
   );
 };

@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button, Snackbar, Alert } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
+import useAlert from '../hook/useAlert';
+
 const Login = () => {
-  const alertInfoInitialState = { open: false, variant: "", info: "" }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [alertInfo, setAlertInfo] = useState(alertInfoInitialState);
   const { setAuthData } = useAuth();
+  const { handleAlertChange, AlertComponent } = useAlert();
   const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
@@ -16,22 +17,6 @@ const Login = () => {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-  };
-
-  const handleAlertChange = (info, variant) => {
-    if (!info && !variant) return setAlertInfo(alertInfoInitialState);
-    setAlertInfo({
-      open: true,
-      variant,
-      info
-    });
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    handleAlertChange();
   };
 
   const handleLoginAttempt = async () => {
@@ -164,20 +149,7 @@ const Login = () => {
           Actually, I forgot my password
         </Button>
       </Box>
-      <Snackbar
-        open={alertInfo.open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        anchorOrigin={{ "vertical": "bottom", "horizontal": "center" }}>
-        <Alert
-          onClose={handleClose}
-          severity={alertInfo.variant}
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
-          {alertInfo.info}
-        </Alert>
-      </Snackbar>
+      { AlertComponent }
     </Container>
   );
 };

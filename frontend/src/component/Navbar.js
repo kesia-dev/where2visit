@@ -101,16 +101,6 @@ const Navbar = () => {
               </Button>
             </div>
           )
-          // <Button
-          // color="inherit"
-          // sx={{ textTransform: 'none' }}
-          // onClick={() => {
-          //   clearAuthData()
-          //   navigate(`/`);
-          // }}
-          // >
-          //   Logout
-          // </Button>
         }
         <Menu
           id="menu"
