@@ -66,6 +66,7 @@ const ResetPassword = () => {
           <Grid item xs={8} sm={2}>
             <TextField
               label="New Password"
+              type='password'
               margin="normal"
               value={password}
               onChange={handlePasswordChange}
