@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
+import useAlert from '../hook/useAlert';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
+  const { handleAlertChange, AlertComponent } = useAlert();
+
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
+
   const handleForgotPassword = async () => {
     try {
       // check if user typed in an email
@@ -20,10 +24,11 @@ const ForgotPassword = () => {
         },
         body: JSON.stringify(emailInfo)
       });
-      const responseData = await response.json();
-      if (responseData.status === 200) alert('Password reset requested. Please check your email.');
+      if (response.ok) {
+        handleAlertChange("Password recovery requested. An email will be sent if the user is found.", "info");
+      }
     } catch (error) {
-      console.log(error);
+      handleAlertChange(`${error}`, "error");
     }
   };
   return (
@@ -35,7 +40,20 @@ const ForgotPassword = () => {
         justifyContent="center"
         height="90vh" // Set the height of the container to full viewport height
       >
-        <Typography variant="h4" align="center" mt={3}>
+        <Typography
+          variant="h5"
+          align="center"
+          sx={{
+            fontFamily: 'Inter',
+            fontSize: '22px',
+            fontWeight: 700,
+            lineHeight: '28px',
+            letterSpacing: '0.35px',
+            textAlign: 'center',
+            color: 'white',
+            marginTop: '20px',
+          }}
+        >
           Password Recovery
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
@@ -47,10 +65,19 @@ const ForgotPassword = () => {
               onChange={handleEmailChange}
             />
           </Grid>
-          <Button variant="contained" color="primary" onClick={handleForgotPassword} mt={2}>
+        </Grid>
+          <Button variant="contained" color="primary" onClick={handleForgotPassword} mt={2} sx={{
+            width: '241px',
+            height: '53px',
+            marginTop: '15px',
+            padding: '16px 32px 16px 32px',
+            borderRadius: '100px',
+            gap: '20px',
+            textTransform: 'none',
+          }}>
             Reset Password
           </Button>
-        </Grid>
+          { AlertComponent }
       </Box>
     </Container>
   );

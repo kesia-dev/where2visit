@@ -98,6 +98,10 @@ const Navbar = () => {
                   Username: {userData?.userName || ''}
                   <br />
                   Email: {userData?.email || ''}
+                  <br />
+                  { userData?.verified ?
+                  'Email is verified' : 'Email not verified'
+                  }
                   {/* Add more user information here */}
                 </Typography>
               </Popover>

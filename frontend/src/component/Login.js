@@ -39,7 +39,7 @@ const Login = () => {
       console.log("responseData", responseData);
       console.log("Response", response);
       if (response.ok) {
-        handleAlertChange(`Welcome, ${responseData.userName}`, "success");
+        handleAlertChange(`Welcome, ${responseData.userName}`, "info");
         setAuthData(responseData); // insert responseData into applicationContext for ease-of-use
         navigate(`/`);
         return;

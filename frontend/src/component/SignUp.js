@@ -43,7 +43,7 @@ const SignUp = () => {
       });
 
       if (response.ok) {
-        handleAlertChange(`Welcome, ${userName}! You will be redirected to the login page now.`);
+        handleAlertChange(`Welcome, ${userName}! You will be redirected to the login page now.`, 'info');
         setTimeout(() => { navigate('/login') }, 2000)
       }
 

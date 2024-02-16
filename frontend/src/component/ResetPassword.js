@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
+import useAlert from '../hook/useAlert';
 
 const ResetPassword = () => {
   const { resetCode } = useParams();
+  const { handleAlertChange, AlertComponent } = useAlert();
   const [password, setPassword] = useState('');
 
   const handlePasswordChange = (event) => {
@@ -26,8 +28,13 @@ const ResetPassword = () => {
         body: JSON.stringify(resetData)
       });
       const responseData = await response.json();
+      if (response.ok) {
+        handleAlertChange("Password reset successful. Try logging in now.", "info");
+        return;
+      }
+      handleAlertChange(`${responseData.error}`, "error");
     } catch (error) {
-      console.log(error);
+      handleAlertChange(`${error}`, "error");
     }
   };
   return (
@@ -39,7 +46,20 @@ const ResetPassword = () => {
         justifyContent="center"
         height="90vh" // Set the height of the container to full viewport height
       >
-        <Typography variant="h4" align="center" mt={3}>
+        <Typography
+          variant="h5"
+          align="center"
+          sx={{
+            fontFamily: 'Inter',
+            fontSize: '22px',
+            fontWeight: 700,
+            lineHeight: '28px',
+            letterSpacing: '0.35px',
+            textAlign: 'center',
+            color: 'white',
+            marginTop: '20px',
+          }}
+        >
           New password
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
@@ -50,12 +70,21 @@ const ResetPassword = () => {
               value={password}
               onChange={handlePasswordChange}
             />
-          </Grid>          
-          <Button variant="contained" color="primary" onClick={handleResetPassword} mt={2}>
+          </Grid>
+        </Grid>
+          <Button variant="contained" color="primary" onClick={handleResetPassword} mt={2} sx={{
+            width: '241px',
+            height: '53px',
+            marginTop: '15px',
+            padding: '16px 32px 16px 32px',
+            borderRadius: '100px',
+            gap: '20px',
+            textTransform: 'none',
+          }}>
             Save
           </Button>
-        </Grid>        
       </Box>
+      { AlertComponent }
     </Container>
   );
 };
