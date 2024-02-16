@@ -6,6 +6,12 @@ const useAlert = () => {
   const alertInfoInitialState = { open: false, variant: '', info: '' };
   const [alertInfo, setAlertInfo] = useState(alertInfoInitialState);
 
+  /**
+   *
+   * @param {string} info the text to be exhibited in the alert
+   * @param {string} variant 'success', 'info', 'alert', 'error'. Determines the color used for the alert theme.
+   * @returns {void}
+   */
   const handleAlertChange = (info, variant) => {
     if (!info && !variant) return setAlertInfo(alertInfoInitialState); // if no params passed, hide alert.
     setAlertInfo({
