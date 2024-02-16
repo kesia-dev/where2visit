@@ -105,7 +105,7 @@ const JoinPlan = () => {
   }, [planCode, planName, hostName, dateOfEvent, timeOfEvent, location]);
 
   return (
-    <Container component="main" width ="100%">
+    <Container component="main" >
       <Paper
         elevation={3}
         sx={{
@@ -115,6 +115,9 @@ const JoinPlan = () => {
           alignItems: 'center',
           marginTop: '40px',
           backgroundColor: '#F2F2F2',
+          width: "400px",  
+          marginRight: 'auto',
+          marginLeft: 'auto',
         }}
       >
         <Typography
@@ -132,16 +135,16 @@ const JoinPlan = () => {
           <strong>Welcome to the party!</strong>
         </Typography>
 
-        <Box mb={2} sc={{ width: '100%', textAlign: 'left' }}>
+        <Box mb={2} sc={{ width: '386px', textAlign: 'left' }}>
           <Typography
             variant="body1"
-            sx={{ fontSize: '16px', color: '#333', width: '100%', textAlign: 'left', letterSpacing: '2px',  }}
+            sx={{ fontSize: '16px', color: '#333', width: '386px', textAlign: 'left', letterSpacing: '1.3px', marginLeft: '22px'  }}
           >
             <strong>{planDetails?.planName}</strong> hosted by {planDetails?.hostName}
           </Typography>
           <Typography
             variant="body2"
-            sx={{ fontSize: '14px', color: '#666', letterSpacing: '0.5px', }}
+            sx={{ fontSize: '14px', color: '#666', letterSpacing: '0.5px', marginLeft: '22px' }}
           >
             {planDetails?.dateOfEvent} @ {planDetails?.timeOfEvent}
           </Typography>
@@ -152,28 +155,52 @@ const JoinPlan = () => {
           spacing={2}
           justifyContent="center"
           alignItems="center"
-          width={'80%'}
+          sx={{
+            
+            width: '386px'
+          }}
         >
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={12}>
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
                 textAlign: 'left',
+                justifyContent:"center",
+                width: '100%'
               }}
             >
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: '12px',
-                  color: 'black',
-                }}
-              >
-                <strong>Invite your friends!</strong>
-                <br />
-                <br /> Tap dotted box to copy your plan code
-              </Typography>
+  <Box
+  sx={{
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'Left',
+    width: '328px'
+  }}
+>
+  <Typography
+    variant="body2"
+    sx={{
+      fontSize: '16px',
+      color: 'black',
+      width: '170px'
+    }}
+  >
+    <strong>Invite your friends!</strong>
+  </Typography>
+
+  <Typography
+    variant="body2"
+    sx={{
+      fontSize: '16px',
+      color: 'black',
+      letterSpacing: '-0.32px'
+    }}
+  >
+    <br /> Tap dotted box to copy your plan code
+  </Typography>
+</Box>
 
               <Box
                 onClick={handleCopyClick}
@@ -184,7 +211,6 @@ const JoinPlan = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  width: '30%',
                   height: '30px',
                   border: '2px dashed #333',
                   cursor: 'pointer',
@@ -218,14 +244,14 @@ const JoinPlan = () => {
           open={copySnackbarOpen}
           autoHideDuration={3000}
           onClose={handleCloseCopySnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <MuiAlert
             elevation={6}
             variant="filled"
             onClose={handleCloseCopySnackbar}
             severity="success"
-            sx={{ width: '80%' }}
+            sx={{ width: '100%' }}
           >
             Plan code copied to clipboard!
           </MuiAlert>
@@ -237,7 +263,7 @@ const JoinPlan = () => {
           onChange={(e) => setUserName(e.target.value)}
           sx={{
             mb: 2,
-            width: '80%',
+            width: '386px',
             marginTop: '20px',
             '& label': {
               color: 'black',
@@ -267,14 +293,14 @@ const JoinPlan = () => {
           open={joinSnackbarOpen}
           autoHideDuration={3000}
           onClose={handleCloseJoinSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <MuiAlert
             elevation={6}
             variant="filled"
             onClose={handleCloseJoinSnackbar}
             severity="error"
-            sx={{ width: '80%' }}
+            sx={{ width: '100%' }}
           >
             Please enter your name before joining.
           </MuiAlert>
