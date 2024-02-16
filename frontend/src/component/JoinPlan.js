@@ -267,16 +267,16 @@ const JoinPlan = () => {
           open={joinSnackbarOpen}
           autoHideDuration={3000}
           onClose={handleCloseJoinSnackbar}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
           <MuiAlert
             elevation={6}
             variant="filled"
             onClose={handleCloseJoinSnackbar}
             severity="error"
-            sx={{ width: '100%' }}
+            sx={{ width: '80%' }}
           >
-            Please enter user name before joining the plan.
+            Please enter your name before joining.
           </MuiAlert>
         </Snackbar>
 
