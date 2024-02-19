@@ -9,10 +9,8 @@
   position: relative;
 }
 
-.skipPreferences {
-  position: absolute;
-  right: 0px;
-  top: -54px
+.title-color{
+  color: #3492c7;
 }
 
 @media (min-width: 600px) {
@@ -22,12 +20,6 @@
     text-transform: none;
     min-width: 15vw;
     min-height: 5vh;
-  }
-
-  .skipPreferences {
-    position: absolute;
-      right: -50px;
-      top: -54px
   }
 
 }

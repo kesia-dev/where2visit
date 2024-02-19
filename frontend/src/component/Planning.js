@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius } from '../features/userOptions/optionsSlice';
+import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius, addCuisine, addPrice, addRating } from '../features/userOptions/optionsSlice';
 import { useNavigate } from 'react-router-dom';
 import { Container, Paper, MobileStepper, Box, Typography, Button } from '@mui/material';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
@@ -8,6 +8,7 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import "../styling/Planning.css";
 import PlanningForm from './PlanningForm';
 import RestaurantOptions from './RestaurantOptions';
+import axios from 'axios';
 
 const PlanningCard = () => {
   const steps = [
@@ -30,7 +31,7 @@ const PlanningCard = () => {
       subtitle: "Select all that apply"
     },
     {
-      title: "How many results do you want?",
+      title: `How many <span class="title-color"> results </span> do you want?`,
       subtitle: "Results refer to the number of options you would like to choose from.",
       buttonLabel1: "3",
       buttonLabel2: "5",
@@ -39,7 +40,7 @@ const PlanningCard = () => {
 
     },
     {
-      title: "How many matches do you want?",
+      title: `How many <span class="title-color"> matches </span> do you want?`,
       subtitle: "Matches refer to the number of restaurants your group has agreed on.",
       buttonLabel1: "1",
       buttonLabel2: "3",
@@ -48,8 +49,12 @@ const PlanningCard = () => {
     },
   ];
 
+  const options = useSelector(state => state.options);
+
   //Term is the first selection the user makes
   const term = useSelector(state => state.options.term);
+  const results = useSelector(state => state.options.numberOfResults);
+  const matches = useSelector(state => state.options.numberOfMatches);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,9 +64,6 @@ const PlanningCard = () => {
     setStep(prevStep => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
   };
 
-  const handleSkip = () => {
-    setStep(3); // Skip to the last step
-  };
 
   // Function to check if a button is selected
   const isAdded = (state, buttonLabel) => {
@@ -82,11 +84,36 @@ const PlanningCard = () => {
     setStep(prevStep => (prevStep > 0 ? prevStep - 1 : prevStep));
   };
 
-  const handleResults = (value) => dispatch(addNumberOfResults(value));
+  const handleResults = (value) => {
+    dispatch(addNumberOfResults(value))
+    console.log(results)
+  };
   const handleMatches = (value) => dispatch(addNumberOfMatches(value));
 
-  const results = (state => state.options.results);
-  const matches = (state => state.options.matches);
+  const renderFinalStepButtons = (buttonLabels, onClickHandler, state) => {
+    return buttonLabels.map((label, index) => (
+      <Button
+        key={index}
+        variant="outlined"
+        onClick={() => onClickHandler(label)}
+        style={{
+          backgroundColor: isAdded(state, label) ? '#153a50' : '#aed3e9',
+          color: isAdded(state, label) ? '#aed3e9' : '#153a50',
+          border: 'none',
+          marginRight: '10px',
+        }}
+        sx={{
+          marginTop: 2,
+          borderRadius: '10px',
+          textTransform: 'none',
+          minHeight: '5vh',
+        }}
+      >
+        {label}
+      </Button>
+    ));
+  };
+
 
   const [formData, setFormData] = useState({
     planName: '',
@@ -108,6 +135,22 @@ const PlanningCard = () => {
     console.log('Next button clicked: ', formData);
   };
 
+  const completePlan = async () => {
+    console.log("Plan complete: Save info to DB and do API call");
+    console.log("States to be shared: ", options);
+
+    try {
+      // API call to save details to DB and search restaurants
+      await axios.post('/create-plan', options);
+    }
+    catch (error) {
+      console.error('Error saving plan to DB: ', error);
+    }
+
+    // navigate('/restaurant-details/:code'); // navigate to Poll-options/Voting screen
+    navigate('/');
+
+  };
 
   return (
     <>
@@ -140,9 +183,9 @@ const PlanningCard = () => {
                 height: '34px',
                 color: 'black',
               }}
-            >
-              {steps[step].title}
-            </Typography>
+              dangerouslySetInnerHTML={{ __html: steps[step].title }}
+            />
+
 
             {step === 0 && (
               <>
@@ -225,7 +268,19 @@ const PlanningCard = () => {
                   </button>
 
 
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ backgroundColor: '#3492c7' }}
+                    onClick={handleClickNextButtonForm}
+                    sx={{
+                      margin: 5,
+                      marginLeft: 1,
+                      borderRadius: '100px',
+                      textTransform: 'none',
+                      minWidth: '20vw'
+                    }}
+                  >
                     Next
                   </Button>
                 </div>
@@ -234,18 +289,6 @@ const PlanningCard = () => {
 
             {step === 2 && (
               <>
-                <Typography
-                  variant="body2"
-                  sx={{ textAlign: 'center', marginTop: 2, cursor: 'pointer' }}
-                  onClick={handleSkip}
-                  fontSize={'15px'}
-                  fontFamily={'Inter'}
-                  color="primary"
-                  className='skipPreferences'
-                >
-                  Skip
-                </Typography>
-
                 <Typography
                   variant="p"
                   noWrap={false}
@@ -285,26 +328,22 @@ const PlanningCard = () => {
                 />
 
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
-                  <Button variant="outlined" onClick={() => handleResults(steps[step].buttonLabel1)} style={{ backgroundColor: isAdded(results, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9', color: isAdded(results, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                    {steps[step].buttonLabel1}
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleResults(steps[step].buttonLabel2)} style={{ backgroundColor: isAdded(results, steps[step].buttonLabel2) ? '#153a50' : '#aed3e9', color: isAdded(results, steps[step].buttonLabel2) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                    {steps[step].buttonLabel2}
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleResults(steps[step].buttonLabel3)} style={{ backgroundColor: isAdded(results, steps[step].buttonLabel3) ? '#153a50' : '#aed3e9', color: isAdded(results, steps[step].buttonLabel3) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                    {steps[step].buttonLabel3}
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleResults(steps[step].buttonLabel4)} style={{ backgroundColor: isAdded(results, steps[step].buttonLabel4) ? '#153a50' : '#aed3e9', color: isAdded(results, steps[step].buttonLabel4) ? '#aed3e9' : '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                    {steps[step].buttonLabel4}
-                  </Button>
+                  {renderFinalStepButtons(
+                    [
+                      steps[step].buttonLabel1,
+                      steps[step].buttonLabel2,
+                      steps[step].buttonLabel3,
+                      steps[step].buttonLabel4,
+                    ],
+                    handleResults,
+                    results
+                  )}
                 </div>
-
 
                 <div style={{ display: 'flex', alignItems: 'center' }} >
                   <button onClick={handlePrevious} className='backArrows'>
                     <KeyboardDoubleArrowLeftIcon />
                   </button>
-
                   <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
                     Next
                   </Button>
@@ -326,41 +365,26 @@ const PlanningCard = () => {
                 />
 
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
-                  <Button variant="outlined" onClick={() => handleMatches(steps[step].buttonLabel1)}
-                    style={{
-                      backgroundColor: isAdded(matches, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9',
-                      color: isAdded(matches, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50',
-                      border: 'none',
-                      marginRight: '10px'
-                    }}
-                    sx={{
-                      marginTop: 2,
-                      borderRadius: '10px',
-                      textTransform: 'none',
-                      minHeight: '5vh'
-                    }}>
-                    {steps[step].buttonLabel1}
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleMatches(steps[step].buttonLabel2)} style={{ backgroundColor: isAdded(matches, steps[step].buttonLabel2) ? '#153a50' : '#aed3e9', color: isAdded(matches, steps[step].buttonLabel2) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                    {steps[step].buttonLabel2}
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleMatches(steps[step].buttonLabel3)} style={{ backgroundColor: isAdded(matches, steps[step].buttonLabel3) ? '#153a50' : '#aed3e9', color: isAdded(matches, steps[step].buttonLabel3) ? '#aed3e9' : '#153a50', border: 'none', marginRight: '10px' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                    {steps[step].buttonLabel3}
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleMatches(steps[step].buttonLabel4)} style={{ backgroundColor: isAdded(matches, steps[step].buttonLabel4) ? '#153a50' : '#aed3e9', color: isAdded(matches, steps[step].buttonLabel4) ? '#aed3e9' : '#153a50', border: 'none' }} sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', minHeight: '5vh' }}>
-                    {steps[step].buttonLabel4}
-                  </Button>
+                  {renderFinalStepButtons(
+                    [
+                      steps[step].buttonLabel1,
+                      steps[step].buttonLabel2,
+                      steps[step].buttonLabel3,
+                      steps[step].buttonLabel4,
+                    ],
+                    handleMatches,
+                    matches
+                  )}
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center' }} >
                   <button onClick={handlePrevious} className='backArrows'>
                     <KeyboardDoubleArrowLeftIcon />
                   </button>
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={completePlan} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
                     Create Plan
                   </Button>
                 </div>
-
               </>
             )}
           </Box>

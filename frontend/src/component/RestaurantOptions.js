@@ -12,8 +12,8 @@ const RestaurantOptions = () => {
   const options = {
     cuisine: ["No preference", "French", "Italian", "Chinese", "Thai", "Greek", "Mexican", "Japanese", "Indian", "American"],
     // dietaryRestrictions: ["Keto", "Vegan", "Paleo", "Kosher", "Vegetarian", "Gluten Free"],
-    priceRange: ["< $50", "$50 - $100", "$100 - $150", "$150+"],
-    rating: ["Any star rating", "⭐3+", "⭐4+", "⭐5"]
+    priceRange: ["< $50", "$100 - $150", "$50 - $100", "$150+"],
+    rating: ["Any star rating", "⭐4+", "⭐3+", "⭐5"]
   };
 
   const states = {
@@ -31,17 +31,52 @@ const RestaurantOptions = () => {
       "Rating (Optional)": "rating",
     };
 
-    //Add state according to category
     const handleClick = (value) => {
       switch (category) {
         case "Cuisine":
           dispatch(addCuisine(value));
           break;
         case "Price Range (per person)":
-          dispatch(addPrice(value));
+          // Mapping price range labels to corresponding values
+          let priceValue;
+          switch (value) {
+            case "< $50":
+              priceValue = 1;
+              break;
+            case "$50 - $100":
+              priceValue = 2;
+              break;
+            case "$100 - $150":
+              priceValue = 3;
+              break;
+            case "$150+":
+              priceValue = 4;
+              break;
+            default:
+              break;
+          }
+          dispatch(addPrice(priceValue));
           break;
         case "Rating (Optional)":
-          dispatch(addRating(value));
+          // Mapping rating labels to corresponding values
+          let ratingValue;
+          switch (value) {
+            case "Any star rating":
+              ratingValue = "any";
+              break;
+            case "⭐3+":
+              ratingValue = 3;
+              break;
+            case "⭐4+":
+              ratingValue = 4;
+              break;
+            case "⭐5":
+              ratingValue = 5;
+              break;
+            default:
+              break;
+          }
+          dispatch(addRating(ratingValue));
           break;
         default:
           break;
@@ -49,9 +84,56 @@ const RestaurantOptions = () => {
     };
 
     return items.map((item, index) => {
-
       const key = stateKeys[category];
-      const isAdded = Array.isArray(states[key]) ? states[key].includes(item) : states[key] === item;
+      let isAdded;
+
+      // Check if the saved value corresponds to the current item
+      switch (category) {
+        case "Price Range (per person)":
+          // Map the saved rating value to labels and compare
+          switch (states[key]) {
+            case 1:
+              isAdded = item === "< $50";
+              break;
+            case 2:
+              isAdded = item === "$50 - $100";
+              break;
+            case 3:
+              isAdded = item === "$100 - $150";
+              break;
+            case 4:
+              isAdded = item === "$150+";
+              break;
+            default:
+              isAdded = false;
+              break;
+          }
+          break;
+        case "Rating (Optional)":
+          // Map the saved rating value to labels and compare
+          switch (states[key]) {
+            case "any":
+              isAdded = item === "Any star rating";
+              break;
+            case 3:
+              isAdded = item === "⭐3+";
+              break;
+            case 4:
+              isAdded = item === "⭐4+";
+              break;
+            case 5:
+              isAdded = item === "⭐5";
+              break;
+            default:
+              isAdded = false;
+              break;
+          }
+          break;
+        default:
+          // For the "Cuisine" category, check if the item is included in the saved array
+          isAdded = Array.isArray(states[key]) ? states[key].includes(item) : states[key] === item;
+          break;
+      }
 
       return (
         <Button
@@ -67,7 +149,7 @@ const RestaurantOptions = () => {
             borderRadius: '10px',
             textTransform: 'none',
             maxWidth: '40vw',
-            minHeight: '5vh'
+            minHeight: '5vh' 
           }}
           onClick={() => handleClick(item)}
         >
@@ -120,7 +202,7 @@ const RestaurantOptions = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" >
+    <Box display="flex" flexDirection="row" alignItems="center" >
       <Grid container spacing={2}>
         {renderCategory("Cuisine", options.cuisine)}
         {/* {renderCategory("Dietary Restrictions (Optional)", options.dietaryRestrictions)} */}
