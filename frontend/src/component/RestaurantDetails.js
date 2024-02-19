@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-// import axios from "axios";
-import plan from "../mock-data/plan-MQIJR";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import VotingDetailsDialog from "./VotingDetailsDialog";
 import MemberDetailsDialog from "./MemberDetailsDialog";
 import copy from "clipboard-copy";
+import Rating from "@mui/material/Rating";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -14,7 +14,6 @@ import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import Rating from "@mui/material/Rating";
 import Popper from "@mui/material/Popper";
 import Fab from "@mui/material/Fab";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
@@ -31,25 +30,39 @@ import { faYelp } from "@fortawesome/free-brands-svg-icons";
 const RestaurantDetails = () => {
   const [copyFeedback, setCopyFeedback] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [planDetails, setPlanDetails] = useState({});
   const [currentRestaurantIndex, setCurrentRestaurantIndex] = useState(0);
 
   // Access the 'code' parameter from the URL
-  const { code } = useParams();
+  const { planCode } = useParams();
 
-  // Axios request to get the plan details
-  //   const getPlanDetails = async (req, res) => {
-  //     try {
-  //       const response = await axios.get(`/get-plan/${code}`);
-  //       const plan = response.data;
-  //       console.log(plan);
-  //     } catch (error) {
-  //       console.error("Error getting plan details:", error);
-  //     }
-  //   };
-  //   getPlanDetails();
+  // Fetch the plan details from the server 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:4200/plan/get-plan?planCode=${planCode}`
+        );
+        setPlanDetails(res.data);
+        console.log("Plan details:", res.data);
+      } catch (error) {
+        console.error("Error getting plan details:", error);
+      }
+    };
+    fetchData();
+  }, [planCode]);
+
+  console.log("Restaurants:", planDetails.restaurants);
+
+  // Use the currentRestaurantIndex to display the corresponding restaurant
+  const restaurant = planDetails.restaurants
+    ? planDetails.restaurants[currentRestaurantIndex]
+    : 0;
 
   // Create a new Date object from the date and time strings
-  const eventDateTime = new Date(`${plan.dateOfEvent}T${plan.timeOfEvent}`);
+  const eventDateTime = new Date(
+    `${planDetails.dateOfEvent}T${planDetails.timeOfEvent}`
+  );
 
   // Format the date and time
   const formattedDate = eventDateTime.toLocaleDateString("en-US", {
@@ -63,28 +76,30 @@ const RestaurantDetails = () => {
     hour12: true,
   });
 
-  // Use the currentRestaurantIndex to display the corresponding restaurant
-  const restaurant = plan.restaurants[currentRestaurantIndex];
+  const positiveVoteCount = restaurant.positiveVotes ? restaurant.positiveVotes.length : 0;
+    console.log("vote count:", positiveVoteCount);
 
-  // Event handlers for the arrow buttons
+  //   Event handlers for the arrow buttons
   const handleNextClick = () => {
     setCurrentRestaurantIndex(
-      (prevIndex) => (prevIndex + 1) % plan.restaurants.length
+      (prevIndex) => (prevIndex + 1) % planDetails.restaurants.length
     );
   };
 
   const handlePrevClick = () => {
     setCurrentRestaurantIndex(
       (prevIndex) =>
-        (prevIndex - 1 + plan.restaurants.length) % plan.restaurants.length
+        (prevIndex - 1 + planDetails.restaurants.length) %
+        planDetails.restaurants.length
     );
   };
 
+  // copy handler
   const handleCopyClick = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
     try {
       // Attempt to copy the code to the clipboard
-      copy(code);
+      copy(planCode);
       setCopyFeedback("Copied to clipboard!");
     } catch (error) {
       console.error("Error copying to clipboard:", error);
@@ -105,13 +120,13 @@ const RestaurantDetails = () => {
       navigator
         .share({
           title: "Join the Party",
-          text: `Join the party with code: ${code}`,
+          text: `Join the party with code: ${planCode}`,
           url: window.location.href,
         })
         .then(() => console.log("Successfully shared"))
         .catch((error) => console.error("Error sharing:", error));
     } else {
-      alert(`Share the code: ${code}`);
+      alert(`Share the code: ${planCode}`);
     }
   };
 
@@ -143,7 +158,8 @@ const RestaurantDetails = () => {
               variant="body1"
               sx={{ fontSize: "18px", color: "#333" }}
             >
-              <strong>{plan.planName}</strong> hosted by {plan.hostName}
+              <strong>{planDetails.planName}</strong> hosted by{" "}
+              {planDetails.hostName}
             </Typography>
             <Typography
               variant="body2"
@@ -200,7 +216,6 @@ const RestaurantDetails = () => {
                 color: "#333",
                 border: "2px dashed #666",
                 borderRadius: "8px",
-                // mx: "1rem",
                 padding: "8px",
                 alignItems: "center",
                 width: "fit-content",
@@ -214,7 +229,7 @@ const RestaurantDetails = () => {
               type="button"
               aria-describedby={id}
             >
-              {code}
+              {planCode}
             </Button>
             {copyFeedback && (
               <Popper id={id} open={open} anchorEl={anchorEl} placement="top">
@@ -284,7 +299,8 @@ const RestaurantDetails = () => {
                 variant="body1"
                 sx={{ color: "#fff", fontSize: "0.9rem" }}
               >
-                {currentRestaurantIndex + 1}/{plan.numberOfResults} Restaurants
+                {currentRestaurantIndex + 1}/{planDetails.numberOfResults}{" "}
+                Restaurants
               </Typography>
               <Typography
                 variant="h4"
@@ -294,10 +310,10 @@ const RestaurantDetails = () => {
               </Typography>
               <Typography variant="body1" sx={{ color: "#fff" }}>
                 <Rating
-                  name="restaurant-rating"
-                  value={restaurant.rating}
-                  precision={0.1}
                   readOnly
+                  name="restaurant-rating"
+                  value={restaurant.rating ? restaurant.rating : 0}
+                  precision={0.1}
                   sx={{ verticalAlign: "bottom", mr: 1 }}
                 />
                 {restaurant.rating} ({restaurant.reviewCount} Reviews)
@@ -319,7 +335,7 @@ const RestaurantDetails = () => {
             }}
           >
             {/* See Likes */}
-            <VotingDetailsDialog />
+            <VotingDetailsDialog positiveVoteCount={positiveVoteCount} />
             {/* See Members */}
             <MemberDetailsDialog />
             {/* See More Photos */}
@@ -332,7 +348,7 @@ const RestaurantDetails = () => {
             height="400px"
             width="100%"
             resize="cover"
-            image={restaurant.photos[0].url}
+            image={restaurant.photos ? restaurant.photos[0].url : ""}
             alt={restaurant.name}
             padding="0"
             position="absolute"
@@ -345,26 +361,26 @@ const RestaurantDetails = () => {
               position: "absolute",
               width: "100%",
               p: 2,
-              top: "80%",
+              top: "77%",
               bottom: "0%",
               boxSizing: "border-box",
             }}
           >
             <Box>
-              <Box
+            <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                 }}
-              >
+            >
                 <Typography variant="body1" sx={{ color: "#fff" }}>
-                  {restaurant.price} • {restaurant.categories.join(", ")}
+                    {restaurant.price} •  {restaurant.categories ? restaurant.categories.join(", ") : ""}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#fff" }}>
-                  {restaurant.distanceFromUser}
+                    {restaurant.distanceFromUser}
                 </Typography>
-              </Box>
+            </Box>
               <Typography variant="body1" sx={{ color: "#fff" }}>
                 {restaurant.address}
               </Typography>
@@ -545,5 +561,4 @@ const RestaurantDetails = () => {
     </Container>
   );
 };
-
 export default RestaurantDetails;
