@@ -30,8 +30,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/join-plan/:planCode" element={<JoinPlan />} />
-            <Route path="/restaurant-details/:code" element={<RestaurantDetails />} />
-            <Route path="/final-poll/:code" element={<FinalPollResult />} />
+            <Route path="/restaurant-details/:planCode" element={<RestaurantDetails />} />
+            <Route path="/final-poll/:planCode" element={<FinalPollResult />} />
             {/* Add other routes as needed */}
           </Routes>
       </Auth0Provider>
