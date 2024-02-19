@@ -28,7 +28,7 @@ function App() {
         <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/join-plan/:code" element={<JoinPlan />} />
+            <Route path="/join-plan/:planCode" element={<JoinPlan />} />
             <Route path="/create-plan" element={<PlanningCard />} />
 
             {/* Add other routes as needed */}

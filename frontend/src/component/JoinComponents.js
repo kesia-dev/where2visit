@@ -3,11 +3,14 @@ import { Typography, Box, Input, Button, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import JoinPlan from './JoinPlan';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const JoinComponents = () => {
   const [enteredCode, setEnteredCode] = useState('');
   const [isCodeValid, setIsCodeValid] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [planDetails, setPlanDetails] = useState(null);
 
   const navigate = useNavigate();
 
@@ -15,16 +18,42 @@ const JoinComponents = () => {
     setEnteredCode(event.target.value);
   };
 
-  const handleJoinPlanClick = () => {
-    // Example validation logic (replace this with your actual validation)
-    const isValid = enteredCode.trim() !== ''; // Check if the code is not empty
+  const handleJoinPlanClick = async () => {
+    try {
+      setLoading(true);
 
-    if (isValid) {
-      // Navigate to the JoinPlanPage with the entered code as a parameter
-      navigate(`/join-plan/${enteredCode}`);
-    } else {
-      // Open the Snackbar to alert the user if the entered code is not valid
+      // Make an asynchronous request to your server to get plan details
+      const response = await axios.get('http://localhost:4200/plan/get-plan', {
+        params: {
+          planCode: enteredCode,
+        },
+      });
+
+      if (response.status === 200) {
+        const data = response.data;
+          // If the code is valid, set isCodeValid to true
+          setIsCodeValid(true);
+          // Set the plan details to be passed to the JoinPlan component
+          setPlanDetails({
+            planName: data.planName,
+            hostName: data.hostName,
+            dateOfEvent: data.dateOfEvent,
+            timeOfEvent: data.timeOfEvent,
+            location: data.location,
+          });
+
+          // Navigate to the JoinPlanPage with the entered code as a parameter
+          navigate(`/join-plan/${enteredCode}`);
+  
+      } else {
+        console.error('Error fetching plan details:', response.statusText);
+        setOpenSnackbar(true);
+      }
+    } catch (error) {
+      console.error('Error fetching plan details:', error);
       setOpenSnackbar(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,7 +88,7 @@ const JoinComponents = () => {
             borderRadius: '20px',
             border: '1px solid #1C1C1C',
             gap: '12px',
-            background: '#C79E34',
+            background: '#E9D8AE',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -98,20 +127,21 @@ const JoinComponents = () => {
             gap: '20px',
             textTransform: 'none',
           }}
+          disabled={loading}
         >
-          Join Plan
+          {loading ? 'Joining...' : 'Join Plan'}
         </Button>
       </div>
 
       {/* Conditionally render JoinPlan based on code validation */}
-      {isCodeValid && <JoinPlan enteredCode={enteredCode} />}
+      {isCodeValid && <JoinPlan planDetails={planDetails} />}
 
       {/* Snackbar for alerting the user */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <MuiAlert
           elevation={6}

@@ -1,28 +1,33 @@
 import React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 
-const PlanDetailsCard = ({ roomName, hostName, dateOfEvent, location }) => {
+const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, location }) => {
   return (
-    <Card variant="outlined" sx={{ marginBottom: '20px', backgroundColor: '#f5f5f5' }}>
-      <CardContent>
+    <Card elevation={0} sx={{ marginBottom: '20px', alignItems: 'center', justifyContent: 'center', background: '#E9D8A3', color: 'black', width: '100%'}}>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
         <Typography variant="h6" gutterBottom sx={{ color: '#333' }}>
           Plan Details
         </Typography>
         <Typography variant="body1" sx={{ color: '#555' }}>
-          <strong>Room Name:</strong> {roomName}
+          Room Name: <strong>{planName} </strong>
         </Typography>
         <Typography variant="body1" sx={{ color: '#555' }}>
-          <strong>Host Name:</strong> {hostName}
+         Host Name:<strong> {hostName} </strong>
         </Typography>
         <Typography variant="body1" sx={{ color: '#555' }}>
-          <strong>Date of Event:</strong> {dateOfEvent}
+          Date of Event:<strong> {dateOfEvent} </strong>
         </Typography>
+        <Typography variant="body1" sx={{ color: '#555' }}>
+          Time of Event:<strong> {timeOfEvent} </strong>
+        </Typography>
+      {/*
         <Typography variant="body1" sx={{ color: '#555' }}>
           <strong>Location:</strong> {location}
         </Typography>
+      */}
       </CardContent>
     </Card>
   );
 };
 
-export default PlanDetailsCard;
+export default PlanDetails;

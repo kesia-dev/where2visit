@@ -16,7 +16,7 @@ exports.getGoogleStaticMap = (restaurantLat, restaurantLng, key) => {
     // Construct the url with the query parameters:
     const params = new URLSearchParams({
         center: `${restaurantLat},${restaurantLng}`,
-        zoom: "20",
+        zoom: "17",
         size: "600x300",
         maptype: "roadmap",
         markers: `color:red|label:S|${restaurantLat},${restaurantLng}`,
