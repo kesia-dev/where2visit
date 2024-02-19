@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
 import useAlert from '../hook/useAlert';
+import StyledTextField from './StyledTextField';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -41,43 +42,43 @@ const ForgotPassword = () => {
         height="90vh" // Set the height of the container to full viewport height
       >
         <Typography
-          variant="h5"
+          variant="h4"
           align="center"
           sx={{
             fontFamily: 'Inter',
-            fontSize: '22px',
             fontWeight: 700,
-            lineHeight: '28px',
             letterSpacing: '0.35px',
             textAlign: 'center',
             color: 'white',
             marginTop: '20px',
+            marginBottom: '0px'
           }}
         >
           Password Recovery
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
           <Grid item xs={8} sm={2}>
-            <TextField
+            <StyledTextField
               label="Email"
               margin="normal"
+              variant='filled'
               value={email}
               onChange={handleEmailChange}
             />
           </Grid>
         </Grid>
-          <Button variant="contained" color="primary" onClick={handleForgotPassword} mt={2} sx={{
-            width: '241px',
-            height: '53px',
-            marginTop: '15px',
-            padding: '16px 32px 16px 32px',
-            borderRadius: '100px',
-            gap: '20px',
-            textTransform: 'none',
-          }}>
-            Reset Password
-          </Button>
-          { AlertComponent }
+        <Button variant="contained" color="primary" onClick={handleForgotPassword} mt={2} sx={{
+          width: '241px',
+          height: '53px',
+          marginTop: '15px',
+          padding: '16px 32px 16px 32px',
+          borderRadius: '100px',
+          gap: '20px',
+          textTransform: 'none',
+        }}>
+          Reset Password
+        </Button>
+        {AlertComponent}
       </Box>
     </Container>
   );

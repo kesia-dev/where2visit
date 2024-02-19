@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
 import useAlert from '../hook/useAlert';
+import StyledTextField from './StyledTextField';
 
 const ResetPassword = () => {
   const { resetCode } = useParams();
@@ -64,10 +65,11 @@ const ResetPassword = () => {
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
           <Grid item xs={8} sm={2}>
-            <TextField
+            <StyledTextField
               label="New Password"
               type='password'
               margin="normal"
+              variant='filled'
               value={password}
               onChange={handlePasswordChange}
             />
