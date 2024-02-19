@@ -15,9 +15,6 @@ import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
 import CloseIcon from "@mui/icons-material/Close";
 
 const poll = {
-    matches: 3,
-    up_votes: 5,
-    member_count: 9,
     members: [
         "John",
         "Jane",
@@ -42,7 +39,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function VotingDetailsDialog() {
+export default function VotingDetailsDialog({ positiveVoteCount }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -60,7 +57,7 @@ export default function VotingDetailsDialog() {
         sx={{ backgroundColor: "#fff" }}
         size="medium"
       >
-        <Badge badgeContent={poll.up_votes} color="info">
+        <Badge badgeContent={positiveVoteCount} color="info">
           <ThumbUpTwoToneIcon sx={{ color: "#2A759F", fontSize: 35 }} />
         </Badge>
       </Fab>
