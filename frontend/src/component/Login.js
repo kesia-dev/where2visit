@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button, Snackbar, Alert } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import useAlert from '../hook/useAlert';
+import StyledTextField from './StyledTextField';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -60,34 +61,33 @@ const Login = () => {
         height="90vh" // Set the height of the container to full viewport height
       >
         <Typography
-          variant="h5"
+          variant="h3"
           align="center"
           sx={{
             fontFamily: 'Inter',
-            fontSize: '22px',
             fontWeight: 700,
-            lineHeight: '28px',
             letterSpacing: '0.35px',
             textAlign: 'center',
             color: 'white',
             marginTop: '20px',
+            marginBottom: '20px'
           }}
         >
           Sign-In
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
           <Grid item xs={8} sm={2}>
-            <TextField
+            <StyledTextField
               label="Email"
-              margin="normal"
+              margin="dense"
+              variant='filled'
               value={email}
               onChange={handleEmailChange}
             />
-          </Grid>
-          <Grid item xs={8} sm={2}>
-            <TextField
+            <StyledTextField
               label="Password"
-              margin="normal"
+              margin="dense"
+              variant='filled'
               value={password}
               type='password'
               onChange={handlePasswordChange}
@@ -101,7 +101,7 @@ const Login = () => {
           sx={{
             width: '241px',
             height: '53px',
-            marginTop: '15px',
+            marginTop: '25px',
             padding: '16px 32px 16px 32px',
             borderRadius: '100px',
             gap: '20px',
@@ -149,7 +149,7 @@ const Login = () => {
           Actually, I forgot my password
         </Button>
       </Box>
-      { AlertComponent }
+      {AlertComponent}
     </Container>
   );
 };

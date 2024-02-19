@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
 import useAlert from '../hook/useAlert';
+import StyledTextField from './StyledTextField';
+
 const SignUp = () => {
 
   const [userName, setUserName] = useState('');
@@ -52,6 +54,31 @@ const SignUp = () => {
     }
   };
 
+  // const StyledTextField = styled((props) => (
+  //   <TextField InputProps={{ disableUnderline: true }} {...props} />
+  // ))(({ theme }) => ({
+  //   '& .MuiFilledInput-root': {
+  //     overflow: 'hidden',
+  //     borderRadius: 4,
+  //     backgroundColor: theme.palette.mode === 'light' ? '#e7e7e7' : '#e7e7e7',
+  //     border: '1px solid',
+  //     borderColor: theme.palette.mode === 'light' ? '#E0E3E7' : '#E0E3E7',
+  //     transition: theme.transitions.create([
+  //       'border-color',
+  //       'background-color',
+  //       'box-shadow',
+  //     ]),
+  //     '&:hover': {
+  //       backgroundColor: 'white',
+  //     },
+  //     '&.Mui-focused': {
+  //       // backgroundColor: 'transparent',
+  //       boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
+  //       borderColor: theme.palette.primary.main,
+  //     },
+  //   },
+  // }));
+
   return (
     <Container>
       <Box
@@ -62,42 +89,43 @@ const SignUp = () => {
         height="90vh" // Set the height of the container to full viewport height
       >
         <Typography
-          variant="h5"
+          variant="h3"
           align="center"
           sx={{
             fontFamily: 'Inter',
-            fontSize: '22px',
             fontWeight: 700,
-            lineHeight: '28px',
             letterSpacing: '0.35px',
             textAlign: 'center',
             color: 'white',
             marginTop: '20px',
+            marginBottom: '20px'
           }}
         >
           Sign-Up
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
           <Grid item xs={8} sm={2}>
-            <TextField
+            <StyledTextField
               label="Username"
-              margin="normal"
+              defaultValue=""
+              variant="filled"
+              margin="dense"
               value={userName}
               onChange={handleUserNameChange}
             />
-          </Grid>
-          <Grid item xs={8} sm={2}>
-            <TextField
+            <StyledTextField
               label="Email"
-              margin="normal"
+              defaultValue=""
+              variant="filled"
+              margin="dense"
               value={email}
               onChange={handleEmailChange}
             />
-          </Grid>
-          <Grid item xs={8} sm={2}>
-            <TextField
+            <StyledTextField
               label="Password"
-              margin="normal"
+              defaultValue=""
+              variant="filled"
+              margin="dense"
               value={password}
               type='password'
               onChange={handlePasswordChange}
@@ -134,7 +162,7 @@ const SignUp = () => {
             letterSpacing: '-0.32px',
             textAlign: 'center',
             color: '#3492C7',
-            textTransform: 'none'
+            textTransform: 'none',
           }}
         >
           Already a member? Log-in instead!
