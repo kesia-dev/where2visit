@@ -1,55 +1,12 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Container, Box, Typography, Grid, TextField, Button, Snackbar, Alert } from '@mui/material';
-import { useAuth } from '../context/AuthContext';
-import useAlert from '../hook/useAlert';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Container, Box, Typography, Grid, Button } from '@mui/material';
 import StyledTextField from './StyledTextField';
+import useLogin from '../hook/useLogin';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { setAuthData } = useAuth();
-  const { handleAlertChange, AlertComponent } = useAlert();
-  const navigate = useNavigate();
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleLoginAttempt = async () => {
-    try {
-      // check if all fields are present
-      if (!email || !password) throw new Error('Please fill in all the fields.');
-
-      const loginData = {
-        email,
-        password
-      };
-      const response = await fetch('http://localhost:4200/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(loginData)
-      });
-      const responseData = await response.json();
-      console.log("responseData", responseData);
-      console.log("Response", response);
-      if (response.ok) {
-        handleAlertChange(`Welcome, ${responseData.userName}`, "info");
-        setAuthData(responseData); // insert responseData into applicationContext for ease-of-use
-        navigate(`/`);
-        return;
-      }
-      handleAlertChange(responseData.error, "error");
-    } catch (error) {
-      handleAlertChange(`${error}`, "error");
-    }
-  };
+  const { handleEmailChange, handlePasswordChange, handleLoginAttempt } = useLogin();
 
   return (
     <Container>
@@ -81,14 +38,12 @@ const Login = () => {
               label="Email"
               margin="dense"
               variant='filled'
-              value={email}
               onChange={handleEmailChange}
             />
             <StyledTextField
               label="Password"
               margin="dense"
               variant='filled'
-              value={password}
               type='password'
               onChange={handlePasswordChange}
             />
@@ -149,7 +104,6 @@ const Login = () => {
           Actually, I forgot my password
         </Button>
       </Box>
-      {AlertComponent}
     </Container>
   );
 };

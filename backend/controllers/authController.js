@@ -76,7 +76,7 @@ exports.verifyEmail = async (req, res) => {
     user.emailVerified = true;
     //user.emailVerificationLink = null; //ideally would've liked to remove this, but not removing the verification link for now as it's causing schema issues. Inquire about later.
     await user.save();
-    return res.redirect("http://localhost:3000?alert_type=success&alert_info=Email%20verified%20successfully");
+    return res.redirect("http://localhost:3000?alert_type=info&alert_info=Email%20verified%20successfully");
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

@@ -1,47 +1,20 @@
 // Navbar.js
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar, Popover } from '@mui/material';
-import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
-import useAlert from '../hook/useAlert';
+import { useAlert } from '../context/AlertContext';
+import useNavbar from '../hook/useNavbar';
 
 const Navbar = () => {
+  const { handleMenuIconClick, handleAvatarClick, handlePopoverClose, handleMenuClose, popoverAnchorEl, anchorEl } = useNavbar();
   const { isLoggedIn, clearAuthData, userData } = useAuth();
-  const { handleAlertChange, AlertComponent } = useAlert();
-  const location = useLocation();
+  const { AlertComponent } = useAlert(); // the global alert component
   const navigate = useNavigate();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const alertInfo = queryParams.get('alert_info');
-    const alertType = queryParams.get('alert_type');
-
-    if (alertInfo && alertType) {
-      handleAlertChange(alertInfo, alertType);
-    }
-  }, [location.search]);
-
-  const handleMenuIconClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleAvatarClick = (event) => {
-    setPopoverAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setPopoverAnchorEl(null);
-  };
 
   return (
     <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black' }}>
@@ -99,8 +72,8 @@ const Navbar = () => {
                   <br />
                   Email: {userData?.email || ''}
                   <br />
-                  { userData?.verified ?
-                  'Email is verified' : 'Email not verified'
+                  {userData?.verified ?
+                    'Email is verified' : 'Email not verified'
                   }
                   {/* Add more user information here */}
                 </Typography>
@@ -132,7 +105,7 @@ const Navbar = () => {
             Join a Plan
           </MenuItem>
         </Menu>
-        { AlertComponent }
+        {AlertComponent}
       </Toolbar>
     </AppBar>
   );

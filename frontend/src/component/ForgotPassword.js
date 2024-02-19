@@ -1,37 +1,12 @@
-import React, { useState } from 'react';
-import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
-import useAlert from '../hook/useAlert';
+import React from 'react';
+import { Container, Box, Typography, Grid, Button } from '@mui/material';
 import StyledTextField from './StyledTextField';
+import useForgotPassword from '../hook/useForgotPassword';
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
-  const { handleAlertChange, AlertComponent } = useAlert();
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
+  const { handleEmailChange, handleForgotPassword } = useForgotPassword();
 
-  const handleForgotPassword = async () => {
-    try {
-      // check if user typed in an email
-      if (!email) throw new Error('Please fill in an email');
-      const emailInfo = {
-        email
-      };
-      const response = await fetch('http://localhost:4200/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(emailInfo)
-      });
-      if (response.ok) {
-        handleAlertChange("Password recovery requested. An email will be sent if the user is found.", "info");
-      }
-    } catch (error) {
-      handleAlertChange(`${error}`, "error");
-    }
-  };
   return (
     <Container>
       <Box
@@ -62,7 +37,7 @@ const ForgotPassword = () => {
               label="Email"
               margin="normal"
               variant='filled'
-              value={email}
+              // value={email}
               onChange={handleEmailChange}
             />
           </Grid>
@@ -78,7 +53,6 @@ const ForgotPassword = () => {
         }}>
           Reset Password
         </Button>
-        {AlertComponent}
       </Box>
     </Container>
   );

@@ -1,58 +1,12 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Container, Box, Typography, Grid, TextField, Button } from '@mui/material';
-import useAlert from '../hook/useAlert';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Container, Box, Typography, Grid, Button } from '@mui/material';
 import StyledTextField from './StyledTextField';
+import useSignUp from '../hook/useSignUp';
 
 const SignUp = () => {
 
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { handleAlertChange, AlertComponent } = useAlert();
-  const navigate = useNavigate();
-
-  const handleUserNameChange = (event) => {
-    setUserName(event.target.value);
-  };
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleSignUpAttempt = async () => {
-    try {
-      // check if all fields are present
-      if (!userName || !email || !password) {
-        throw new Error('Please fill in all fields.');
-      }
-
-      const signUpData = {
-        username: userName,
-        email,
-        password
-      };
-
-      const response = await fetch('http://localhost:4200/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(signUpData)
-      });
-
-      if (response.ok) {
-        handleAlertChange(`Welcome, ${userName}! You will be redirected to the login page now.`, 'info');
-        setTimeout(() => { navigate('/login') }, 2000)
-      }
-
-    } catch (error) {
-      handleAlertChange(`${error}`, "error");
-    }
-  };
+  const { handleUserNameChange, handleEmailChange, handlePasswordChange, handleSignUpAttempt } = useSignUp();
 
   return (
     <Container>
@@ -85,7 +39,7 @@ const SignUp = () => {
               defaultValue=""
               variant="filled"
               margin="dense"
-              value={userName}
+              // value={userName}
               onChange={handleUserNameChange}
             />
             <StyledTextField
@@ -93,7 +47,7 @@ const SignUp = () => {
               defaultValue=""
               variant="filled"
               margin="dense"
-              value={email}
+              // value={email}
               onChange={handleEmailChange}
             />
             <StyledTextField
@@ -101,7 +55,7 @@ const SignUp = () => {
               defaultValue=""
               variant="filled"
               margin="dense"
-              value={password}
+              // value={password}
               type='password'
               onChange={handlePasswordChange}
             />
@@ -143,7 +97,6 @@ const SignUp = () => {
           Already a member? Log-in instead!
         </Button>
       </Box>
-      {AlertComponent}
     </Container>
   );
 };

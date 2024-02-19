@@ -20,6 +20,7 @@ const StyledTextField = styled((props) => (
     '&.Mui-focused': {
       boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
       borderColor: theme.palette.primary.main,
+      backgroundColor: 'white'
     },
   },
 }));

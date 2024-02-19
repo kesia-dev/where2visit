@@ -1,7 +1,9 @@
 import { Snackbar, Alert } from '@mui/material';
-import { useState } from 'react';
+import { Children, createContext, useContext, useState } from 'react';
 
-const useAlert = () => {
+const AlertContext = createContext();
+
+export const AlertProvider = ({ children }) => {
   // state definition and handling
   const alertInfoInitialState = { open: false, variant: '', info: '' };
   const [alertInfo, setAlertInfo] = useState(alertInfoInitialState);
@@ -21,7 +23,7 @@ const useAlert = () => {
     })
   };
 
-  const handleCloseAlert = (event, reason) => {
+  const handleCloseAlert = (reason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -46,7 +48,20 @@ const useAlert = () => {
     </Snackbar>
   );
 
-  return { handleAlertChange, handleCloseAlert, AlertComponent };
+  // return { handleAlertChange, handleCloseAlert, AlertComponent };
+  return (
+    <AlertContext.Provider
+      value={{
+        handleAlertChange,
+        handleCloseAlert,
+        AlertComponent
+      }}>
+      {children}
+    </AlertContext.Provider>
+  );
 };
 
-export default useAlert;
+// export default useAlert;
+export const useAlert = () => {
+  return useContext(AlertContext);
+}
