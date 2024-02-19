@@ -62,6 +62,11 @@ const PlanningCard = () => {
 
   const handleNext = () => {
     setStep(prevStep => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
   };
 
 
@@ -82,6 +87,11 @@ const PlanningCard = () => {
 
   const handlePrevious = () => {
     setStep(prevStep => (prevStep > 0 ? prevStep - 1 : prevStep));
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
   };
 
   const handleResults = (value) => {
@@ -245,10 +255,10 @@ const PlanningCard = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center' }} >
+                <div style={{ display: 'flex', alignItems: 'center' }} onClick={goBackHistory} >
                   <KeyboardDoubleArrowLeftIcon className='backArrows' />
 
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={goBackHistory} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
                     Create a Plan
                   </Button>
                 </div>

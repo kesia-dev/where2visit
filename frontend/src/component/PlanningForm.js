@@ -91,12 +91,12 @@ const PlanningForm = ({ formData, setFormData }) => {
 
         <FormControl defaultValue="" required className='inputForm'>
           <Label>Time of Event</Label>
-          <FormGroup>
+          {/* <FormGroup>
             <span className='formCheckbox'>
-              {/* <FormControlLabel control={<Checkbox  size="small" />} label="Now" /> */}
+              <FormControlLabel control={<Checkbox  size="small" />} label="Now" />
               <FormControlLabel control={<Checkbox size="small" />} label="All Day" />
             </span>
-          </FormGroup>
+          </FormGroup> */}
           <TimePicker className='dateTimePicker' use12Hours format="h:mm a" onChange={(time, timeString) => setFormData({ ...formData, time: timeString })} placeholder='' />
           <HelperText />
         </FormControl>
@@ -122,7 +122,7 @@ const PlanningForm = ({ formData, setFormData }) => {
             min={0}
             max={20}
             sx={{
-              width: 350
+              width: 320
             }}
             onChange={(e, value) => setFormData({ ...formData, radius: value })}
           />
@@ -139,7 +139,7 @@ const StyledInput = styled(Input)(
   ({ theme }) => `
 
   .${inputClasses.input} {
-    width: 320px;
+    width: 300px;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 0.875rem;
     font-weight: 400;
