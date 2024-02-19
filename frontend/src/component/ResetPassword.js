@@ -52,21 +52,20 @@ const ResetPassword = () => {
           align="center"
           sx={{
             fontFamily: 'Inter',
-            fontSize: '22px',
             fontWeight: 700,
-            lineHeight: '28px',
             letterSpacing: '0.35px',
             textAlign: 'center',
             color: 'white',
             marginTop: '20px',
+            marginBottom: '20px'
           }}
         >
-          New password
+          Enter your new password
         </Typography>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
           <Grid item xs={8} sm={2}>
             <StyledTextField
-              label="New Password"
+              label="Password"
               type='password'
               margin="normal"
               variant='filled'
