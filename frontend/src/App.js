@@ -8,16 +8,13 @@ import './App.css';
 import JoinPlan from './component/JoinPlan.js';
 import RestaurantDetails from './component/RestaurantDetails.js';
 import FinalPollResult from './component/FinalPollResult.js';
+import Instructions from './component/Instructions.js';
 
-
-//const domain = process.env.REACT_APP_AUTH0_DOMAIN
-//const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID
 const domain = "dev-rkjah3umfq8c82at.us.auth0.com"
 const clientId = "xbeT4PtSPVwbkexbBRsCKmzveb3aNIE0"
 
 function App() {
   return (
-    
     <Router>
       <Auth0Provider
         domain={domain}
@@ -30,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/join-plan/:planCode" element={<JoinPlan />} />
+            <Route path="/instructions" element={<Instructions />} />
             <Route path="/restaurant-details/:planCode" element={<RestaurantDetails />} />
             <Route path="/final-poll/:planCode" element={<FinalPollResult />} />
             {/* Add other routes as needed */}
