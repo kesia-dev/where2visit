@@ -1,7 +1,7 @@
 const axios = require('axios');
 require('dotenv').config();
 const { calculateDistance } = require('./distanceService');
-const { getGoogleStaticMap } = require('./mapService');
+const { getGoogleStaticMap, getGoogleMapsEmbedUrl } = require('./mapService');
 
 const YELP_API_KEY = process.env.YELP_API_KEY;
 
@@ -39,6 +39,7 @@ exports.fetchYelpRestaurants = async (searchParams) => {
           price: restaurant.price,
           yelpRestaurantUrl: restaurant.url,
           googleStaticMapUrl: getGoogleStaticMap(restaurant.coordinates.latitude, restaurant.coordinates.longitude, process.env.GOOGLE_MAPS_API_KEY),
+          googleEmbedMapUrl: getGoogleMapsEmbedUrl(restaurant.coordinates.latitude, restaurant.coordinates.longitude, process.env.GOOGLE_MAPS_API_KEY),
           yelpBusinessId: restaurant.id,
           distanceFromUser: `${distance.toFixed(2)} km`,
           categories: restaurant.categories.map(category => category.title),
