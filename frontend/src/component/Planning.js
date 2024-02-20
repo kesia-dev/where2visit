@@ -255,10 +255,10 @@ const PlanningCard = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center' }} onClick={goBackHistory} >
-                  <KeyboardDoubleArrowLeftIcon className='backArrows' />
+                <div style={{ display: 'flex', alignItems: 'center' }}  >
+                  <KeyboardDoubleArrowLeftIcon className='backArrows' onClick={goBackHistory} />
 
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button variant="contained" color="primary" onClick={handleNext} style={{ backgroundColor: '#3492c7' }} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
                     Create a Plan
                   </Button>
                 </div>
