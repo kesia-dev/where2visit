@@ -1,59 +1,119 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, Button, TextField, Container, Paper, Box, useMediaQuery } from '@mui/material';
+import {
+  Typography,
+  Button,
+  TextField,
+  Container,
+  Box,
+  Grid,
+  Snackbar,
+} from '@mui/material';
 import copy from 'clipboard-copy';
 import PlanDetails from './PlanDetails';
-
-const roomName = 'Party Room';
-const hostName = 'Karen';
-const dateOfEvent = 'December 7, 2023 @ 8PM';
-const location = 'Current Location';
+import axios from 'axios';
+import MuiAlert from '@mui/material/Alert';
 
 const JoinPlan = () => {
-  // Access the 'code' parameter from the URL
-  const { code } = useParams();
-
-  // 'code' contains the value from the URL
-
+  const { planCode, planName, hostName, dateOfEvent, timeOfEvent, location } = useParams();
   const [userName, setUserName] = useState('');
-  const isSmallScreen = useMediaQuery('(max-width:767px)');
+  const [planDetails, setPlanDetails] = useState(null);
+  const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
+  const [joinSnackbarOpen, setJoinSnackbarOpen] = useState(false);
 
-  const [copyFeedback, setCopyFeedback] = useState('');
+  const handleCloseCopySnackbar = () => {
+    setCopySnackbarOpen(false);
+  };
+
+  const handleCloseJoinSnackbar = () => {
+    setJoinSnackbarOpen(false);
+  };
 
   const handleCopyClick = () => {
     try {
-      // Attempt to copy the code to the clipboard
-      copy(code);
-      setCopyFeedback('Plan code copied to clipboard!');
+      copy(planCode);
+      setCopySnackbarOpen(true);
     } catch (error) {
       console.error('Error copying to clipboard:', error);
-      setCopyFeedback('Error copying to clipboard');
     }
-
-    // Clear the feedback after a short delay
-    setTimeout(() => {
-      setCopyFeedback('');
-    }, 2000);
   };
 
   const handleShareClick = () => {
     if (navigator.share) {
-      navigator.share({
-        title: 'Join the Party',
-        text: `Join the party with code: ${code}`,
-        url: window.location.href,
-      })
+      navigator
+        .share({
+          title: 'Join the Party',
+          text: `Join the party with planCode: ${planCode}`,
+          url: window.location.href,
+        })
         .then(() => console.log('Successfully shared'))
         .catch((error) => console.error('Error sharing:', error));
     } else {
-      alert(`Share the code: ${code}`);
+      alert(`Share the planCode: ${planCode}`);
     }
   };
 
+  const handleJoinPlanClick = () => {
+    if (!userName) {
+      setJoinSnackbarOpen(true);
+      return;
+    } else {
+      console.log('Navigating to voting page');
+    }
+  };
+
+  useEffect(() => {
+    const fetchPlanDetails = async () => {
+      if (!planCode) {
+        alert('Please enter a valid planCode before joining the plan.');
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:4200/plan/get-plan', {
+          params: {
+            planCode: planCode,
+            planName: planName,
+            hostName: hostName,
+            dateOfEvent: dateOfEvent,
+            timeOfEvent: timeOfEvent,
+            location: location,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = response.data;
+
+        setPlanDetails({
+          planName: data.planName,
+          hostName: data.hostName,
+          dateOfEvent: data.dateOfEvent,
+          timeOfEvent: data.timeOfEvent,
+          location: data.location,
+        });
+
+      } catch (error) {
+        console.error('Error checking code:', error);
+        alert('An error occurred while checking the code.');
+      }
+    };
+
+    fetchPlanDetails();
+  }, [planCode, planName, hostName, dateOfEvent, timeOfEvent, location]);
+
   return (
-    <Container component="main" maxWidth="md">
-      <Paper elevation={3} sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px' }}>
-        {/* Welcome message */}
+    <Container component="main"
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundColor: 'white',
+      width: "400px",  
+      marginRight: 'auto',
+      marginLeft: 'auto',
+    }} >
         <Typography
           variant="h4"
           component="div"
@@ -61,109 +121,187 @@ const JoinPlan = () => {
             mb: 2,
             fontFamily: 'Inter',
             fontWeight: 700,
+            fontSize: '28px',
+            letterSpacing: '0.36px',
             color: 'rgba(52, 146, 199, 1)',
+            width: "311px"
           }}
         >
           <strong>Welcome to the party!</strong>
         </Typography>
 
-        {/* Additional details about the event */}
-        <Box mb={2}>
-          <Typography variant="body1" sx={{ fontSize: '16px', color: '#333' }}>
-            <strong>Last Min Plansss</strong> hosted by Karen
+        <Box mb={2} sc={{ width: '386px', textAlign: 'left' }}>
+          <Typography
+            variant="body1"
+            sx={{ fontSize: '16px', color: '#333', width: '386px', textAlign: 'left', letterSpacing: '0.32px', marginLeft: '22px'  }}
+          >
+            <strong>{planDetails?.planName}</strong> hosted by {planDetails?.hostName}
           </Typography>
-          <Typography variant="body2" sx={{ fontSize: '14px', color: '#666' }}>
-            December 7, 2023 @ 8PM
+          <Typography
+            variant="body2"
+            sx={{ fontSize: '14px', color: '#666', letterSpacing: '0.5px', marginLeft: '22px' }}
+          >
+            {planDetails?.dateOfEvent} @ {planDetails?.timeOfEvent}
           </Typography>
         </Box>
 
-        {/* Yellow box with code details and copy/share button */}
-        <Box
+        <Grid
+          container
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
           sx={{
-            backgroundColor: '#C79E34',
-            padding: '15px',
-            borderRadius: '8px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '40%',
-            border: '2px dashed #333',
-            mb: 2,
+            
+            width: '386px'
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 600, color: '#333', mb: 1 }}>
-            Code: {code}
-          </Typography>
-          {isSmallScreen ? (
-            <>
+          <Grid item xs={12} md={12}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                textAlign: 'left',
+                justifyContent:"center",
+                width: '100%'
+              }}
+            >
+  <Box
+  sx={{
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'Left',
+    width: '328px'
+  }}
+>
+  <Typography
+    variant="body2"
+    sx={{
+      fontSize: '16px',
+      color: 'black',
+      width: '170px',
+    }}
+  >
+    <strong>Invite your friends!</strong>
+  </Typography>
+
+  <Typography
+    variant="body2"
+    sx={{
+      fontSize: '14px',
+      color: 'black',
+      letterSpacing: '-0.32px',
+      marginTop: '10px'
+    }}
+  >
+    Tap dotted box to copy your plan code
+  </Typography>
+</Box>
+
+              <Box
+                onClick={handleCopyClick}
+                sx={{
+                  backgroundColor: '#E9D8A3',
+                  padding: '5px',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  height: '30px',
+                  border: '2px dashed #333',
+                  cursor: 'pointer',
+                  margin: '10px',
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: '#333' }}
+                >
+                  {planCode}
+                </Typography>
+              </Box>
               <Button
                 variant="outlined"
-                style={{ color: '#1C1C1C' }}
+                style={{
+                  color: '#3492C7',
+                  textTransform: 'none',
+                  border: 'none',
+                  marginTop: '10px',
+                }}
                 onClick={handleShareClick}
               >
                 Share
               </Button>
-              <Typography variant="body2" sx={{ fontSize: '12px', color: 'black', mt: 1 }}>
-                Click share to invite your friends
-              </Typography>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="outlined"
-                style={{ color: '#1C1C1C' }}
-                onClick={handleCopyClick}
-              >
-                Copy
-              </Button>
-              <Typography variant="body2" sx={{ fontSize: '12px', color: 'black', mt: 1 }}>
-                <strong>Invite your friends!</strong> Copy the plan code and share
-              </Typography>
-              {copyFeedback && (
-                <Typography variant="body2" sx={{ fontSize: '14px', color: 'black', mt: 1 }}>
-                  {copyFeedback}
-                </Typography>
-              )}
-            </>
-          )}
-        </Box>
+            </Box>
+          </Grid>
+        </Grid>
 
-        {/* Text box for the user to enter their name */}
+        <Snackbar
+          open={copySnackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseCopySnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleCloseCopySnackbar}
+            severity="success"
+            sx={{ width: '100%' }}
+          >
+            Plan code copied to clipboard!
+          </MuiAlert>
+        </Snackbar>
+
         <TextField
           label="Enter Your Name"
-          variant="outlined"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           sx={{
             mb: 2,
-            width: '40%',
+            width: '386px',
             marginTop: '20px',
             '& label': {
-              color: 'black', // Set label color to black
-            },
-            '& fieldset': {
-              borderColor: 'black', // Set border color to black
+              color: 'black',
             },
           }}
         />
 
-        {/* Additional details about the event */}
         <div>
           <Button
             variant="contained"
             color="primary"
             sx={{
-              width: '241px',
               height: '53px',
               padding: '16px 32px 16px 32px',
               borderRadius: '100px',
               textTransform: 'none',
               marginTop: '20px',
+              width: '241px'
             }}
+            onClick={handleJoinPlanClick}
           >
             Join Plan
           </Button>
         </div>
+
+        <Snackbar
+          open={joinSnackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseJoinSnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleCloseJoinSnackbar}
+            severity="error"
+            sx={{ width: '100%' }}
+          >
+            Please enter your name before joining.
+          </MuiAlert>
+        </Snackbar>
+
         <Button
           variant="text"
           align="center"
@@ -183,10 +321,13 @@ const JoinPlan = () => {
           Already have an account? Log In
         </Button>
 
-        {/* Plan details card */}
-        <PlanDetails roomName={roomName} hostName={hostName} dateOfEvent={dateOfEvent} location={location} />
-
-      </Paper>
+        <PlanDetails
+          planName={planDetails?.planName}
+          hostName={planDetails?.hostName}
+          dateOfEvent={planDetails?.dateOfEvent}
+          timeOfEvent={planDetails?.timeOfEvent}
+          location={planDetails?.location}
+        />
     </Container>
   );
 };
