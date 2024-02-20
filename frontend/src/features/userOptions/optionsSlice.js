@@ -11,7 +11,7 @@ const initialState = {
     longitude: 0
   },
   radius: 0,
-  cuisine: [],
+  cuisine: "",
   rating: 0,
   priceRange: "",
   numberOfResults: 0,
@@ -44,7 +44,7 @@ const optionsSlice = createSlice({
       state.radius = action.payload;
     },
     addCuisine: (state, action) => {
-      state.cuisine = [action.payload];
+      state.cuisine = action.payload;
 
     },
     addRating: (state, action) => {

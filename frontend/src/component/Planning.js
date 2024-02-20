@@ -151,7 +151,7 @@ const PlanningCard = () => {
 
     try {
       // API call to save details to DB and search restaurants
-      await axios.post('/create-plan', options);
+      await axios.post('http://localhost:4200/plan/create-plan', options);
     }
     catch (error) {
       console.error('Error saving plan to DB: ', error);

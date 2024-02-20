@@ -9,7 +9,7 @@ import { DatePicker, TimePicker } from 'antd';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 import React, { useState } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import '../styling/PlanningForm.css';
 
 const PlanningForm = ({ formData, setFormData }) => {
@@ -34,7 +34,7 @@ const PlanningForm = ({ formData, setFormData }) => {
     },
   ];
 
-  const [ city, setCity ] = useState('')
+  const [city, setCity] = useState('');
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -51,7 +51,7 @@ const PlanningForm = ({ formData, setFormData }) => {
         longitude: position.coords.longitude
       }
     });
-    getCity(position.coords);
+    setCity(position.coords);
   };
 
   const getCity = (coordinates) => {
@@ -59,7 +59,7 @@ const PlanningForm = ({ formData, setFormData }) => {
     const lon = coordinates.longitude;
 
     axios(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&language=en&result_type=locality&key=AIzaSyBZRmFvwMfu5UEmA2QEUID_PHsuBJcIJMk`)
-      .then((response => setCity(response.data.results[0].formatted_address)));      
+      .then((response => console.log(response.data.results[0].formatted_address)));      
   }
 
   return (
@@ -103,7 +103,7 @@ const PlanningForm = ({ formData, setFormData }) => {
 
         <FormControl defaultValue="" required className='inputForm' value={city}>
           <Label>Location</Label>
-          <StyledInput onChange={(e) => setFormData({ ...formData, location: e.target.value })}  />
+          <StyledInput onChange={(e) => setFormData({ ...formData, location: e.target.value })} />
           <HelperText />
           <button type="button" className='locationButton' onClick={getLocation}>
             <MyLocationIcon />
