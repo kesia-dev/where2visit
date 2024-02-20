@@ -29,7 +29,7 @@ exports.fetchYelpRestaurants = async (searchParams) => {
       .filter(restaurant => minRating === null || restaurant.rating >= minRating)
       .map(restaurant => {
         const distance = calculateDistance(latitude, longitude, restaurant.coordinates.latitude, restaurant.coordinates.longitude);
-        const address = `${restaurant.location.address1}, ${restaurant.location.city}`;
+        const address = `${restaurant.location.address1}, ${restaurant.location.city}, ${restaurant.location.state}, ${restaurant.location.zip_code}, ${restaurant.location.country}`;
         return {
           name: restaurant.name,
           rating: restaurant.rating,
@@ -39,13 +39,14 @@ exports.fetchYelpRestaurants = async (searchParams) => {
           price: restaurant.price,
           yelpRestaurantUrl: restaurant.url,
           googleStaticMapUrl: getGoogleStaticMap(restaurant.coordinates.latitude, restaurant.coordinates.longitude, process.env.GOOGLE_MAPS_API_KEY),
-          googleEmbedMapUrl: getGoogleMapsEmbedUrl(restaurant.coordinates.latitude, restaurant.coordinates.longitude, process.env.GOOGLE_MAPS_API_KEY),
+          googleEmbedMapUrl: getGoogleMapsEmbedUrl(restaurant.name, address, process.env.GOOGLE_MAPS_API_KEY),
           yelpBusinessId: restaurant.id,
           distanceFromUser: `${distance.toFixed(2)} km`,
           categories: restaurant.categories.map(category => category.title),
-          voteCount: 0,
-          positiveVotes: [],
-          negativeVotes: []
+          memberVotes: [],
+          totalVoteCount: 0,
+          positiveVoteCount: 0,
+          negativeVoteCount: 0
         };
       });
 
