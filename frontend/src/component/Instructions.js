@@ -13,20 +13,24 @@ const Instructions = () => {
 
   const steps = [
     {
-      content: '<strong>Step 1</strong>: Select a topic <br>Restaurant / Activities / Hotels',
-      image: './assets/food-combo.png',
+      content1: '<span style="color: black; font-size: 22px;font-weight: 700; font-family: inter">STEP 1: <span style="color: #3492C7; font-size: 22px; ;font-weight: 700; font-family: inter">Select topic</span>',
+      content2: '<span style="color: #00000099; font-size: 17px; ;font-weight: 400; font-family: inter; letter-spacing: -0.41px; line-height: 22px">Restaurant / Activities / Hotels</span>',
+      image1: './assets/food-combo.png',
     },
     {
-      content: '<strong>Step 2</strong>: Set Preferences <br>Select your preferences to filter and find the most suitable options for you and your group',
-      image: './assets/gray-box.png',
+      content1: '<span style="color: black; font-size: 22px;font-weight: 700; font-family: inter">STEP 2:</span> <span style="color: #3492C7; font-size: 22px; ;font-weight: 700; font-family: inter">Set Preferences</span> ',
+      content4: 'Select your preferences to filter and find the most suitable options for you and your group',
+      image2: "./assets/gray-box.png",
     },
     {
-      content: '<strong>Step 3</strong>: Share and Vote <br>Invite your friends to join and vote for the best choice',
-      image: './assets/online-ordering.png',
+      content1: '<span style="color: black; font-size: 22px;font-weight: 700; font-family: inter">STEP 3:</span> <span style="color: #3492C7; font-size: 22px; ;font-weight: 700; font-family: inter">Share and Vote</span> ', 
+      content3: '<span><br>Invite your friends to join and vote for the best choice</span>',
+      image3: './assets/online-ordering.png',
     },
     {
-      content: '<strong>Step 4</strong>: View Poll Results <br>Once the votes are collected, see the final matches and enjoy!',
-      image: './assets/winner-cup.png',
+      content1: '<span style="color: black; font-size: 22px;font-weight: 700; font-family: inter"> Step 4:</span> <span style="color: #3492C7; font-size: 22px; ;font-weight: 700; font-family: inter"> View Poll Results </span>',
+      content2: 'Once the votes are collected, see the final matches and enjoy!',
+      image4: './assets/winner-cup.png',
     },
     {
       text2: 'Where2Visit',
@@ -107,41 +111,77 @@ const Instructions = () => {
 
             {/* Step Image and Content */}
             <Box display="flex" flexDirection="column" alignItems="center">
-              {step < 4 && <img src={steps[step].image} alt={`Step ${step + 1}`} style={{ maxWidth: '80%' }} />}
+              {step === 0 && <img src={steps[step].image1} alt={`Step ${step + 1}`} style={{ width: '153px', height: '115px', marginTop: '20px', marginBottom: '20px' }} />}
+              {step === 1 && <img src={steps[step].image2} alt={`Step ${step + 1}`} style={{ width: '194px', height: '55px', marginTop: '55px', marginBottom: '20px' }} />}
+              {step === 2 && <img src={steps[step].image3} alt={`Step ${step + 1}`} style={{ width: '167px', height: '127px', marginTop: '5px', marginBottom: '20px' }} />}
+              {step === 3 && <img src={steps[step].image4} alt={`Step ${step + 1}`} style={{ width: '153px', height: '153px', marginTop: '5px', marginBottom: '15px'  }} />}
               <Typography
                 variant="body2"
                 color="text.secondary"
-                dangerouslySetInnerHTML={{ __html: steps[step].content }}
+                dangerouslySetInnerHTML={{ __html: steps[step].content1 }}
                 align="center"
-                marginTop={'10px'}
+                marginTop={'15px'}
                 fontFamily={'Inter'}
                 fontWeight={400}
                 fontSize={'17px'}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                dangerouslySetInnerHTML={{ __html: steps[step].content2 }}
+                align="center"
+                fontFamily={'Inter'}
+                fontWeight={400}
+                fontSize={'17px'}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                dangerouslySetInnerHTML={{ __html: steps[step].content3 }}
+                align="center"
+                fontFamily={'Inter'}
+                fontWeight={400}
+                fontSize={'17px'}
+                lineHeight={'22px'}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                dangerouslySetInnerHTML={{ __html: steps[step].content4 }}
+                align="center"
+                fontFamily={'Inter'}
+                width={'278px'}
+                letterSpacing={'-0.41px'}
+                fontWeight={400}
+                fontSize={'17px'}
+                lineHeight={'22px'}
               />
             </Box>
 
             {/* Next Button */}
             {step < 4 && (
-              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                <Button variant="contained" color="primary" onClick={handleNext}>
-                  Next
-                </Button>
-              </div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '35px' }}>
+              <Button variant="contained" color="primary" onClick={handleNext} style={{ borderRadius: '100px', width: '100px', height: '53px' }}>
+                Next
+              </Button>
+            </div>
+            
             )}
 
             {/* Skip Instructions */}
-            {step < 4 && (
-              <Typography
-                variant="body2"
-                sx={{ textAlign: 'center', marginTop: 2, cursor: 'pointer' }}
-                onClick={handleSkip}
-                fontSize={'15px'}
-                fontFamily={'Inter'}
-                color="primary"
-              >
-                Skip Instructions
-              </Typography>
-            )}
+            {step === 0 && (
+  <Typography
+    variant="body2"
+    sx={{ textAlign: 'center', marginTop: '20px', cursor: 'pointer' }}
+    onClick={handleSkip}
+    fontSize={'15px'}
+    fontFamily={'Inter'}
+    color="primary"
+  >
+    Skip Instructions
+  </Typography>
+)}
+
 
           {/* Display Shape and Text for Step 5 */}
 <Box display="flex" alignItems="center" justifyContent="center" sx={{ marginTop: '4vh' }}>
@@ -184,14 +224,14 @@ const Instructions = () => {
     </Box>
 
     {/* Create a plan button for Step 5 */}
-    <Button variant="contained" color="primary" onClick={handleNext} sx={{marginTop: '10vh', borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px' }}>
+    <Button variant="contained" color="primary" onClick={handleNext} sx={{marginTop: '8vh', borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px' }}>
       {steps[step].buttonLabel1}
     </Button>
 
     {/* Link label for Step 5 */}
     <Typography
       variant="body2"
-      sx={{ textAlign: 'center', marginTop: 1, cursor: 'pointer' }}
+      sx={{ textAlign: 'center', cursor: 'pointer', marginTop:'2vh' }}
       onClick={handleSkip}
       fontSize={'15px'}
       fontFamily={'Inter'}

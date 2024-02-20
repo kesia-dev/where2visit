@@ -113,6 +113,7 @@ const JoinPlan = () => {
       width: "400px",  
       marginRight: 'auto',
       marginLeft: 'auto',
+      marginTop: '30px'
     }} >
         <Typography
           variant="h4"
