@@ -25,3 +25,21 @@ exports.getGoogleStaticMap = (restaurantLat, restaurantLng, key) => {
     const url = `${baseUrl}?${params.toString()}`;
     return url;
 };
+
+exports.getGoogleMapsEmbedUrl = (restaurantLat, restaurantLng, key) => {
+    // Ensure latitude and longitude are valid:
+    if (!restaurantLat || !restaurantLng || !key) {
+      console.error('Invalid parameters for generating Google Maps Embed URL.');
+      return null;
+    }
+  
+    const baseUrl = 'https://www.google.com/maps/embed/v1/view';
+    const params = new URLSearchParams({
+      center: `${restaurantLat},${restaurantLng}`,
+      zoom: 15,
+      maptype: 'roadmap',
+      key
+    });
+  
+    return `${baseUrl}?${params.toString()}`;
+  };
