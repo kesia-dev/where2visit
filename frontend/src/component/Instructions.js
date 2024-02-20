@@ -73,6 +73,11 @@ const Instructions = () => {
     };
   }, [location.pathname]);
 
+  const handleCreatePlan = () => {
+    navigate('/create-plan');
+  }
+
+
   return (
     <>
       {location.pathname === '/instructions'}
@@ -184,7 +189,7 @@ const Instructions = () => {
     </Box>
 
     {/* Create a plan button for Step 5 */}
-    <Button variant="contained" color="primary" onClick={handleNext} sx={{marginTop: '10vh', borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px' }}>
+    <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{marginTop: '10vh', borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px' }}>
       {steps[step].buttonLabel1}
     </Button>
 

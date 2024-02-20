@@ -8,6 +8,7 @@ import './App.css';
 import JoinPlan from './component/JoinPlan.js';
 import RestaurantDetails from './component/RestaurantDetails.js';
 import FinalPollResult from './component/FinalPollResult.js';
+import PlanningCard from './component/Planning.js';
 import Instructions from './component/Instructions.js';
 
 const domain = "dev-rkjah3umfq8c82at.us.auth0.com"
@@ -26,8 +27,9 @@ function App() {
         <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/join-plan/:planCode" element={<JoinPlan />} />
+            <Route path="/create-plan" element={<PlanningCard />} />
             <Route path="/instructions" element={<Instructions />} />
+            <Route path="/join-plan/:planCode" element={<JoinPlan />} />
             <Route path="/restaurant-details/:planCode" element={<RestaurantDetails />} />
             <Route path="/final-poll/:planCode" element={<FinalPollResult />} />
             {/* Add other routes as needed */}
