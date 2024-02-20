@@ -5,7 +5,6 @@ import {
   Button,
   TextField,
   Container,
-  Paper,
   Box,
   Grid,
   Snackbar,
@@ -105,21 +104,16 @@ const JoinPlan = () => {
   }, [planCode, planName, hostName, dateOfEvent, timeOfEvent, location]);
 
   return (
-    <Container component="main" >
-      <Paper
-        elevation={3}
-        sx={{
-          paddingTop: '20px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          marginTop: '40px',
-          backgroundColor: '#F2F2F2',
-          width: "400px",  
-          marginRight: 'auto',
-          marginLeft: 'auto',
-        }}
-      >
+    <Container component="main"
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundColor: 'white',
+      width: "400px",  
+      marginRight: 'auto',
+      marginLeft: 'auto',
+    }} >
         <Typography
           variant="h4"
           component="div"
@@ -130,6 +124,7 @@ const JoinPlan = () => {
             fontSize: '28px',
             letterSpacing: '0.36px',
             color: 'rgba(52, 146, 199, 1)',
+            width: "311px"
           }}
         >
           <strong>Welcome to the party!</strong>
@@ -138,7 +133,7 @@ const JoinPlan = () => {
         <Box mb={2} sc={{ width: '386px', textAlign: 'left' }}>
           <Typography
             variant="body1"
-            sx={{ fontSize: '16px', color: '#333', width: '386px', textAlign: 'left', letterSpacing: '1.3px', marginLeft: '22px'  }}
+            sx={{ fontSize: '16px', color: '#333', width: '386px', textAlign: 'left', letterSpacing: '0.32px', marginLeft: '22px'  }}
           >
             <strong>{planDetails?.planName}</strong> hosted by {planDetails?.hostName}
           </Typography>
@@ -184,7 +179,7 @@ const JoinPlan = () => {
     sx={{
       fontSize: '16px',
       color: 'black',
-      width: '170px'
+      width: '170px',
     }}
   >
     <strong>Invite your friends!</strong>
@@ -193,12 +188,13 @@ const JoinPlan = () => {
   <Typography
     variant="body2"
     sx={{
-      fontSize: '16px',
+      fontSize: '14px',
       color: 'black',
-      letterSpacing: '-0.32px'
+      letterSpacing: '-0.32px',
+      marginTop: '10px'
     }}
   >
-    <br /> Tap dotted box to copy your plan code
+    Tap dotted box to copy your plan code
   </Typography>
 </Box>
 
@@ -332,7 +328,6 @@ const JoinPlan = () => {
           timeOfEvent={planDetails?.timeOfEvent}
           location={planDetails?.location}
         />
-      </Paper>
     </Container>
   );
 };
