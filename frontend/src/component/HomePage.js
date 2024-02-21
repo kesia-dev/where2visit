@@ -33,18 +33,20 @@ const HomePage = () => {
         <Grid item>
           <HomeImage />
         </Grid>
-        <Grid item>
-          <ReadyToStartText />
-        </Grid>
-        <Grid item>
-          <CreatePlanButton />
-        </Grid>
-        <Grid item>
-          <LoginText />
-        </Grid>
-        <Grid item>
-          <JoinCompnents />
-        </Grid>
+        <div style={{marginTop: '34px'}}>
+          <Grid item>
+            <ReadyToStartText />
+          </Grid>
+          <Grid item>
+            <CreatePlanButton />
+          </Grid>
+          <Grid item>
+            <LoginText />
+          </Grid>
+          <Grid item>
+            <JoinCompnents />
+          </Grid>
+        </div>
       </Grid>
     </Container>
   );

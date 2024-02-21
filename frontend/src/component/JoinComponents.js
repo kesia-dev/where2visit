@@ -74,7 +74,7 @@ const JoinComponents = () => {
           lineHeight: '28px',
           textAlign: 'center',
           color: 'white',
-          marginTop: '15px',
+          marginTop: '44px',
         }}
       >
         Joining an Existing Plan?
@@ -82,16 +82,17 @@ const JoinComponents = () => {
       <div>
         <Box
           sx={{
-            width: '182px',
-            height: '21px',
+            width: '175px',
+            height: '19px',
             padding: '16px 32px 16px 32px',
             borderRadius: '20px',
-            border: '1px solid #1C1C1C',
+            border: '1px dashed #1C1C1C',
             gap: '12px',
             background: '#E9D8AE',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            marginTop: '16px'
           }}
         >
           <Input
@@ -121,11 +122,12 @@ const JoinComponents = () => {
           sx={{
             width: '241px',
             height: '53px',
-            marginTop: '15px',
+            marginTop: '19px',
             padding: '16px 32px 16px 32px',
             borderRadius: '100px',
             gap: '20px',
             textTransform: 'none',
+            backgroundColor: '#3492C7'
           }}
           disabled={loading}
         >

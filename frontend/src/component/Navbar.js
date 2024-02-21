@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from 
 import { Link, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useMediaQuery, useTheme } from '@mui/material';
+import '@fontsource/inter';
 
 const Navbar = () => {
   const theme = useTheme();
@@ -85,7 +86,7 @@ const Navbar = () => {
           </Typography>
         </div>
         <div>
-          <Button color="inherit" sx={{ textTransform: 'none', marginLeft: '20px' }}>
+          <Button color="inherit" sx={{ textTransform: 'none', marginLeft: '20px', fontWeight: '600' }}>
             Login
           </Button>
           <Menu
