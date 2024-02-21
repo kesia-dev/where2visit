@@ -1,8 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar, Popover } from '@mui/material';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@mui/material';
-import { Link, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
