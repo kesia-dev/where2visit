@@ -1,5 +1,5 @@
 * {
-  box-sizing: none;
+  box-sizing: content-box;
   margin: 0;
   padding: 0;
 }
@@ -10,4 +10,5 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
+  overflow: scroll;
 }
