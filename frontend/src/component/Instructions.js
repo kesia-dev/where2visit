@@ -244,7 +244,7 @@ const Instructions = () => {
 
     {/* Create a plan button for Step 5 */}
 
-    <Box display="flex" alignItems="center" justifyContent="center" sx={{ marginTop: '4vh' }}>
+    <Box display="flex" alignItems="center" justifyContent="center" >
         {step.shape && <div style={{ ...step.shape, marginRight: '10px' }} />}
         <Typography
           color="black"
@@ -257,24 +257,24 @@ const Instructions = () => {
           {step.text2}
         </Typography>
       </Box>
-      
-    <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{ borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px', marginTop: '20px' }}>
-      {steps[step].buttonLabel1}
-    </Button>
+     
+                  <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{ borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px', marginTop: '5px' }}>
+                    {steps[step].buttonLabel1}
+                  </Button>
 
-    {/* Link label for Step 5 */}
-    <Typography
-      variant="body2"
-      sx={{ textAlign: 'center', marginTop: 1, cursor: 'pointer' }}
-      onClick={handleSkip}
-      fontSize={'15px'}
-      fontFamily={'Inter'}
-      color="primary"
-    >
-      {steps[step].linkLabel}
-    </Typography>
-  </div>
-)}
+                  {/* Link label for Step 5 */}
+                  <Typography
+                    variant="body2"
+                    sx={{ textAlign: 'center', marginTop: 1, cursor: 'pointer' }}
+                    onClick={handleSkip}
+                    fontSize={'15px'}
+                    fontFamily={'Inter'}
+                    color="primary"
+                  >
+                    {steps[step].linkLabel}
+                  </Typography>
+                </div>
+              )}
 
           </CardContent>
         </DialogContent>
