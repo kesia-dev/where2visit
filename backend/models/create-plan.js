@@ -54,6 +54,10 @@ const createPlanSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    participants: [{
+        type: String,
+        required: false,
+    }],
     restaurants: [restaurantSchema],
     roomId: {
         type: String,
