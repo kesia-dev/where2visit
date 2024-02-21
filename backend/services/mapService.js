@@ -33,7 +33,7 @@ exports.getGoogleMapsEmbedUrl = (restaurantLat, restaurantLng, key) => {
       return null;
     }
   
-    const baseUrl = 'https://www.google.com/maps/embed/v1/view';
+    const baseUrl = 'https://www.google.com/maps/embed/v1/place';
     const params = new URLSearchParams({
       center: `${restaurantLat},${restaurantLng}`,
       zoom: 15,

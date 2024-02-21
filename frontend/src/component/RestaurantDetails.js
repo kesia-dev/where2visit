@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import VotingDetailsDialog from "./VotingDetailsDialog";
 import MemberDetailsDialog from "./MemberDetailsDialog";
+import GoogleMapEmbed from "./GoogleMapEmbed";
 import copy from "clipboard-copy";
 import Rating from "@mui/material/Rating";
 import Divider from "@mui/material/Divider";
@@ -36,7 +37,7 @@ const RestaurantDetails = () => {
   // Access the 'code' parameter from the URL
   const { planCode } = useParams();
 
-  // Fetch the plan details from the server 
+  // Fetch the plan details from the server
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,24 +61,34 @@ const RestaurantDetails = () => {
     : 0;
 
   // Create a new Date object from the date and time strings
-  const eventDateTime = new Date(
-    `${planDetails.dateOfEvent}T${planDetails.timeOfEvent}`
+  const eventDate = new Date(
+    `${planDetails.dateOfEvent}`
   );
+  const eventTime = new Date(
+    `${planDetails.dateOfEvent}T${planDetails.timeOfEvent}`  );
 
   // Format the date and time
-  const formattedDate = eventDateTime.toLocaleDateString("en-US", {
+  const formattedDate = eventDate.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-  const formattedTime = eventDateTime.toLocaleTimeString("en-US", {
+  const formattedTime = eventTime.toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
   });
 
-  const positiveVoteCount = restaurant.positiveVotes ? restaurant.positiveVotes.length : 0;
-    console.log("vote count:", positiveVoteCount);
+  console.log("date:", planDetails.dateOfEvent);
+  console.log("time:", planDetails.timeOfEvent);
+  console.log("formatted date:", formattedDate);
+  console.log("formatted time:", formattedTime);
+
+  // Get the number of positive votes for the current restaurant
+  const positiveVoteCount = restaurant.positiveVotes
+    ? restaurant.positiveVotes.length
+    : 0;
+  console.log("vote count:", positiveVoteCount);
 
   //   Event handlers for the arrow buttons
   const handleNextClick = () => {
@@ -367,20 +378,23 @@ const RestaurantDetails = () => {
             }}
           >
             <Box>
-            <Box
+              <Box
                 sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
-            >
+              >
                 <Typography variant="body1" sx={{ color: "#fff" }}>
-                    {restaurant.price} •  {restaurant.categories ? restaurant.categories.join(", ") : ""}
+                  {restaurant.price} •{" "}
+                  {restaurant.categories
+                    ? restaurant.categories.join(", ")
+                    : ""}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#fff" }}>
-                    {restaurant.distanceFromUser}
+                  {restaurant.distanceFromUser}
                 </Typography>
-            </Box>
+              </Box>
               <Typography variant="body1" sx={{ color: "#fff" }}>
                 {restaurant.address}
               </Typography>
@@ -515,7 +529,7 @@ const RestaurantDetails = () => {
               Menu
             </Button>
           </Box>
-          <Box sx={{ display: "flex" }}>
+          {/* <Box sx={{ display: "flex" }}>
             <Button
               variant="outlined"
               sx={{
@@ -535,9 +549,10 @@ const RestaurantDetails = () => {
               />
               View Directions
             </Button>
-          </Box>
+          </Box> */}
           {/* Map */}
-          <Card
+          <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl}/>
+          {/* <Card
             sx={{
               justifyContent: "center",
               alignItems: "center",
@@ -549,13 +564,13 @@ const RestaurantDetails = () => {
             }}
           >
             <CardMedia
-              component="img"
-              image={restaurant.googleStaticMapUrl}
+              component="iframe"
+              src={restaurant.googleStaticMapUrl}
               alt="Map"
               width="100%"
               height="170px"
             />
-          </Card>
+          </Card> */}
         </Box>
       </Paper>
     </Container>
