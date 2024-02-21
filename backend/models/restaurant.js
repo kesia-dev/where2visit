@@ -37,6 +37,10 @@ const restaurantSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    googleEmbedMapUrl: {
+        type: String,
+        required: false,
+    },
     yelpBusinessId: {
         type: String,
         required: true,

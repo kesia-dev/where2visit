@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Instructions from './Instructions';
 
 const CreatePlanButton = () => {
+  const navigate = useNavigate();
   const [openInstructions, setOpenInstructions] = useState(false);
 
   const handleCreatePlan = () => {
     // Open the instructions component
     setOpenInstructions(true);
+
+    // Navigate to /instructions
+    navigate('/instructions');
+
+    // Apply body background color
+    document.body.classList.add('home-page');
+
   };
 
   const handleCloseInstructions = () => {

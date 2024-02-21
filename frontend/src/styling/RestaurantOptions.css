@@ -1,0 +1,18 @@
+.MuiBox-root.css-dvxtzn {
+  margin: 15px 10px;
+}
+
+.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-6.css-1osj8n2-MuiGrid-root {
+  padding-top: 0;
+}
+
+.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.css-1idn90j-MuiGrid-root {
+  padding-top: 25px;
+}
+
+@media (min-width: 600px) {
+
+  .MuiBox-root.css-dvxtzn {
+    margin: 15px 100px;
+  }
+}
