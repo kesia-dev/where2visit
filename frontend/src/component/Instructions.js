@@ -88,7 +88,9 @@ const Instructions = () => {
     setOpenInstructions(false);
     navigate('/');
   };
-
+  const handleCreatePlan = () => {
+    navigate('/create-plan');
+  }
 
   return (
     <div className="instructions-body">
@@ -256,7 +258,7 @@ const Instructions = () => {
         </Typography>
       </Box>
       
-    <Button variant="contained" color="primary" onClick={handleNext} sx={{ borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px', marginTop: '20px' }}>
+    <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{ borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px', marginTop: '20px' }}>
       {steps[step].buttonLabel1}
     </Button>
 
