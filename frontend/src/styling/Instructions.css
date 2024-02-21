@@ -1,24 +1,14 @@
 /* Instructions.css */
 
-.instructions-body {
-  background: linear-gradient(179.94deg, rgba(0, 0, 0, 0) -0.4%, rgba(0, 0, 0, 0.6) 72.52%), linear-gradient(0deg, #3492C7, #3492C7);
-}
-
-.css-1t1j96h-MuiPaper-root-MuiDialog-paper::-webkit-scrollbar {
-  margin: 80px;
-  display: none;
-}
 
 .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
-  margin: 80px;
+  height: 470px;
+  width: 343px;
 }
 
-.css-hz1bth-MuiDialog-container{
-  /* margin-top: 50px; */
-}
 
-body {
+.MuiDialog-root{
   background: linear-gradient(179.94deg, rgba(0, 0, 0, 0) -0.4%, rgba(0, 0, 0, 0.6) 72.52%), linear-gradient(0deg, #3492C7, #3492C7);
 }

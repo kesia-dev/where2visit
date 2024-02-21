@@ -37,10 +37,14 @@ const HomePage = () => {
           <Grid item>
             <ReadyToStartText />
           </Grid>
-          <Grid item>
+          <Grid item style={{
+            display: 'flex',
+            justifyContent: 'center'}}>
             <CreatePlanButton />
           </Grid>
-          <Grid item>
+          <Grid item style={{
+            display: 'flex',
+            justifyContent: 'center'}}>
             <LoginText />
           </Grid>
           <Grid item>

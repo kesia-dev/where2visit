@@ -39,7 +39,9 @@ const CreatePlanButton = () => {
           borderRadius: '100px',
           gap: '20px',
           textTransform: 'none',
-          backgroundColor: '#3492C7'
+          backgroundColor: '#3492C7',
+          display: 'flex', 
+          justifyContent: 'center'
         }}
       >
         Create a Plan

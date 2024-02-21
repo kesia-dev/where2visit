@@ -31,20 +31,19 @@ const JoinComponents = () => {
 
       if (response.status === 200) {
         const data = response.data;
-          // If the code is valid, set isCodeValid to true
-          setIsCodeValid(true);
-          // Set the plan details to be passed to the JoinPlan component
-          setPlanDetails({
-            planName: data.planName,
-            hostName: data.hostName,
-            dateOfEvent: data.dateOfEvent,
-            timeOfEvent: data.timeOfEvent,
-            location: data.location,
-          });
+        // If the code is valid, set isCodeValid to true
+        setIsCodeValid(true);
+        // Set the plan details to be passed to the JoinPlan component
+        setPlanDetails({
+          planName: data.planName,
+          hostName: data.hostName,
+          dateOfEvent: data.dateOfEvent,
+          timeOfEvent: data.timeOfEvent,
+          location: data.location,
+        });
 
-          // Navigate to the JoinPlanPage with the entered code as a parameter
-          navigate(`/join-plan/${enteredCode}`);
-  
+        // Navigate to the JoinPlanPage with the entered code as a parameter
+        navigate(`/join-plan/${enteredCode}`);
       } else {
         console.error('Error fetching plan details:', response.statusText);
         setOpenSnackbar(true);
@@ -63,10 +62,17 @@ const JoinComponents = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <Typography
-        variant='h3'
-        align='center'
+        variant="h3"
+        align="center"
         sx={{
           fontFamily: 'Inter',
           fontSize: '22px',
@@ -75,6 +81,8 @@ const JoinComponents = () => {
           textAlign: 'center',
           color: 'white',
           marginTop: '44px',
+          letterSpacing: '0.35px',
+          width: '276px',
         }}
       >
         Joining an Existing Plan?
@@ -151,7 +159,7 @@ const JoinComponents = () => {
           onClose={handleCloseSnackbar}
           severity="error"
         >
-          Please enter a valid code before joining the plan.
+          Please enter a valid code to join the plan.
         </MuiAlert>
       </Snackbar>
     </div>

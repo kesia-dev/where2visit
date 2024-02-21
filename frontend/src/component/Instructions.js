@@ -1,47 +1,80 @@
 import React, { useState, useEffect } from 'react';
-import { CardContent, Typography, Button, Box, MobileStepper, Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
+import {
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  MobileStepper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import '../styling/Instructions.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const Instructions = () => {
-  const [openInstructions, setOpenInstructions] = useState(true);
-  const [step, setStep] = React.useState(0);
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const steps = [
     {
-      content: '<strong>Step 1</strong>: Select a topic <br>Restaurant / Activities / Hotels',
-      image: './assets/food-combo.png',
+      content1: '<span style="color: black; font-size: 22px;font-weight: 700; font-family: inter">STEP 1: <span style="color: #3492C7; font-size: 22px; ;font-weight: 700; font-family: inter">Select topic</span>',
+      content2: '<br><span style="color: #00000099; font-size: 17px; ;font-weight: 400; font-family: inter; letter-spacing: -0.41px; line-height: 22px">Restaurant / Activities / Hotels</span>',
+      image1: './assets/food-combo.png',
     },
     {
-      content: '<strong>Step 2</strong>: Set Preferences <br>Select your preferences to filter and find the most suitable options for you and your group',
-      image: './assets/gray-box.png',
+      content1: '<span style="color: black; font-size: 22px;font-weight: 700; font-family: inter">STEP 2:</span> <span style="color: #3492C7; font-size: 22px; ;font-weight: 700; font-family: inter">Set Preferences</span> ',
+      content4: '<br>Select your preferences to filter and find the most suitable options for you and your group',
+      image2: "./assets/gray-box.png",
     },
     {
-      content: '<strong>Step 3</strong>: Share and Vote <br>Invite your friends to join and vote for the best choice',
-      image: './assets/online-ordering.png',
+      content1: '<span style="color: black; font-size: 22px;font-weight: 700; font-family: inter">STEP 3:</span> <span style="color: #3492C7; font-size: 22px; ;font-weight: 700; font-family: inter">Share and Vote</span> ', 
+      content3: '<span><br>Invite your friends to join and vote for the best choice</span>',
+      image3: './assets/online-ordering.png',
     },
     {
-      content: '<strong>Step 4</strong>: View Poll Results <br>Once the votes are collected, see the final matches and enjoy!',
-      image: './assets/winner-cup.png',
+      content1: '<span style="color: black; font-size: 22px;font-weight: 700; font-family: inter"> Step 4:</span> <span style="color: #3492C7; font-size: 22px; ;font-weight: 700; font-family: inter"> View Poll Results </span>',
+      content2: '<br>Once the votes are collected, see the final matches and enjoy!',
+      image4: './assets/winner-cup.png',
     },
     {
       text2: 'Where2Visit',
+      text3: 'Ready to Start?',
       shape: {
         width: '20px',
         height: '20px',
         background: '#3492C7',
         borderRadius: '100%',
       },
-      text3: 'Ready to Start?',
       buttonLabel1: 'Create a Plan',
-      linkLabel: 'Already have an account? Login',
+      linkLabel: 'Already have an account? Login'
     },
-
   ];
+
+  const [step, setStep] = React.useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [isOnInstructionsPage, setIsOnInstructionsPage] = useState(
+    location.pathname === '/instructions'
+  );
+
+  useEffect(() => {
+    // Update the state when the location changes
+    setIsOnInstructionsPage(location.pathname === '/instructions');
+  }, [location]);
+
+  useEffect(() => {
+    // Handle initial mount and route change
+    document.body.classList.toggle('gradient-background', isOnInstructionsPage);
+
+    // Cleanup on component unmount
+    return () => {
+      document.body.classList.remove('gradient-background');
+    };
+  }, [isOnInstructionsPage]);
+
+  const [openInstructions, setOpenInstructions] = useState(true);
 
   const handleNext = () => {
     setStep((prevStep) => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
@@ -53,120 +86,107 @@ const Instructions = () => {
 
   const handleCloseInstructions = () => {
     setOpenInstructions(false);
-
-    // Navigate to the home page
     navigate('/');
   };
-
-  useEffect(() => {
-    // Apply background styles when the component mounts
-    if (location.pathname === '/instructions') {
-      // document.body.style.background = 'linear-gradient(179.94deg, rgba(0, 0, 0, 0) -0.4%, rgba(0, 0, 0, 0.6) 72.52%), linear-gradient(0deg, #3492C7, #3492C7)';
-      document.body.style.background = '#3492C7';
-    } else {
-      // Reset background styles when leaving the instructions route
-      document.body.style.background = 'initial';
-    }
-
-    // Clean up styles when the component unmounts
-    return () => {
-      document.body.style.background = 'initial';
-    };
-  }, [location.pathname]);
-
   const handleCreatePlan = () => {
     navigate('/create-plan');
   }
 
-
   return (
-    <>
-      <div>
-        <Box
+    <div className="instructions-body">
+    <Dialog open={openInstructions} onClose={handleCloseInstructions}>
+      <DialogTitle>
+        <IconButton
+          edge="end"
+          color="inherit"
+          onClick={handleCloseInstructions}
+          aria-label="close"
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'row',
-            height: '10vh',
-            marginTop:'15px',
-            fontFamily: 'Inter'
+            position: 'absolute',
+            right: 8,
+            top: 8,
           }}
-        >
-          <div>
-            <div style={{ 
-              width: '24px', 
-              height: '24px', 
-              borderRadius: '50%', 
-              backgroundColor: '#fff' }}></div>
-          </div>
-          <div>
-            <span style={{ fontSize: '24px', fontWeight: 'bold', color: 'white' }}>Where2Visit</span>
-          </div>
-        </Box>
-      </div>
-      {location.pathname === '/instructions'}
-      <Dialog 
-      open={openInstructions} 
-      onClose={handleCloseInstructions} 
-      sx={{
-        marginLeft: '12px',
-        marginRight: '12px'
-        }}>
-        <DialogTitle>
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleCloseInstructions}
-            aria-label="close"
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <CardContent className="customCardContent" style={{ padding: '0px' }}>
-            {/* MobileStepper for navigation */}
-            <MobileStepper
-              variant="dots"
-              steps={steps.length}
-              position="static"
-              activeStep={step}
-              sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}
-              dotactivestyle={{ backgroundColor: 'black' }}
-              dotstyle={{ backgroundColor: 'grey' }}
-            />
+        > 
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+    <CardContent className="customCardContent" style={{padding: '0px'}}>
+      {/* MobileStepper for navigation */}
+      <MobileStepper
+        variant="dots"
+        steps={steps.length}
+        position="static"
+        activeStep={step}
+        sx={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}
+        dotactivestyle={{ backgroundColor: 'black' }}
+        dotstyle={{ backgroundColor: 'grey' }}
+      />
 
             {/* Step Image and Content */}
             <Box display="flex" flexDirection="column" alignItems="center">
-              {step < 4 && <img src={steps[step].image} alt={`Step ${step + 1}`} style={{ maxWidth: '80%' }} />}
+              {step === 0 && <img src={steps[step].image1} alt={`Step ${step + 1}`} style={{ width: '153px', height: '115px', marginTop: '20px', marginBottom: '20px' }} />}
+              {step === 1 && <img src={steps[step].image2} alt={`Step ${step + 1}`} style={{ width: '194px', height: '55px', marginTop: '55px', marginBottom: '20px' }} />}
+              {step === 2 && <img src={steps[step].image3} alt={`Step ${step + 1}`} style={{ width: '167px', height: '127px', marginTop: '5px', marginBottom: '20px' }} />}
+              {step === 3 && <img src={steps[step].image4} alt={`Step ${step + 1}`} style={{ width: '153px', height: '153px' }} />}
               <Typography
                 variant="body2"
                 color="text.secondary"
-                dangerouslySetInnerHTML={{ __html: steps[step].content }}
+                dangerouslySetInnerHTML={{ __html: steps[step].content1 }}
                 align="center"
-                marginTop={'10px'}
+                marginTop={'15px'}
+                width={'278px'}
                 fontFamily={'Inter'}
                 fontWeight={400}
                 fontSize={'17px'}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                dangerouslySetInnerHTML={{ __html: steps[step].content2 }}
+                align="center"
+                width={'278px'}
+                fontFamily={'Inter'}
+                fontWeight={400}
+                fontSize={'17px'}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                dangerouslySetInnerHTML={{ __html: steps[step].content3 }}
+                align="center"
+                fontFamily={'Inter'}
+                width={'278px'}
+                fontWeight={400}
+                fontSize={'17px'}
+                lineHeight={'22px'}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                dangerouslySetInnerHTML={{ __html: steps[step].content4 }}
+                align="center"
+                fontFamily={'Inter'}
+                width={'278px'}
+                letterSpacing={'-0.41px'}
+                fontWeight={400}
+                fontSize={'17px'}
+                lineHeight={'22px'}
               />
             </Box>
 
             {/* Next Button */}
             {step < 4 && (
-              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                <Button variant="contained" color="primary" onClick={handleNext}>
-                  Next
-                </Button>
-              </div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '35px' }}>
+              <Button variant="contained" color="primary" onClick={handleNext} style={{ borderRadius: '100px', width: '100px', height: '53px' }}>
+                Next
+              </Button>
+            </div>
+            
             )}
 
             {/* Skip Instructions */}
-            {step < 4 && (
+            {step === 0 && (
               <Typography
                 variant="body2"
                 sx={{ textAlign: 'center', marginTop: 2, cursor: 'pointer' }}
@@ -179,10 +199,16 @@ const Instructions = () => {
               </Typography>
             )}
 
-            {/* Display Shape and Text for Step 5 */}
+
+
+      {/* Display Buttons for Step 5 */}
+      {step === 4 && (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',  overflowY: '0' }}>
+
+            {/* Ready to start text */}
             <Box display="flex" alignItems="center" justifyContent="center" sx={{ marginTop: '4vh' }}>
               {step === 4 && (
-                <div style={{ ...steps[step].shape, marginRight: '10px' }} />
+                <div style={{ ...steps[step].shape, marginRight: '10px', marginTop:'-60px' }} />
               )}
               <Typography
                 color="black"
@@ -191,38 +217,50 @@ const Instructions = () => {
                 fontSize="20px"
                 lineHeight="25px"
                 letterSpacing="0.38px"
+                marginTop={'-60px'}
               >
                 {steps[step].text2}
               </Typography>
             </Box>
+            {/* Ready to start text */}
+            <Box style={{  alignItems: 'center', width: '100%', marginBottom: '10vh', marginTop: '10vh' }}>
+            <Typography
+              color="text.secondary"
+              align="center"
+              fontFamily="Inter"
+              fontWeight={700}
+              fontSize="22px"
+              lineHeight="34px"
+              letterSpacing="0.36px"
+              sx={{
+                width: '100%',
+                height: '34px',
+                color: 'black',
+              }}
+            >
+              {steps[step].text3}
+            </Typography>
+          </Box>
 
-            {/* Display Buttons for Step 5 */}
-            {step === 4 && (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10vh', overflowY: '0' }}>
-                {/* Ready to start text */}
-                <Box style={{ marginTop: 1, alignItems: 'center', width: '100%' }}>
-                  <Typography
-                    color="text.secondary"
-                    align="center"
-                    fontFamily="Inter"
-                    fontWeight={700}
-                    fontSize="22px"
-                    lineHeight="34px"
-                    letterSpacing="0.36px"
-                    sx={{
-                      width: '100%',
-                      height: '34px',
-                      color: 'black',
-                    }}
-                  >
-                    {steps[step].text3}
-                  </Typography>
-                </Box>
+    {/* Create a plan button for Step 5 */}
 
-                {/* Create a plan button for Step 5 */}
-                <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{ marginTop: '10vh', borderRadius: '100px', textTransform: 'none', width: '200px', height: '50.34px' }}>
-                  {steps[step].buttonLabel1}
-                </Button>
+    <Box display="flex" alignItems="center" justifyContent="center" sx={{ marginTop: '4vh' }}>
+        {step.shape && <div style={{ ...step.shape, marginRight: '10px' }} />}
+        <Typography
+          color="black"
+          fontFamily="Inter"
+          fontWeight={600}
+          fontSize="20px"
+          lineHeight="25px"
+          letterSpacing="0.38px"
+        >
+          {step.text2}
+        </Typography>
+      </Box>
+      
+    <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{ borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px', marginTop: '20px' }}>
+      {steps[step].buttonLabel1}
+    </Button>
 
                 {/* Link label for Step 5 */}
                 <Typography
@@ -241,7 +279,7 @@ const Instructions = () => {
           </CardContent>
         </DialogContent>
       </Dialog>
-    </>
+      </div>
   );
 };
 
