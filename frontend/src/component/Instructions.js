@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CardContent, Typography, Button, Box, MobileStepper, Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import '../styling/Instructions.css';
-import { useNavigate, useLocation} from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
 const Instructions = () => {
@@ -34,7 +34,7 @@ const Instructions = () => {
         width: '20px',
         height: '20px',
         background: '#3492C7',
-        borderRadius: '50%',
+        borderRadius: '100%',
       },
       text3: 'Ready to Start?',
       buttonLabel1: 'Create a Plan',
@@ -61,7 +61,8 @@ const Instructions = () => {
   useEffect(() => {
     // Apply background styles when the component mounts
     if (location.pathname === '/instructions') {
-      document.body.style.background = 'linear-gradient(179.94deg, rgba(0, 0, 0, 0) -0.4%, rgba(0, 0, 0, 0.6) 72.52%), linear-gradient(0deg, #3492C7, #3492C7)';
+      // document.body.style.background = 'linear-gradient(179.94deg, rgba(0, 0, 0, 0) -0.4%, rgba(0, 0, 0, 0.6) 72.52%), linear-gradient(0deg, #3492C7, #3492C7)';
+      document.body.style.background = '#3492C7';
     } else {
       // Reset background styles when leaving the instructions route
       document.body.style.background = 'initial';
@@ -80,8 +81,38 @@ const Instructions = () => {
 
   return (
     <>
+      <div>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            height: '10vh',
+            marginTop:'15px',
+            fontFamily: 'Inter'
+          }}
+        >
+          <div>
+            <div style={{ 
+              width: '24px', 
+              height: '24px', 
+              borderRadius: '50%', 
+              backgroundColor: '#fff' }}></div>
+          </div>
+          <div>
+            <span style={{ fontSize: '24px', fontWeight: 'bold', color: 'white' }}>Where2Visit</span>
+          </div>
+        </Box>
+      </div>
       {location.pathname === '/instructions'}
-      <Dialog open={openInstructions} onClose={handleCloseInstructions}>
+      <Dialog 
+      open={openInstructions} 
+      onClose={handleCloseInstructions} 
+      sx={{
+        marginLeft: '12px',
+        marginRight: '12px'
+        }}>
         <DialogTitle>
           <IconButton
             edge="end"
@@ -148,64 +179,64 @@ const Instructions = () => {
               </Typography>
             )}
 
-          {/* Display Shape and Text for Step 5 */}
-<Box display="flex" alignItems="center" justifyContent="center" sx={{ marginTop: '4vh' }}>
-  {step === 4 && (
-    <div style={{ ...steps[step].shape, marginRight: '10px' }} />
-  )}
-  <Typography
-    color="black"
-    fontFamily="Inter"
-    fontWeight={600}
-    fontSize="20px"
-    lineHeight="25px"
-    letterSpacing="0.38px"
-  >
-    {steps[step].text2}
-  </Typography>
-</Box>
+            {/* Display Shape and Text for Step 5 */}
+            <Box display="flex" alignItems="center" justifyContent="center" sx={{ marginTop: '4vh' }}>
+              {step === 4 && (
+                <div style={{ ...steps[step].shape, marginRight: '10px' }} />
+              )}
+              <Typography
+                color="black"
+                fontFamily="Inter"
+                fontWeight={600}
+                fontSize="20px"
+                lineHeight="25px"
+                letterSpacing="0.38px"
+              >
+                {steps[step].text2}
+              </Typography>
+            </Box>
 
-{/* Display Buttons for Step 5 */}
-{step === 4 && (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10vh', overflowY: '0' }}>
-    {/* Ready to start text */}
-    <Box style={{ marginTop: 1, alignItems: 'center', width: '100%' }}>
-      <Typography
-        color="text.secondary"
-        align="center"
-        fontFamily="Inter"
-        fontWeight={700}
-        fontSize="22px"
-        lineHeight="34px"
-        letterSpacing="0.36px"
-        sx={{
-          width: '100%',
-          height: '34px',
-          color: 'black',
-        }}
-      >
-        {steps[step].text3}
-      </Typography>
-    </Box>
+            {/* Display Buttons for Step 5 */}
+            {step === 4 && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10vh', overflowY: '0' }}>
+                {/* Ready to start text */}
+                <Box style={{ marginTop: 1, alignItems: 'center', width: '100%' }}>
+                  <Typography
+                    color="text.secondary"
+                    align="center"
+                    fontFamily="Inter"
+                    fontWeight={700}
+                    fontSize="22px"
+                    lineHeight="34px"
+                    letterSpacing="0.36px"
+                    sx={{
+                      width: '100%',
+                      height: '34px',
+                      color: 'black',
+                    }}
+                  >
+                    {steps[step].text3}
+                  </Typography>
+                </Box>
 
-    {/* Create a plan button for Step 5 */}
-    <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{marginTop: '10vh', borderRadius: '100px', textTransform: 'none', width: '200px', height:'50.34px' }}>
-      {steps[step].buttonLabel1}
-    </Button>
+                {/* Create a plan button for Step 5 */}
+                <Button variant="contained" color="primary" onClick={handleCreatePlan} sx={{ marginTop: '10vh', borderRadius: '100px', textTransform: 'none', width: '200px', height: '50.34px' }}>
+                  {steps[step].buttonLabel1}
+                </Button>
 
-    {/* Link label for Step 5 */}
-    <Typography
-      variant="body2"
-      sx={{ textAlign: 'center', marginTop: 1, cursor: 'pointer' }}
-      onClick={handleSkip}
-      fontSize={'15px'}
-      fontFamily={'Inter'}
-      color="primary"
-    >
-      {steps[step].linkLabel}
-    </Typography>
-  </div>
-)}
+                {/* Link label for Step 5 */}
+                <Typography
+                  variant="body2"
+                  sx={{ textAlign: 'center', marginTop: 1, cursor: 'pointer' }}
+                  onClick={handleSkip}
+                  fontSize={'15px'}
+                  fontFamily={'Inter'}
+                  color="primary"
+                >
+                  {steps[step].linkLabel}
+                </Typography>
+              </div>
+            )}
 
           </CardContent>
         </DialogContent>
