@@ -17,11 +17,7 @@ import MuiAlert from '@mui/material/Alert';
 const JoinPlan = () => {
   const { planCode, planName, hostName, dateOfEvent, timeOfEvent, location } = useParams();
   const [userName, setUserName] = useState('');
-  const [planDetails, setPlanDetails] = useState(() => {
-    // Load from local storage on component mount
-    const storedDetails = localStorage.getItem('planDetails');
-    return storedDetails ? JSON.parse(storedDetails) : null;
-  });
+  const [planDetails, setPlanDetails] = useState(null);
   const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
   const [joinSnackbarOpen, setJoinSnackbarOpen] = useState(false);
 
@@ -129,27 +125,58 @@ const JoinPlan = () => {
             fontSize: '28px',
             letterSpacing: '0.36px',
             color: 'rgba(52, 146, 199, 1)',
-            width: "311px"
+            width: "311px",
+            marginBottom: '20px'
           }}
         >
           <strong>Welcome to the party!</strong>
         </Typography>
 
-        <Box mb={2} sc={{ width: '386px', textAlign: 'left' }}>
-          <Typography
-            variant="body1"
-            sx={{ fontSize: '16px', color: '#333', width: '386px', textAlign: 'left', letterSpacing: '0.32px', marginLeft: '22px'  }}
-          >
-            <strong>{planDetails?.planName}</strong> hosted by {planDetails?.hostName}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ fontSize: '14px', color: '#666', letterSpacing: '0.5px', marginLeft: '22px' }}
-          >
-            {planDetails?.dateOfEvent} @ {planDetails?.timeOfEvent}
-          </Typography>
-        </Box>
+        <Box mb={2} sx={{ width: '375px', textAlign: 'left', color: '#1C1C1C' }}>
+            <div style={{ display: 'flex', alignItems: 'left' }}>
+              <Typography
+                variant="body1"
+                sx={{ 
+                  marginTop: '10px',
+                  fontFamily: 'Inter',
+                  fontWeight: '700',
+                  fontSize: '22px',
+                  lineHeight: '28px', 
+                  textAlign: 'left', 
+                  letterSpacing: '0.35px' }}
+              >
+                {planDetails?.planName}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{ 
+                  fontFamily: 'Inter',
+                  fontWeight: '400',
+                  fontSize: '16px',
+                  lineHeight: '-10px', 
+                  marginLeft: '5px',
+                  letterSpacing: '-0.32px',
+                  alignSelf: 'flex-end'  }}
+              >
+                hosted by {planDetails?.hostName}
+              </Typography>
+            </div>
 
+            <Typography
+              variant="body2"
+              sx={{
+                width: '386px',
+                fontSize: '16px',
+                color: '#1C1C1C',
+                letterSpacing: '-0.32px',
+                fontFamily: 'inter',
+                fontWeight: '400',
+                lineHeight: '21px',
+              }}
+            >
+              {planDetails?.dateOfEvent} @ {planDetails?.timeOfEvent}
+            </Typography>
+        </Box>
         <Grid
           container
           spacing={2}
@@ -171,37 +198,37 @@ const JoinPlan = () => {
                 width: '100%'
               }}
             >
-  <Box
-  sx={{
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'Left',
-    width: '328px'
-  }}
->
-  <Typography
-    variant="body2"
-    sx={{
-      fontSize: '16px',
-      color: 'black',
-      width: '170px',
-    }}
-  >
-    <strong>Invite your friends!</strong>
-  </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                textAlign: 'Left',
+                width: '328px'
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: '16px',
+                  color: 'black',
+                  width: '170px',
+                }}
+              >
+                <strong>Invite your friends!</strong>
+              </Typography>
 
-  <Typography
-    variant="body2"
-    sx={{
-      fontSize: '14px',
-      color: 'black',
-      letterSpacing: '-0.32px',
-      marginTop: '10px'
-    }}
-  >
-    Tap dotted box to copy your plan code
-  </Typography>
-</Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: '14px',
+                  color: 'black',
+                  letterSpacing: '-0.32px',
+                  marginTop: '10px'
+                }}
+              >
+                Tap dotted box to copy your plan code
+              </Typography>
+          </Box>
 
               <Box
                 onClick={handleCopyClick}

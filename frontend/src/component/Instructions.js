@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CardContent,
   Typography,
@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import '../styling/Instructions.css';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const Instructions = () => {
@@ -53,9 +53,28 @@ const Instructions = () => {
 
   const [step, setStep] = React.useState(0);
   const navigate = useNavigate();
-  
-  const [openInstructions, setOpenInstructions] = useState(true);
+  const location = useLocation();
 
+  const [isOnInstructionsPage, setIsOnInstructionsPage] = useState(
+    location.pathname === '/instructions'
+  );
+
+  useEffect(() => {
+    // Update the state when the location changes
+    setIsOnInstructionsPage(location.pathname === '/instructions');
+  }, [location]);
+
+  useEffect(() => {
+    // Handle initial mount and route change
+    document.body.classList.toggle('gradient-background', isOnInstructionsPage);
+
+    // Cleanup on component unmount
+    return () => {
+      document.body.classList.remove('gradient-background');
+    };
+  }, [isOnInstructionsPage]);
+
+  const [openInstructions, setOpenInstructions] = useState(true);
 
   const handleNext = () => {
     setStep((prevStep) => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
@@ -72,6 +91,7 @@ const Instructions = () => {
 
 
   return (
+    <div className="instructions-body">
     <Dialog open={openInstructions} onClose={handleCloseInstructions}>
       <DialogTitle>
         <IconButton
@@ -84,7 +104,7 @@ const Instructions = () => {
             right: 8,
             top: 8,
           }}
-        >
+        > 
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -185,21 +205,21 @@ const Instructions = () => {
 
             {/* Ready to start text */}
             <Box display="flex" alignItems="center" justifyContent="center" sx={{ marginTop: '4vh' }}>
-  {step === 4 && (
-    <div style={{ ...steps[step].shape, marginRight: '10px', marginTop:'-60px' }} />
-  )}
-  <Typography
-    color="black"
-    fontFamily="Inter"
-    fontWeight={600}
-    fontSize="20px"
-    lineHeight="25px"
-    letterSpacing="0.38px"
-    marginTop={'-60px'}
-  >
-    {steps[step].text2}
-  </Typography>
-</Box>
+              {step === 4 && (
+                <div style={{ ...steps[step].shape, marginRight: '10px', marginTop:'-60px' }} />
+              )}
+              <Typography
+                color="black"
+                fontFamily="Inter"
+                fontWeight={600}
+                fontSize="20px"
+                lineHeight="25px"
+                letterSpacing="0.38px"
+                marginTop={'-60px'}
+              >
+                {steps[step].text2}
+              </Typography>
+            </Box>
             {/* Ready to start text */}
             <Box style={{  alignItems: 'center', width: '100%', marginBottom: '10vh', marginTop: '10vh' }}>
             <Typography
@@ -257,6 +277,7 @@ const Instructions = () => {
           </CardContent>
         </DialogContent>
       </Dialog>
+      </div>
   );
 };
 

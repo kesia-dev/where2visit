@@ -1,8 +1,5 @@
 /* Instructions.css */
 
-.instructions-body {
-  background: linear-gradient(179.94deg, rgba(0, 0, 0, 0) -0.4%, rgba(0, 0, 0, 0.6) 72.52%), linear-gradient(0deg, #3492C7, #3492C7);
-}
 
 .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
   -ms-overflow-style: none;  /* IE and Edge */
@@ -12,7 +9,6 @@
 }
 
 
-body {
+.MuiDialog-root{
   background: linear-gradient(179.94deg, rgba(0, 0, 0, 0) -0.4%, rgba(0, 0, 0, 0.6) 72.52%), linear-gradient(0deg, #3492C7, #3492C7);
 }
-
