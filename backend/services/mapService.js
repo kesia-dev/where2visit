@@ -26,7 +26,7 @@ exports.getGoogleStaticMap = (restaurantLat, restaurantLng, key) => {
     return url;
 };
 
-exports.getGoogleMapsEmbedUrl = (restaurantName, restaurantAddress, key) => {
+exports.getGoogleMapsEmbedUrl = (restaurantName, restaurantAddress, restaurantLat, restaurantLng, key) => {
     // Ensure latitude and longitude are valid:
     if (!restaurantName || !restaurantAddress || !key) {
       console.error('Invalid parameters for generating Google Maps Embed URL.');
@@ -36,6 +36,8 @@ exports.getGoogleMapsEmbedUrl = (restaurantName, restaurantAddress, key) => {
     const baseUrl = 'https://www.google.com/maps/embed/v1/place';
     const params = new URLSearchParams({
       q: `${restaurantName},${restaurantAddress}`,
+      center: `${restaurantLat},${restaurantLng}`,
+      zoom: "12",
       key
     });
   
