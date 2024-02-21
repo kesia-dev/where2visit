@@ -3,11 +3,14 @@ import { Typography, Box, Input, Button, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import JoinPlan from './JoinPlan';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const JoinComponents = () => {
   const [enteredCode, setEnteredCode] = useState('');
   const [isCodeValid, setIsCodeValid] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [planDetails, setPlanDetails] = useState(null);
 
   const navigate = useNavigate();
 
@@ -15,16 +18,41 @@ const JoinComponents = () => {
     setEnteredCode(event.target.value);
   };
 
-  const handleJoinPlanClick = () => {
-    // Example validation logic (replace this with your actual validation)
-    const isValid = enteredCode.trim() !== ''; // Check if the code is not empty
+  const handleJoinPlanClick = async () => {
+    try {
+      setLoading(true);
 
-    if (isValid) {
-      // Navigate to the JoinPlanPage with the entered code as a parameter
-      navigate(`/join-plan/${enteredCode}`);
-    } else {
-      // Open the Snackbar to alert the user if the entered code is not valid
+      // Make an asynchronous request to your server to get plan details
+      const response = await axios.get('http://localhost:4200/plan/get-plan', {
+        params: {
+          planCode: enteredCode,
+        },
+      });
+
+      if (response.status === 200) {
+        const data = response.data;
+        // If the code is valid, set isCodeValid to true
+        setIsCodeValid(true);
+        // Set the plan details to be passed to the JoinPlan component
+        setPlanDetails({
+          planName: data.planName,
+          hostName: data.hostName,
+          dateOfEvent: data.dateOfEvent,
+          timeOfEvent: data.timeOfEvent,
+          location: data.location,
+        });
+
+        // Navigate to the JoinPlanPage with the entered code as a parameter
+        navigate(`/join-plan/${enteredCode}`);
+      } else {
+        console.error('Error fetching plan details:', response.statusText);
+        setOpenSnackbar(true);
+      }
+    } catch (error) {
+      console.error('Error fetching plan details:', error);
       setOpenSnackbar(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,10 +62,17 @@ const JoinComponents = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <Typography
-        variant='h3'
-        align='center'
+        variant="h3"
+        align="center"
         sx={{
           fontFamily: 'Inter',
           fontSize: '22px',
@@ -46,72 +81,75 @@ const JoinComponents = () => {
           textAlign: 'center',
           color: 'white',
           marginTop: '15px',
+          letterSpacing: '0.35px',
+          width: '276px',
         }}
       >
         Joining an Existing Plan?
       </Typography>
-      <div>
-        <Box
+
+      <Box
+        sx={{
+          width: '160px',
+          height: '21px',
+          padding: '16px 32px 16px 32px',
+          borderRadius: '20px',
+          border: '3px dotted #1C1C1C',
+          gap: '12px',
+          background: '#E9D8AE',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: '20px'
+        }}
+      >
+        <Input
+          placeholder="Enter Code"
+          disableUnderline
+          value={enteredCode}
+          onChange={handleCodeChange}
           sx={{
-            width: '182px',
-            height: '21px',
-            padding: '16px 32px 16px 32px',
-            borderRadius: '20px',
-            border: '1px solid #1C1C1C',
-            gap: '12px',
-            background: '#C79E34',
-            display: 'flex',
+            fontFamily: 'Inter',
+            fontSize: '16px',
+            fontWeight: 600,
+            color: 'black',
             alignItems: 'center',
+            letterSpacing: '0.35px',
+            lineHeight: '10',
             justifyContent: 'center',
+            alignContent: 'center',
+            textAlign: 'center',
           }}
-        >
-          <Input
-            placeholder="Enter Code"
-            disableUnderline
-            value={enteredCode}
-            onChange={handleCodeChange}
-            sx={{
-              fontFamily: 'Inter',
-              fontSize: '16px',
-              fontWeight: 600,
-              color: 'black',
-              alignItems: 'center',
-              letterSpacing: '0.35px',
-              lineHeight: '21px',
-              justifyContent: 'center',
-              alignContent: 'center'
-            }}
-          />
-        </Box>
-      </div>
-      <div>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleJoinPlanClick}
-          sx={{
-            width: '241px',
-            height: '53px',
-            marginTop: '15px',
-            padding: '16px 32px 16px 32px',
-            borderRadius: '100px',
-            gap: '20px',
-            textTransform: 'none',
-          }}
-        >
-          Join Plan
-        </Button>
-      </div>
+        />
+      </Box>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleJoinPlanClick}
+        sx={{
+          width: '235px',
+          height: '53px',
+          marginTop: '20px',
+          padding: '16px 32px 16px 32px',
+          borderRadius: '100px',
+          gap: '20px',
+          textTransform: 'none',
+        }}
+        disabled={loading}
+      >
+        {loading ? 'Joining...' : 'Join Plan'}
+      </Button>
 
       {/* Conditionally render JoinPlan based on code validation */}
-      {isCodeValid && <JoinPlan enteredCode={enteredCode} />}
+      {isCodeValid && <JoinPlan planDetails={planDetails} />}
 
       {/* Snackbar for alerting the user */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <MuiAlert
           elevation={6}
@@ -119,7 +157,7 @@ const JoinComponents = () => {
           onClose={handleCloseSnackbar}
           severity="error"
         >
-          Please enter a valid code before joining the plan.
+          Please enter a valid code to join the plan.
         </MuiAlert>
       </Snackbar>
     </div>

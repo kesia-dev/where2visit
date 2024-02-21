@@ -1,7 +1,8 @@
-// Navbar.js
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar, Popover } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import { Link, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
@@ -15,6 +16,14 @@ const Navbar = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const location = useLocation();
+  // Check if the current path is '/instructions'
+  const isInstructionsPage = location.pathname === '/instructions';
+
+  // Render the Navbar only if not on the '/instructions' path
+  if (isInstructionsPage) {
+    return null;
+  }
 
   return (
     <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black' }}>
@@ -30,21 +39,55 @@ const Navbar = () => {
             <MenuIcon />
           </IconButton>
         )}
-        <Typography
-          variant="h6"
-          component={Link}
-          to="/"
-          sx={{ textDecoration: 'none', color: 'black', textTransform: 'none' }}
-
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
         >
-          Where2Visit
-        </Typography>
+          <div
+            style={{
+              width: '24px',
+              height: '24px',
+              marginLeft: '10px',
+              background: '#3492C7',
+              borderRadius: '50%',
+              display: 'block',
+            }}
+          />
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{
+              textDecoration: 'none',
+              color: 'black',
+              textTransform: 'none',
+              marginLeft: '10px',
+              fontFamily: 'Inter',
+              fontSize: '20px',
+              fontWeight: 600,
+              lineHeight: '25px',
+              letterSpacing: '0.38px',
+              textAlign: 'center',
+              display: 'block',
+            }}
+          >
+            Where2Visit
+          </Typography>
+        </div>
         {!isLoggedIn() ?
           <Button
             component={Link}
             to="/login"
-            color="inherit"
-            sx={{ textTransform: 'none' }}
+            color="inherit" sx={{
+              textTransform: 'none', marginLeft: '20px', fontSize: '16px', fontFamily: 'Inter',
+              fontWeight: 600,
+              lineHeight: '21px',
+              letterSpacing: '-0.32px',
+              textAlign: 'Right',
+              display: 'block',
+            }}
 
           >Login</Button>
           : (
@@ -79,8 +122,14 @@ const Navbar = () => {
                 </Typography>
               </Popover>
               <Button
-                color="inherit"
-                sx={{ textTransform: 'none' }}
+                color="inherit" sx={{
+                  textTransform: 'none', fontSize: '16px', fontFamily: 'Inter',
+                  fontWeight: 600,
+                  lineHeight: '21px',
+                  letterSpacing: '-0.32px',
+                  textAlign: 'Right',
+                  display: 'inline-block',
+                }}
                 onClick={() => {
                   clearAuthData();
                   navigate(`/`);
@@ -96,7 +145,7 @@ const Navbar = () => {
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
-          sx={{ marginTop: isSmallScreen ? '0' : '5px' }} // Adjust the marginTop value
+          sx={{ marginTop: isSmallScreen ? '0' : '5px' }}
         >
           <MenuItem onClick={handleMenuClose} component={Link} to="/create-plan">
             Create a Plan
