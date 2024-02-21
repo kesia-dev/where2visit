@@ -17,7 +17,11 @@ import MuiAlert from '@mui/material/Alert';
 const JoinPlan = () => {
   const { planCode, planName, hostName, dateOfEvent, timeOfEvent, location } = useParams();
   const [userName, setUserName] = useState('');
-  const [planDetails, setPlanDetails] = useState(null);
+  const [planDetails, setPlanDetails] = useState(() => {
+    // Load from local storage on component mount
+    const storedDetails = localStorage.getItem('planDetails');
+    return storedDetails ? JSON.parse(storedDetails) : null;
+  });
   const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
   const [joinSnackbarOpen, setJoinSnackbarOpen] = useState(false);
 
@@ -110,7 +114,7 @@ const JoinPlan = () => {
       flexDirection: 'column',
       alignItems: 'center',
       backgroundColor: 'white',
-      width: "400px",  
+      width: "440px",  
       marginRight: 'auto',
       marginLeft: 'auto',
       marginTop: '30px'
