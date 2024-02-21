@@ -48,7 +48,7 @@ exports.createPlan = async (req, res) => {
       minRating: rating
     });
 
-    const newPlan = new createPlan({
+    const newPlan = await createPlan.create({
       planName,
       hostName,
       dateOfEvent,
@@ -68,9 +68,11 @@ exports.createPlan = async (req, res) => {
 
     return res.status(201).json({ 
       message: 'Plan registered successfully', 
-      roomId: getRoomId 
+      roomId: getRoomId,
+      // THis is to include the restaurantIds in the response for the frontend to use for voting:
+      restaurantIds: newPlan.restaurants.map(restaurant => restaurant._id)
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: 'Failed to create plan' });
   }
 };
