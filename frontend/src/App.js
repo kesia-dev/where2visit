@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react'; // Import Auth0Provider
 import './App.css';
 import JoinPlan from './component/JoinPlan.js';
+import RestaurantDetails from './component/RestaurantDetails.js';
+import FinalPollResult from './component/FinalPollResult.js';
 import PlanningCard from './component/Planning.js';
 import Instructions from './component/Instructions.js';
 
@@ -23,13 +25,15 @@ function App() {
         }}
       >
         <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/join-plan/:planCode" element={<JoinPlan />} />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
             <Route path="/create-plan" element={<PlanningCard />} />
-          <Route path="/instructions" element={<Instructions />} />
-          {/* Add other routes as needed */}
-        </Routes>
+            <Route path="/instructions" element={<Instructions />} />
+            <Route path="/join-plan/:planCode" element={<JoinPlan />} />
+            <Route path="/restaurant-details/:planCode" element={<RestaurantDetails />} />
+            <Route path="/final-poll/:planCode" element={<FinalPollResult />} />
+            {/* Add other routes as needed */}
+          </Routes>
       </Auth0Provider>
     </Router>
   );
