@@ -14,7 +14,7 @@ exports.joinPlan = async (req, res) => {
       // Check if the username already exists in the plan's participants:
       const isExistingParticipant = plan.participants.includes(userName);
       if (isExistingParticipant) {
-        return res.status(400).send('User has already joined this plan');
+        return res.status(409).json('User has already joined this plan');
       }
   
       // Add the username to the plan's participants and save:
