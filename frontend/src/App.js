@@ -17,9 +17,6 @@ import FinalPollResult from './component/FinalPollResult.js';
 import PlanningCard from './component/Planning.js';
 import Instructions from './component/Instructions.js';
 
-const domain = "dev-rkjah3umfq8c82at.us.auth0.com"
-const clientId = "xbeT4PtSPVwbkexbBRsCKmzveb3aNIE0"
-
 function App() {
   return (
     <AuthProvider>
