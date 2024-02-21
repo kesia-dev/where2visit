@@ -61,7 +61,7 @@ const JoinPlan = () => {
 
     try {
       const response = await axios.post('http://localhost:4200/plan/join', {
-        userName: userName,
+        userName: userName.trim(),
         planCode: planCode,
       });
       console.log('Joined plan successfully:', response.data);
@@ -69,7 +69,12 @@ const JoinPlan = () => {
       window.location.href = `/restaurant-details/${planCode}`;
     } catch (error) {
       console.error('Error joining plan:', error);
-      alert('An error occurred while joining the plan.');
+      // Check if the error is specifically because the username already exists:
+      if (error.response && error.response.status === 409) {
+        alert('Username already exists in this plan. Please choose a different name.');
+      } else {
+        alert('An error occurred while joining the plan.');
+      }
     }
   };
 
