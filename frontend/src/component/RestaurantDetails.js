@@ -27,15 +27,17 @@ import RestaurantRoundedIcon from "@mui/icons-material/RestaurantRounded";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
+import { set } from "mongoose";
 
 const RestaurantDetails = () => {
   const [copyFeedback, setCopyFeedback] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [planDetails, setPlanDetails] = useState({});
   const [currentRestaurantIndex, setCurrentRestaurantIndex] = useState(0);
+  const [voteType, setVoteType] = useState(null);
 
-  // Access the 'code' parameter from the URL
-  const { planCode } = useParams();
+  // Access the code and username parameter from the URL
+  const { planCode, userName } = useParams();
 
   // Fetch the plan details from the server
   useEffect(() => {
@@ -53,19 +55,48 @@ const RestaurantDetails = () => {
     fetchData();
   }, [planCode]);
 
-  console.log("Restaurants:", planDetails.restaurants);
+//   console.log("Restaurants:", planDetails.restaurants);
+  const members = planDetails.participants;
+//   console.log("Members:", members);
 
   // Use the currentRestaurantIndex to display the corresponding restaurant
   const restaurant = planDetails.restaurants
     ? planDetails.restaurants[currentRestaurantIndex]
     : 0;
 
+  // Event handler for voting
+  const handleVoteClick = async () => {
+      console.log(
+        "Vote:",
+        voteType,
+        "for restaurant:",
+        restaurant._id,
+        "by user:",
+        userName
+      );
+    setVoteType(voteType);
+
+    // Send the vote to the server
+     await axios
+      .post(`http://localhost:4200/plan/vote-restaurant?planCode=${planCode}`, {
+        roomId: planCode,
+        username: userName,
+        restaurantId: restaurant._id,
+        voteType: voteType,
+      })
+      .then((res) => {
+        console.log("Vote response:", res.data);
+      })
+     .catch((error) => {
+        console.error("Error voting:", error);
+      });
+  };
+
   // Create a new Date object from the date and time strings
-  const eventDate = new Date(
-    `${planDetails.dateOfEvent}`
-  );
+  const eventDate = new Date(`${planDetails.dateOfEvent}`);
   const eventTime = new Date(
-    `${planDetails.dateOfEvent}T${planDetails.timeOfEvent}`  );
+    `${planDetails.dateOfEvent}T${planDetails.timeOfEvent}`
+  );
 
   // Format the date and time
   const formattedDate = eventDate.toLocaleDateString("en-US", {
@@ -85,8 +116,8 @@ const RestaurantDetails = () => {
   console.log("formatted time:", formattedTime);
 
   // Get the number of positive votes for the current restaurant
-  const positiveVoteCount = restaurant.positiveVotes
-    ? restaurant.positiveVotes.length
+  const positiveVoteCount = restaurant.positiveVoteCount
+    ? restaurant.positiveVoteCount
     : 0;
   console.log("vote count:", positiveVoteCount);
 
@@ -348,7 +379,7 @@ const RestaurantDetails = () => {
             {/* See Likes */}
             <VotingDetailsDialog positiveVoteCount={positiveVoteCount} />
             {/* See Members */}
-            <MemberDetailsDialog />
+            <MemberDetailsDialog members={members} />
             {/* See More Photos */}
             <Fab sx={{ backgroundColor: "#fff" }} size="medium">
               <PhotoTwoToneIcon sx={{ color: "#2A759F", fontSize: 35 }} />
@@ -434,6 +465,8 @@ const RestaurantDetails = () => {
             }}
           >
             <Button
+              voteType="negative"
+              onClick={() => handleVoteClick("negative")}
               variant="outlined"
               sx={{
                 border: "3px solid #9E2A2A",
@@ -447,6 +480,8 @@ const RestaurantDetails = () => {
               <ThumbDownTwoToneIcon sx={{ color: "#9E2A2A", fontSize: 40 }} />
             </Button>
             <Button
+              voteType="positive"
+              onClick={() => handleVoteClick("positive")}
               variant="outlined"
               sx={{
                 border: "3px solid #299F75",
@@ -551,7 +586,7 @@ const RestaurantDetails = () => {
             </Button>
           </Box> */}
           {/* Map */}
-          <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl}/>
+          <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
           {/* <Card
             sx={{
               justifyContent: "center",
