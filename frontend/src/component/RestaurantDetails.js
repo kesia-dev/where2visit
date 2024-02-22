@@ -85,8 +85,8 @@ const RestaurantDetails = () => {
   console.log("formatted time:", formattedTime);
 
   // Get the number of positive votes for the current restaurant
-  const positiveVoteCount = restaurant.positiveVotes
-    ? restaurant.positiveVotes.length
+  const positiveVoteCount = restaurant.positiveVoteCount
+    ? restaurant.positiveVoteCount.length
     : 0;
   console.log("vote count:", positiveVoteCount);
 
