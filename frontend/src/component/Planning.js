@@ -125,6 +125,7 @@ const PlanningCard = () => {
     date: '',
     time: '',
     location: '',
+    locationName:'',
     radius: 5,
   });
 
