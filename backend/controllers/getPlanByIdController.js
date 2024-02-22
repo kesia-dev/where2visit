@@ -20,7 +20,7 @@ exports.getPlanById = async (req, res) => {
       });
     }
 
-    const { planName, hostName, dateOfEvent, timeOfEvent, location, radius, cuisine, rating, priceRange, numberOfResults, numberOfMatches, restaurants } = plan;
+    const { planName, hostName, dateOfEvent, timeOfEvent, location, radius, cuisine, rating, priceRange, numberOfResults, numberOfMatches, participants, restaurants } = plan;
 
     console.log(`Plan fetched successfully:`, {
       planName,
