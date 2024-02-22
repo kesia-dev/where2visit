@@ -2,11 +2,25 @@ const getPlan = require('../models/create-plan');
 
 exports.vote = async (req, res) => {
   // The frontend will send the following payload:
-  const { roomId, username, restaurantId, voteType } = req.body;
+  const { planCode, userName, restaurantId, voteType } = req.body;
+
+  // Check for missing fields:
+  if (!planCode || !userName || !restaurantId || !voteType) {
+    return res.status(400).json({
+      error: 'Missing required fields. Please include planCode, userName, restaurantId, and voteType.'
+    });
+  }
+
+  // Validate voteType:
+  if (!['positive', 'negative'].includes(voteType)) {
+    return res.status(400).json({
+      error: 'Invalid voteType. Expected "positive" or "negative".'
+    });
+  }
 
   try {
     // Get plan by roomId from payload:
-    const plan = await getPlan.findOne({ roomId: roomId });
+    const plan = await getPlan.findOne({ roomId: planCode });
 
     // Check if plan exists:
     if (!plan) {
@@ -26,14 +40,14 @@ exports.vote = async (req, res) => {
     }
 
     // Check if user has already voted for the specific restaurant within the plan by looking through the memberVotes array:
-    const hasVoted = restaurant.memberVotes.find(vote => vote.username === username);
+    const hasVoted = restaurant.memberVotes.find(vote => vote.username === userName);
 
     if (hasVoted) {
       return res.status(400).json({ error: 'User has already voted for this restaurant' });
     }
 
     // Add the new vote to the memberVotes array:
-    const newVote = { username: username, voteType: voteType };
+    const newVote = { username: userName, voteType: voteType };
     restaurant.memberVotes.push(newVote);
 
     // Update vote counts based on vote types:
