@@ -50,11 +50,7 @@ const PlanningCard = () => {
   ];
 
   const options = useSelector(state => state.options);
-
-  //Term is the first selection the user makes
-  const term = useSelector(state => state.options.term);
-  const results = useSelector(state => state.options.numberOfResults);
-  const matches = useSelector(state => state.options.numberOfMatches);
+  const { term, numberOfResults: results, numberOfMatches: matches } = options
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,11 +71,6 @@ const PlanningCard = () => {
     return state === buttonLabel;
   };
 
-  const firstStepSelection = (newSelection) => {
-    dispatch(addTerm(newSelection));
-    handleNext();
-  };
-
   // Function will take user back to the last visited page
   const goBackHistory = () => {
     navigate(-1);
@@ -94,10 +85,13 @@ const PlanningCard = () => {
     });
   };
 
+  const handleTerm = value => dispatch(addTerm(value));
+
   const handleResults = (value) => {
     dispatch(addNumberOfResults(value))
     console.log(results)
   };
+  
   const handleMatches = (value) => dispatch(addNumberOfMatches(value));
 
   const renderFinalStepButtons = (buttonLabels, onClickHandler, state) => {
@@ -202,7 +196,7 @@ const PlanningCard = () => {
                 {/* Step 1 Content */}
                 <Button
                   variant="outlined"
-                  onClick={() => firstStepSelection(steps[step].buttonLabel1)}
+                  onClick={() => handleTerm(steps[step].buttonLabel1)}
                   style={{ backgroundColor: isAdded(term, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50', border: 'none' }}
                   sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
                 >
@@ -229,8 +223,8 @@ const PlanningCard = () => {
                         <Button
                           key={key}
                           variant="outlined"
-                          // onClick={() => firstStepSelection(steps[step][key])}
-                          style={{ backgroundColor: isAdded(steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(steps[step][key]) ? '#aed3e9' : '#153a50', border: 'none' }}
+                          // onClick={() => handleTerm(steps[step][key])}
+                          style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50', border: 'none' }}
                           sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
                         >
                           {steps[step][key]}
@@ -245,8 +239,8 @@ const PlanningCard = () => {
                         <Button
                           key={key}
                           variant="outlined"
-                          // onClick={() => firstStepSelection(steps[step][key])}
-                          style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }}
+                          // onClick={() => handleTerm(steps[step][key])}
+                          style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50', border: 'none' }}
                           sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
                         >
                           {steps[step][key]}
