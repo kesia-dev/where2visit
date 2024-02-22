@@ -34,6 +34,7 @@ exports.getPlanById = async (req, res) => {
       priceRange,
       numberOfResults,
       numberOfMatches,
+      participants,
       restaurants,
       roomId: planCode,
     });
@@ -50,6 +51,7 @@ exports.getPlanById = async (req, res) => {
       priceRange,
       numberOfResults,
       numberOfMatches,
+      participants,
       restaurants,
       roomId: planCode,
     });
