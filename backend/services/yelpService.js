@@ -2,7 +2,7 @@ const axios = require('axios');
 require('dotenv').config();
 const { calculateDistance } = require('./distanceService');
 const { getGoogleStaticMap, getGoogleMapsEmbedUrl } = require('./mapService');
-const Restaurant = require('../models/restaurant');
+const { Restaurant } = require('../models/restaurant');
 
 const YELP_API_KEY = process.env.YELP_API_KEY;
 
