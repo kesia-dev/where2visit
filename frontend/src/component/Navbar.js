@@ -85,7 +85,12 @@ const Navbar = () => {
           </Typography>
         </div>
         <div>
-          <Button color="inherit" sx={{ textTransform: 'none', marginLeft: '20px' }}>
+          <Button color="inherit" sx={{ textTransform: 'none', marginLeft: '20px', fontSize: '16px',fontFamily: 'Inter',
+              fontWeight: 600,
+              lineHeight: '21px',
+              letterSpacing: '-0.32px',
+              textAlign: 'Right',
+              display: 'block', }}>
             Login
           </Button>
           <Menu
