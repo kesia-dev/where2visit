@@ -272,7 +272,6 @@ const Instructions = () => {
                 </Box>
 
                 {/* Create a plan button for Step 5 */}
-
                 <Box display="flex" alignItems="center" justifyContent="center" sx={{ marginTop: '4vh' }}>
                   {step.shape && <div style={{ ...step.shape, marginRight: '10px' }} />}
                   <Typography
