@@ -50,7 +50,7 @@ const PlanningCard = () => {
   ];
 
   const options = useSelector(state => state.options);
-  const { term, numberOfResults: results, numberOfMatches: matches } = options
+  const { term, numberOfResults: results, numberOfMatches: matches } = options;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,10 +88,10 @@ const PlanningCard = () => {
   const handleTerm = value => dispatch(addTerm(value));
 
   const handleResults = (value) => {
-    dispatch(addNumberOfResults(value))
-    console.log(results)
+    dispatch(addNumberOfResults(value));
+    console.log(results);
   };
-  
+
   const handleMatches = (value) => dispatch(addNumberOfMatches(value));
 
   const renderFinalStepButtons = (buttonLabels, onClickHandler, state) => {
@@ -145,15 +145,16 @@ const PlanningCard = () => {
 
     try {
       // API call to save details to DB and search restaurants
-      await axios.post('http://localhost:4200/plan/create-plan', options);
+      const response = await axios.post('http://localhost:4200/plan/create-plan', options);
+      console.log('Response from server: ', response.data);
+      const { roomId } = response.data;
+
+      // navigate to Poll-options/Voting screen
+      navigate(`/restaurant-details/${roomId}`);
     }
     catch (error) {
       console.error('Error saving plan to DB: ', error);
     }
-
-    // navigate('/restaurant-details/:code'); // navigate to Poll-options/Voting screen
-    navigate('/');
-
   };
 
   return (
@@ -197,21 +198,22 @@ const PlanningCard = () => {
                 <Button
                   variant="outlined"
                   onClick={() => handleTerm(steps[step].buttonLabel1)}
-                  style={{ backgroundColor: isAdded(term, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50', border: 'none' }}
-                  sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                  style={{ backgroundColor: isAdded(term, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50' }}
+                  sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', width: '180px', height: '53px' }}
                 >
                   {steps[step].buttonLabel1}
                 </Button>
 
                 <Typography
                   variant="body2"
-                  color="text.secondary"
+                  color="#1c1c1c"
                   dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
                   align="center"
-                  marginTop={'10px'}
                   fontFamily={'Inter'}
                   fontWeight={400}
-                  fontSize={'17px'}
+                  fontSize={'16px'}
+                  lineHeight={'21px'}
+                  letterSpacing={'-0.32px'}
                 />
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -223,9 +225,9 @@ const PlanningCard = () => {
                         <Button
                           key={key}
                           variant="outlined"
-                          // onClick={() => handleTerm(steps[step][key])}
-                          style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50', border: 'none' }}
-                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                          // onClick={() => handleTerm(steps[step][key])}                          
+                          style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50' }}
+                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', width: '180px', height: '53px' }}
                         >
                           {steps[step][key]}
                         </Button>
@@ -239,9 +241,9 @@ const PlanningCard = () => {
                         <Button
                           key={key}
                           variant="outlined"
-                          // onClick={() => handleTerm(steps[step][key])}
-                          style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50', border: 'none' }}
-                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                          // onClick={() => handleTerm(steps[step][key])}                          
+                          style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50' }}
+                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', width: '180px', height: '53px' }}
                         >
                           {steps[step][key]}
                         </Button>
@@ -249,16 +251,20 @@ const PlanningCard = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center' }}  >
-                  <KeyboardDoubleArrowLeftIcon className='backArrows' onClick={goBackHistory} />
+                <div style={{ display: 'flex', alignItems: 'center' }} className='first-navigation-btn'  >
+                  <KeyboardDoubleArrowLeftIcon className='backArrows' fontSize='large' onClick={goBackHistory} />
 
-                  <Button variant="contained" color="primary" onClick={handleNext} style={{ backgroundColor: '#3492c7' }} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    style={{ backgroundColor: '#3492c7' }}
+                  >
                     Create a Plan
                   </Button>
                 </div>
               </>
             )}
-
 
             {step === 1 && (
               <>
@@ -266,24 +272,14 @@ const PlanningCard = () => {
                   formData={formData}
                   setFormData={setFormData}
                 />
-                <div style={{ display: 'flex', alignItems: 'center' }} >
-                  <button onClick={handlePrevious} className='backArrows'>
-                    <KeyboardDoubleArrowLeftIcon />
-                  </button>
-
+                <div style={{ display: 'flex', alignItems: 'center' }} className='second-navigation-btn' >
+                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
 
                   <Button
                     variant="contained"
                     color="primary"
                     style={{ backgroundColor: '#3492c7' }}
                     onClick={handleClickNextButtonForm}
-                    sx={{
-                      margin: 5,
-                      marginLeft: 1,
-                      borderRadius: '100px',
-                      textTransform: 'none',
-                      minWidth: '20vw'
-                    }}
                   >
                     Next
                   </Button>
@@ -306,12 +302,15 @@ const PlanningCard = () => {
 
                 <RestaurantOptions />
 
-                <div style={{ display: 'flex', alignItems: 'center' }} >
-                  <button onClick={handlePrevious} className='backArrows'>
-                    <KeyboardDoubleArrowLeftIcon />
-                  </button>
+                <div style={{ display: 'flex', alignItems: 'center' }} className='third-navigation-btn' >
+                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
 
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleClickNextButtonForm} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ backgroundColor: '#3492c7' }}
+                    onClick={handleClickNextButtonForm}
+                  >
                     Next
                   </Button>
                 </div>
@@ -344,11 +343,15 @@ const PlanningCard = () => {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center' }} >
-                  <button onClick={handlePrevious} className='backArrows'>
-                    <KeyboardDoubleArrowLeftIcon />
-                  </button>
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }} className='navigation-btn' >
+                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ backgroundColor: '#3492c7' }}
+                    onClick={handleNext}
+                  >
                     Next
                   </Button>
                 </div>
@@ -381,11 +384,15 @@ const PlanningCard = () => {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center' }} >
-                  <button onClick={handlePrevious} className='backArrows'>
-                    <KeyboardDoubleArrowLeftIcon />
-                  </button>
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={completePlan} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }} className='navigation-btn' >
+                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ backgroundColor: '#3492c7' }}
+                    onClick={completePlan}
+                  >
                     Create Plan
                   </Button>
                 </div>

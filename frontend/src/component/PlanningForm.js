@@ -147,9 +147,7 @@ const PlanningForm = ({ formData, setFormData }) => {
             marks={marks}
             min={0}
             max={20}
-            sx={{
-              width: 320
-            }}
+            sx={{ width: 320 }}
             onChange={(e, value) => setFormData({ ...formData, radius: value })}
           />
         </FormControl>
@@ -183,6 +181,7 @@ const StyledInput = styled(Input)(
 
   .${inputClasses.input} {
     width: 300px;
+    height: 30px;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 0.875rem;
     font-weight: 400;
