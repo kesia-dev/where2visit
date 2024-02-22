@@ -1,4 +1,5 @@
-import { Box, Checkbox, Slider } from '@mui/material';
+import { Box, Checkbox, Slider, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import { FormControl, useFormControlContext } from '@mui/base/FormControl';
 import { Input, inputClasses } from '@mui/base/Input';
 import { styled } from '@mui/system';
@@ -35,23 +36,37 @@ const PlanningForm = ({ formData, setFormData }) => {
   ];
 
   const [city, setCity] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const handleClick = () => setOpenSnackbar(true);
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
 
   const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(getCoordinates);
-    } else {
-      alert("Geolocation is not supported by this browser.");
+    if (!navigator.geolocation) {
+      setOpenSnackbar(true);
     }
+    navigator.geolocation.getCurrentPosition(getCoordinates, (error) => console.error('Error getting location: ', error));
   };
 
   const getCoordinates = (position) => {
+
+    if (!position) {
+      console.log("No position!")
+      setOpenSnackbar(true);
+    }
+
     setFormData({
       ...formData, location: {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
       }
     });
-    setCity(position.coords);
+    getCity(position.coords);
   };
 
   const getCity = (coordinates) => {
@@ -59,8 +74,19 @@ const PlanningForm = ({ formData, setFormData }) => {
     const lon = coordinates.longitude;
 
     axios(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&language=en&result_type=locality&key=AIzaSyBZRmFvwMfu5UEmA2QEUID_PHsuBJcIJMk`)
-      .then((response => console.log(response.data.results[0].formatted_address)));      
-  }
+      .then((response => {
+        const cityFromCoords = response.data.results[0].address_components[0].long_name;
+        setCity(cityFromCoords);
+
+        if (!cityFromCoords) {
+          setOpenSnackbar(true)
+        }
+      }))
+      .catch((error) => {
+        console.error('Error getting location: ', error);
+        setOpenSnackbar(true);
+      });
+  };
 
   return (
     <>
@@ -97,11 +123,11 @@ const PlanningForm = ({ formData, setFormData }) => {
               <FormControlLabel control={<Checkbox size="small" />} label="All Day" />
             </span>
           </FormGroup> */}
-          <TimePicker className='dateTimePicker' use12Hours format="h:mm a" onChange={(time, timeString) => setFormData({ ...formData, time: timeString })} placeholder='' />
+          <TimePicker className='dateTimePicker' use12Hours format="hh:mm a" onChange={(time, timeString) => setFormData({ ...formData, time: timeString })} placeholder='' />
           <HelperText />
         </FormControl>
 
-        <FormControl defaultValue="" required className='inputForm' value={city}>
+        <FormControl defaultValue="" required className='inputForm' value={city} >
           <Label>Location</Label>
           <StyledInput onChange={(e) => setFormData({ ...formData, location: e.target.value })} />
           <HelperText />
@@ -127,6 +153,23 @@ const PlanningForm = ({ formData, setFormData }) => {
             onChange={(e, value) => setFormData({ ...formData, radius: value })}
           />
         </FormControl>
+
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={4000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleClose}
+            severity="error"
+            sx={{ width: '100%' }}
+          >
+            Geolocation couldn't be found. Please, try searching by city.
+          </MuiAlert>
+        </Snackbar>
 
       </Box>
 
