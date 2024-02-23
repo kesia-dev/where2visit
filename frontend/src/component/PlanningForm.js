@@ -6,7 +6,6 @@ import { styled } from '@mui/system';
 import clsx from 'clsx';
 import { DatePicker, TimePicker } from 'antd';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../styling/PlanningForm.css';
@@ -53,7 +52,6 @@ const PlanningForm = ({ formData, setFormData }) => {
 
   // Function to convert address to coordinates (Geocoding):
   const convertAddressToCoordinates = async () => {
-    const key = process.env.GOOGLE_MAPS_API_KEY
     try {
       const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(locationInput)}&key=AIzaSyBZRmFvwMfu5UEmA2QEUID_PHsuBJcIJMk`);
       if (response.data.results.length > 0) {
@@ -77,7 +75,6 @@ const PlanningForm = ({ formData, setFormData }) => {
 
   // Function to get user's live current location and convert to readable address (Reverse Geocoding):
   const getLocation = () => {
-    const key = process.env.GOOGLE_MAPS_API_KEY
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
