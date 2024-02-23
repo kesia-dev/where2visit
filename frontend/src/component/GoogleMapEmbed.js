@@ -11,22 +11,23 @@ const GoogleMapEmbed = ({ googleEmbedMapUrl }) => {
       sx={{
         justifyContent: "center",
         alignItems: "center",
-        m: 0,
+        m: 1,
         p: 0,
         borderRadius: "16px",
         border: "2px solid black",
+        boxSizing: "border-box",
       }}
     >
       <iframe
         src={googleEmbedMapUrl}
-        width="130%"
-        height="300"
-        style={{
-          border: "none",
-        }}
-        allowfullscreen=""
-        loading="eager"
-        referrerpolicy="no-referrer-when-downgrade"
+        title="Google Map Embed"
+        width="133%"
+        height="330"
+        frameBorder="0"
+        style={{ border: 0 }}
+        allowFullScreen
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
       ></iframe>
       {/* <Card
         sx={{

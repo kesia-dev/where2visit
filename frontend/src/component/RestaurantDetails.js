@@ -28,13 +28,14 @@ import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
 
+
 const RestaurantDetails = () => {
   const [copyFeedback, setCopyFeedback] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [planDetails, setPlanDetails] = useState({});
   const [currentRestaurantIndex, setCurrentRestaurantIndex] = useState(0);
 
-  // Access the 'code' parameter from the URL
+  // Access the code and username parameter from the URL
   const { planCode } = useParams();
 
   // Fetch the plan details from the server
@@ -53,19 +54,46 @@ const RestaurantDetails = () => {
     fetchData();
   }, [planCode]);
 
-  console.log("Restaurants:", planDetails.restaurants);
-
+//   console.log("Restaurants:", planDetails.restaurants);
+  const members = planDetails.participants;
+//   console.log("Members:", members);
+  const userName = localStorage.getItem("userName");
+  console.log("User:", userName);
   // Use the currentRestaurantIndex to display the corresponding restaurant
   const restaurant = planDetails.restaurants
     ? planDetails.restaurants[currentRestaurantIndex]
     : 0;
 
+  // Event handler for voting
+  const handleVoteClick = async (voteType) => {
+      console.log(
+        "Vote:",
+        voteType,
+        "for restaurant:",
+        restaurant._id,
+        "by user:",
+        userName, 
+        "in plan:", planCode
+      );
+
+    // Send the vote to the server
+     await axios
+      .post(`http://localhost:4200/plan/vote-restaurant`, {
+        planCode,
+        userName,
+        restaurantId: restaurant._id,
+        voteType,
+      })
+      .then((res) => {
+        console.log("Vote response:", res.data);
+      })
+     .catch((error) => {
+        console.error("Error voting:", error);
+      });
+  };
+
   // Create a new Date object from the date and time strings
-  const eventDate = new Date(
-    `${planDetails.dateOfEvent}`
-  );
-  const eventTime = new Date(
-    `${planDetails.dateOfEvent}T${planDetails.timeOfEvent}`  );
+  const eventDate = new Date(`${planDetails.dateOfEvent}`);
 
   // Format the date and time
   const formattedDate = eventDate.toLocaleDateString("en-US", {
@@ -73,22 +101,28 @@ const RestaurantDetails = () => {
     month: "long",
     day: "numeric",
   });
-  const formattedTime = eventTime.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
+
 
   console.log("date:", planDetails.dateOfEvent);
   console.log("time:", planDetails.timeOfEvent);
   console.log("formatted date:", formattedDate);
-  console.log("formatted time:", formattedTime);
+
 
   // Get the number of positive votes for the current restaurant
   const positiveVoteCount = restaurant.positiveVoteCount
-    ? restaurant.positiveVoteCount.length
+    ? restaurant.positiveVoteCount
     : 0;
   console.log("vote count:", positiveVoteCount);
+
+  // Filter memberVotes to get the usernames associated with positive votes
+  const positiveMemberVotes = restaurant.memberVotes ? restaurant.memberVotes.filter(
+    (memberVote) => memberVote.voteType === "positive"
+    ) : [];
+
+    const getPositiveMemberVotes = positiveMemberVotes.map((memberVote) => memberVote.username);
+    console.log("GET positive member votes:", getPositiveMemberVotes);
+
+    console.log("positive member votes:", positiveMemberVotes);
 
   //   Event handlers for the arrow buttons
   const handleNextClick = () => {
@@ -177,7 +211,7 @@ const RestaurantDetails = () => {
               sx={{ fontSize: "18px", color: "#777" }}
             >
               {/* Display the formatted date and time  */}
-              {formattedDate} @ {formattedTime}
+              {formattedDate} @ {planDetails.timeOfEvent}
             </Typography>
           </Box>
           {/* Adjust Selections */}
@@ -346,9 +380,9 @@ const RestaurantDetails = () => {
             }}
           >
             {/* See Likes */}
-            <VotingDetailsDialog positiveVoteCount={positiveVoteCount} />
+            <VotingDetailsDialog positiveVoteCount={positiveVoteCount} getPositiveMemberVotes={getPositiveMemberVotes} />
             {/* See Members */}
-            <MemberDetailsDialog />
+            <MemberDetailsDialog members={members} />
             {/* See More Photos */}
             <Fab sx={{ backgroundColor: "#fff" }} size="medium">
               <PhotoTwoToneIcon sx={{ color: "#2A759F", fontSize: 35 }} />
@@ -434,6 +468,7 @@ const RestaurantDetails = () => {
             }}
           >
             <Button
+              onClick={() => handleVoteClick("negative")}
               variant="outlined"
               sx={{
                 border: "3px solid #9E2A2A",
@@ -447,6 +482,7 @@ const RestaurantDetails = () => {
               <ThumbDownTwoToneIcon sx={{ color: "#9E2A2A", fontSize: 40 }} />
             </Button>
             <Button
+              onClick={() => handleVoteClick("positive")}
               variant="outlined"
               sx={{
                 border: "3px solid #299F75",
@@ -551,7 +587,7 @@ const RestaurantDetails = () => {
             </Button>
           </Box> */}
           {/* Map */}
-          <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl}/>
+          <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
           {/* <Card
             sx={{
               justifyContent: "center",

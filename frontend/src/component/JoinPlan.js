@@ -65,6 +65,7 @@ const JoinPlan = () => {
         planCode: planCode,
       });
       console.log('Joined plan successfully:', response.data);
+      localStorage.setItem('userName', userName.trim());
       // Redirect to the restaurant plan details page:
       window.location.href = `/restaurant-details/${planCode}`;
     } catch (error) {
