@@ -48,6 +48,9 @@ exports.createPlan = async (req, res) => {
       minRating: rating
     });
 
+    // Add host to participants list:
+    const participants = [{ username: hostName, isHost: true }]
+
     const newPlan = await createPlan.create({
       planName,
       hostName,
@@ -61,6 +64,7 @@ exports.createPlan = async (req, res) => {
       numberOfResults,
       numberOfMatches,
       restaurants,
+      participants,
       roomId: getRoomId
     });
 

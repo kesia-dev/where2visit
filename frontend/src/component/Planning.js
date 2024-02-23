@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius, addCuisine, addPrice, addRating } from '../features/userOptions/optionsSlice';
 import { useNavigate } from 'react-router-dom';
-import { Container, Paper, MobileStepper, Box, Typography, Button } from '@mui/material';
+import { Container, Paper, MobileStepper, Box, Typography, Button, Grid } from '@mui/material';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
 import "../styling/Planning.css";
@@ -13,7 +13,7 @@ import axios from 'axios';
 const PlanningCard = () => {
   const steps = [
     {
-      title: "What would you like to do?",
+      title: `<span class="title-star">*</span> What would you like to do?`,
       subtitle: "COMING SOON:",
       buttonLabel1: "Restaurants",
       buttonLabel2: "Local Attractions",
@@ -24,14 +24,14 @@ const PlanningCard = () => {
       buttonLabel7: "Hotel & Travel",
     },
     {
-      title: "Let's make your plans"
+      title: `<span class="title-star">*</span> Let's make your plans`
     },
     {
       title: "Set your preferences",
       subtitle: "Select all that apply"
     },
     {
-      title: `How many <span class="title-color"> results </span> do you want?`,
+      title: `<span class="title-star">*</span> How many <span class="title-color"> results </span> do you want?`,
       subtitle: "Results refer to the number of options you would like to choose from.",
       buttonLabel1: "3",
       buttonLabel2: "5",
@@ -40,7 +40,7 @@ const PlanningCard = () => {
 
     },
     {
-      title: `How many <span class="title-color"> matches </span> do you want?`,
+      title: `<span class="title-star">*</span> How many <span class="title-color"> matches </span> do you want?`,
       subtitle: "Matches refer to the number of restaurants your group has agreed on.",
       buttonLabel1: "1",
       buttonLabel2: "3",
@@ -50,11 +50,7 @@ const PlanningCard = () => {
   ];
 
   const options = useSelector(state => state.options);
-
-  //Term is the first selection the user makes
-  const term = useSelector(state => state.options.term);
-  const results = useSelector(state => state.options.numberOfResults);
-  const matches = useSelector(state => state.options.numberOfMatches);
+  const { term, numberOfResults: results, numberOfMatches: matches } = options;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,11 +71,6 @@ const PlanningCard = () => {
     return state === buttonLabel;
   };
 
-  const firstStepSelection = (newSelection) => {
-    dispatch(addTerm(newSelection));
-    handleNext();
-  };
-
   // Function will take user back to the last visited page
   const goBackHistory = () => {
     navigate(-1);
@@ -94,10 +85,14 @@ const PlanningCard = () => {
     });
   };
 
+  const handleTerm = value => dispatch(addTerm(value));
+
   const handleResults = (value) => {
-    dispatch(addNumberOfResults(value))
-    console.log(results)
+    dispatch(addNumberOfResults(value));
+    console.log(results);
+    handleNext();
   };
+
   const handleMatches = (value) => dispatch(addNumberOfMatches(value));
 
   const renderFinalStepButtons = (buttonLabels, onClickHandler, state) => {
@@ -108,15 +103,7 @@ const PlanningCard = () => {
         onClick={() => onClickHandler(label)}
         style={{
           backgroundColor: isAdded(state, label) ? '#153a50' : '#aed3e9',
-          color: isAdded(state, label) ? '#aed3e9' : '#153a50',
-          border: 'none',
-          marginRight: '10px',
-        }}
-        sx={{
-          marginTop: 2,
-          borderRadius: '10px',
-          textTransform: 'none',
-          minHeight: '5vh',
+          color: isAdded(state, label) ? '#aed3e9' : '#153a50',          
         }}
       >
         {label}
@@ -131,6 +118,7 @@ const PlanningCard = () => {
     date: '',
     time: '',
     location: '',
+    locationName: '',
     radius: 5,
   });
 
@@ -151,15 +139,16 @@ const PlanningCard = () => {
 
     try {
       // API call to save details to DB and search restaurants
-      await axios.post('http://localhost:4200/plan/create-plan', options);
+      const response = await axios.post('http://localhost:4200/plan/create-plan', options);
+      console.log('Response from server: ', response.data);
+      const { roomId } = response.data;
+
+      // navigate to Poll-options/Voting screen
+      navigate(`/restaurant-details/${roomId}`);
     }
     catch (error) {
       console.error('Error saving plan to DB: ', error);
     }
-
-    // navigate('/restaurant-details/:code'); // navigate to Poll-options/Voting screen
-    navigate('/');
-
   };
 
   return (
@@ -179,45 +168,47 @@ const PlanningCard = () => {
 
           <Box display="flex" flexDirection="column" alignItems="center">
             {/* Step Title */}
-            <Typography
-              color="text.secondary"
-              noWrap={true}
-              align="center"
-              fontFamily="Inter"
-              fontWeight={700}
-              fontSize="22px"
-              lineHeight="34px"
-              letterSpacing="0.36px"
-              sx={{
-                width: '100%',
-                height: '34px',
-                color: 'black',
-              }}
-              dangerouslySetInnerHTML={{ __html: steps[step].title }}
-            />
-
+            {step < 4 && (
+              <Typography
+                color="text.secondary"
+                noWrap={true}
+                align="center"
+                fontFamily="Inter"
+                fontWeight={700}
+                fontSize="22px"
+                lineHeight="28px"
+                letterSpacing="0.35px"
+                sx={{
+                  width: '369px',
+                  height: '28px',
+                  color: 'black',
+                }}
+                dangerouslySetInnerHTML={{ __html: steps[step].title }}
+              />
+            )}
 
             {step === 0 && (
               <>
                 {/* Step 1 Content */}
                 <Button
                   variant="outlined"
-                  onClick={() => firstStepSelection(steps[step].buttonLabel1)}
-                  style={{ backgroundColor: isAdded(term, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50', border: 'none' }}
-                  sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                  onClick={() => handleTerm(steps[step].buttonLabel1)}
+                  style={{ backgroundColor: isAdded(term, steps[step].buttonLabel1) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step].buttonLabel1) ? '#aed3e9' : '#153a50' }}
+                  sx={{ marginTop: 4, marginBottom: 4, borderRadius: '10px', textTransform: 'none', width: '180px', height: '53px' }}
                 >
                   {steps[step].buttonLabel1}
                 </Button>
 
                 <Typography
                   variant="body2"
-                  color="text.secondary"
+                  color="#1c1c1c"
                   dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
                   align="center"
-                  marginTop={'10px'}
                   fontFamily={'Inter'}
                   fontWeight={400}
-                  fontSize={'17px'}
+                  fontSize={'16px'}
+                  lineHeight={'21px'}
+                  letterSpacing={'-0.32px'}
                 />
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -229,9 +220,9 @@ const PlanningCard = () => {
                         <Button
                           key={key}
                           variant="outlined"
-                          // onClick={() => firstStepSelection(steps[step][key])}
-                          style={{ backgroundColor: isAdded(steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(steps[step][key]) ? '#aed3e9' : '#153a50', border: 'none' }}
-                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                          // onClick={() => handleTerm(steps[step][key])}                          
+                          style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50' }}
+                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', width: '180px', height: '53px' }}
                         >
                           {steps[step][key]}
                         </Button>
@@ -245,9 +236,9 @@ const PlanningCard = () => {
                         <Button
                           key={key}
                           variant="outlined"
-                          // onClick={() => firstStepSelection(steps[step][key])}
-                          style={{ backgroundColor: '#aed3e9', color: '#153a50', border: 'none' }}
-                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', maxWidth: '60vw', minHeight: '5vh' }}
+                          // onClick={() => handleTerm(steps[step][key])}                          
+                          style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50' }}
+                          sx={{ marginTop: 2, borderRadius: '10px', textTransform: 'none', width: '180px', height: '53px' }}
                         >
                           {steps[step][key]}
                         </Button>
@@ -255,16 +246,20 @@ const PlanningCard = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center' }} onClick={goBackHistory} >
-                  <KeyboardDoubleArrowLeftIcon className='backArrows' />
+                <div className='first navigation-btn'  >
+                  <KeyboardDoubleArrowLeftIcon className='backArrows' fontSize='large' onClick={goBackHistory} />
 
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    style={{ backgroundColor: '#3492c7' }}
+                  >
                     Create a Plan
                   </Button>
                 </div>
               </>
             )}
-
 
             {step === 1 && (
               <>
@@ -272,24 +267,14 @@ const PlanningCard = () => {
                   formData={formData}
                   setFormData={setFormData}
                 />
-                <div style={{ display: 'flex', alignItems: 'center' }} >
-                  <button onClick={handlePrevious} className='backArrows'>
-                    <KeyboardDoubleArrowLeftIcon />
-                  </button>
-
+                <div className='second navigation-btn' >
+                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
 
                   <Button
                     variant="contained"
                     color="primary"
                     style={{ backgroundColor: '#3492c7' }}
                     onClick={handleClickNextButtonForm}
-                    sx={{
-                      margin: 5,
-                      marginLeft: 1,
-                      borderRadius: '100px',
-                      textTransform: 'none',
-                      minWidth: '20vw'
-                    }}
                   >
                     Next
                   </Button>
@@ -306,97 +291,183 @@ const PlanningCard = () => {
                   align="center"
                   marginTop={'2px'}
                   fontFamily={'Inter'}
-                  fontWeight={400}
-                  fontSize={'14px'}
+                  fontWeight={600}
+                  fontSize={'16px'}
+                  lineHeight={'21px'}
+                  letterSpacing={'-0.32px'}
                 />
 
                 <RestaurantOptions />
 
-                <div style={{ display: 'flex', alignItems: 'center' }} >
-                  <button onClick={handlePrevious} className='backArrows'>
-                    <KeyboardDoubleArrowLeftIcon />
-                  </button>
+                <div className='third navigation-btn' >
+                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
 
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleClickNextButtonForm} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ backgroundColor: '#3492c7' }}
+                    onClick={handleClickNextButtonForm}
+                  >
                     Next
                   </Button>
                 </div>
               </>
             )}
 
-            {step === 3 && (
+            {step >= 3 && (
+
               <>
+                {step === 4 && (
+                  <Typography
+                    color="text.secondary"
+                    noWrap={true}
+                    align="center"
+                    fontFamily="Inter"
+                    fontWeight={700}
+                    fontSize="22px"
+                    lineHeight="28px"
+                    letterSpacing="0.35px"
+                    sx={{
+                      width: '369px',
+                      height: '28px',
+                      color: 'black',
+                    }}
+                    dangerouslySetInnerHTML={{ __html: steps[3].title }} // Use title from step 3
+                  />
+                )}
+
                 <Typography
                   variant="p"
                   noWrap={false}
-                  dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
+                  dangerouslySetInnerHTML={{ __html: steps[3].subtitle }}
                   align="center"
                   marginTop={'2px'}
                   fontFamily={'Inter'}
                   fontWeight={400}
-                  fontSize={'14px'}
+                  fontSize={'16px'}
+                  lineHeight={'21px'}
+                  letterSpacing={'-0.32px'}
+                  sx={{
+                    width: '310px',
+                    height: '42px',
+                    color: 'black',
+                  }}
                 />
 
-                <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
+                <Grid container spacing={0}>
+                  <Typography
+                    variant="p"
+                    color="text.secondary"
+                    align="left"
+                    marginTop={3}                                        
+                    fontFamily={'Inter'}
+                    fontWeight={400}
+                    fontSize={'16px'}
+                    lineHeight={'21px'}
+                    letterSpacing={'-0.32px'}
+                    sx={{
+                      width: '135px',
+                      color: 'black',                
+                    }}
+                  > Number of Results
+                  </Typography>
+                </Grid>
+
+                <div className='last-step-btn' >
                   {renderFinalStepButtons(
                     [
-                      steps[step].buttonLabel1,
-                      steps[step].buttonLabel2,
-                      steps[step].buttonLabel3,
-                      steps[step].buttonLabel4,
+                      steps[3].buttonLabel1,
+                      steps[3].buttonLabel2,
+                      steps[3].buttonLabel3,
+                      steps[3].buttonLabel4,
                     ],
                     handleResults,
                     results
                   )}
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center' }} >
-                  <button onClick={handlePrevious} className='backArrows'>
-                    <KeyboardDoubleArrowLeftIcon />
-                  </button>
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={handleNext} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
-                    Next
-                  </Button>
-                </div>
-              </>
-            )}
+                <Typography
+                  color="text.secondary"
+                  noWrap={true}
+                  align="center"
+                  fontFamily="Inter"
+                  fontWeight={700}
+                  fontSize="22px"
+                  lineHeight="34px"
+                  letterSpacing="0.36px"
+                  sx={{
+                    width: '100%',
+                    height: '34px',
+                    color: 'black',
+                  }}
+                  dangerouslySetInnerHTML={{ __html: steps[4].title }} // Use title from step 4
+                />
 
-            {step === 4 && (
-              <>
                 <Typography
                   variant="p"
                   noWrap={false}
-                  dangerouslySetInnerHTML={{ __html: steps[step].subtitle }}
+                  dangerouslySetInnerHTML={{ __html: steps[4].subtitle }}
                   align="center"
                   marginTop={'2px'}
                   fontFamily={'Inter'}
                   fontWeight={400}
-                  fontSize={'14px'}
+                  fontSize={'16px'}
+                  lineHeight={'21px'}
+                  letterSpacing={'-0.32px'}
+                  sx={{
+                    width: '314px',
+                    height: '42px',
+                    color: 'black',
+                  }}
                 />
 
-                <div style={{ display: 'flex', alignItems: 'center', margin: '15px' }} >
+                <Grid container spacing={0}>
+                  <Typography
+                    variant="p"
+                    color="text.secondary"
+                    align="left"
+                    marginTop={3}
+                    fontFamily={'Inter'}
+                    fontWeight={400}
+                    fontSize={'16px'}
+                    lineHeight={'21px'}
+                    letterSpacing={'-0.32px'}
+                    sx={{
+                      width: '145px',
+                      color: 'black',
+                    }}
+                  > Number of Matches
+                  </Typography>
+                </Grid>
+
+                <div className='last-step-btn' >
                   {renderFinalStepButtons(
                     [
-                      steps[step].buttonLabel1,
-                      steps[step].buttonLabel2,
-                      steps[step].buttonLabel3,
-                      steps[step].buttonLabel4,
+                      steps[4].buttonLabel1,
+                      steps[4].buttonLabel2,
+                      steps[4].buttonLabel3,
+                      steps[4].buttonLabel4,
                     ],
                     handleMatches,
                     matches
                   )}
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center' }} >
-                  <button onClick={handlePrevious} className='backArrows'>
-                    <KeyboardDoubleArrowLeftIcon />
-                  </button>
-                  <Button variant="contained" color="primary" style={{ backgroundColor: '#3492c7' }} onClick={completePlan} sx={{ margin: 5, marginLeft: 1, borderRadius: '100px', textTransform: 'none', minWidth: '20vw' }}>
+                <div className='fourth navigation-btn' >
+                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ backgroundColor: '#3492c7' }}
+                    onClick={completePlan}
+                  >
                     Create Plan
                   </Button>
                 </div>
               </>
             )}
+
           </Box>
         </Paper>
       </Container>

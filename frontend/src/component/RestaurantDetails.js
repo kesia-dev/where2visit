@@ -27,13 +27,15 @@ import RestaurantRoundedIcon from "@mui/icons-material/RestaurantRounded";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
-
+import Alert from "@mui/material/Alert";
 
 const RestaurantDetails = () => {
   const [copyFeedback, setCopyFeedback] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [planDetails, setPlanDetails] = useState({});
   const [currentRestaurantIndex, setCurrentRestaurantIndex] = useState(0);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
 
   // Access the code and username parameter from the URL
   const { planCode } = useParams();
@@ -66,21 +68,26 @@ const RestaurantDetails = () => {
 
   // Event handler for voting
   const handleVoteClick = async (voteType) => {
-      console.log(
+      
+    const voterName = userName || planDetails.hostName;
+    console.log("Voting as:", voterName);
+    console.log(
         "Vote:",
         voteType,
         "for restaurant:",
         restaurant._id,
         "by user:",
-        userName, 
+        voterName, 
         "in plan:", planCode
       );
-
+    // Clear the alert message: 
+    setShowAlert(false);
+    setAlertMessage("");
     // Send the vote to the server
      await axios
       .post(`http://localhost:4200/plan/vote-restaurant`, {
         planCode,
-        userName,
+        userName: voterName,
         restaurantId: restaurant._id,
         voteType,
       })
@@ -89,6 +96,14 @@ const RestaurantDetails = () => {
       })
      .catch((error) => {
         console.error("Error voting:", error);
+
+        if (error.response && error.response.status === 400 && error.response.data.error === "User has already voted for this restaurant") {
+          setAlertMessage("You have already voted for this restaurant");
+          setShowAlert(true);
+        } else {
+          setAlertMessage("Error occurred while submitting your vote.");
+          setShowAlert(true);
+        }
       });
   };
 
@@ -190,6 +205,11 @@ const RestaurantDetails = () => {
           pb: 6,
         }}
       >
+        {showAlert && (
+          <Alert severity="warning" onClose ={() => setShowAlert(false)}>
+            {alertMessage}
+          </Alert>
+        )}
         {/* Details about the event */}
         <Box
           sx={{
