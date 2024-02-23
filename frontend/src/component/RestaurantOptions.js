@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addCuisine, addPrice, addRating } from "../features/userOptions/optionsSlice";
 import { Box, Button, Grid, Typography } from "@mui/material";
+import StarIcon from '@mui/icons-material/Star';
 
 import "../styling/RestaurantOptions.css";
 
@@ -13,7 +14,7 @@ const RestaurantOptions = () => {
     cuisine: ["No preference", "French", "Italian", "Chinese", "Thai", "Greek", "Mexican", "Japanese", "Indian", "American"],
     // dietaryRestrictions: ["Keto", "Vegan", "Paleo", "Kosher", "Vegetarian", "Gluten Free"],
     priceRange: ["< $50", "$100 - $150", "$50 - $100", "$150+"],
-    rating: ["Any star rating", "⭐4+", "⭐3+", "⭐5"]
+    rating: ["Any star rating", "4+", "3+", "5"]
   };
 
   const states = {
@@ -62,7 +63,7 @@ const RestaurantOptions = () => {
           let ratingValue;
           switch (value) {
             case "Any star rating":
-              ratingValue = "any";
+              ratingValue = null;
               break;
             case "⭐3+":
               ratingValue = 3;
@@ -112,7 +113,7 @@ const RestaurantOptions = () => {
         case "Rating (Optional)":
           // Map the saved rating value to labels and compare
           switch (states[key]) {
-            case "any":
+            case null:
               isAdded = item === "Any star rating";
               break;
             case 3:
@@ -141,18 +142,18 @@ const RestaurantOptions = () => {
           variant="outlined"
           style={{
             backgroundColor: isAdded ? '#153a50' : '#aed3e9',
-            color: isAdded ? '#aed3e9' : '#153a50',
-            border: 'none'
+            color: isAdded ? '#aed3e9' : '#153a50'
           }}
           sx={{
             marginTop: 2,
             borderRadius: '10px',
             textTransform: 'none',
-            maxWidth: '40vw',
-            minHeight: '5vh' 
+            width: '180px',
+            height: '53px'
           }}
           onClick={() => handleClick(item)}
-        >
+        >         
+          {category === "Rating (Optional)" && item !== "Any star rating" && <StarIcon />} 
           {item}
         </Button>
       );
@@ -192,7 +193,12 @@ const RestaurantOptions = () => {
             fontFamily={'Inter'}
             fontWeight={400}
             fontSize={'16px'}
-          > {title}:
+            lineHeight={'21px'}
+            letterSpacing={'-0.32px'}
+            sx={{
+              color: 'black'
+            }}
+          > {title}
           </Typography>
         </Grid>
 
