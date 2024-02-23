@@ -65,13 +65,13 @@ const RestaurantOptions = () => {
             case "Any star rating":
               ratingValue = null;
               break;
-            case "⭐3+":
+            case "3+":
               ratingValue = 3;
               break;
-            case "⭐4+":
+            case "4+":
               ratingValue = 4;
               break;
-            case "⭐5":
+            case "5":
               ratingValue = 5;
               break;
             default:
@@ -117,13 +117,13 @@ const RestaurantOptions = () => {
               isAdded = item === "Any star rating";
               break;
             case 3:
-              isAdded = item === "⭐3+";
+              isAdded = item === "3+";
               break;
             case 4:
-              isAdded = item === "⭐4+";
+              isAdded = item === "4+";
               break;
             case 5:
-              isAdded = item === "⭐5";
+              isAdded = item === "5";
               break;
             default:
               isAdded = false;
