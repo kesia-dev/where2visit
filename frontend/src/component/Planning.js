@@ -36,8 +36,7 @@ const PlanningCard = () => {
       buttonLabel1: "3",
       buttonLabel2: "5",
       buttonLabel3: "10",
-      buttonLabel4: "15+",
-
+      buttonLabel4: "15",
     },
     {
       title: `<span class="title-star">*</span> How many <span class="title-color"> matches </span> do you want?`,
@@ -45,7 +44,6 @@ const PlanningCard = () => {
       buttonLabel1: "1",
       buttonLabel2: "3",
       buttonLabel3: "5",
-      buttonLabel4: "Custom"
     },
   ];
 
@@ -446,7 +444,6 @@ const PlanningCard = () => {
                       steps[4].buttonLabel1,
                       steps[4].buttonLabel2,
                       steps[4].buttonLabel3,
-                      steps[4].buttonLabel4,
                     ],
                     handleMatches,
                     matches
