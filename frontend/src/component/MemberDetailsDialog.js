@@ -100,7 +100,7 @@ export default function MemberDetailsDialog({ members }) {
               sx={{ textAlign: "center", m: "0 auto", p: 0 }}
             >
               <ListItemText
-                primary={member}
+                primary={member.username}
                 primaryTypographyProps={{
                   fontSize: 16,
                   fontWeight: "medium",
