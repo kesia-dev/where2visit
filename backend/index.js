@@ -7,6 +7,7 @@ const getPlanById = require('./routes/getPlanByIdRoute');
 const restaurants = require('./routes/googleMapsApiRoute');
 const restaurantsSearchFromYelp = require('./routes/yelpSearchApiRoute');
 const voteRestaurant = require('./routes/votingRoute');
+const joinPlan = require('./routes/joinPlanRoute');
 
 const app = express();
 const cors = require('cors');
@@ -23,6 +24,7 @@ app.use('/auth', authRouter);
 app.use('/plan', createPlan);
 app.use('/plan', getPlanById);
 app.use('/plan', voteRestaurant);
+app.use('/plan', joinPlan);
 app.use('/maps', restaurants);
 app.use('/yelp', restaurantsSearchFromYelp);
 

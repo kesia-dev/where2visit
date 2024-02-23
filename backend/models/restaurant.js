@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { memberVoteSchema } = require('./member-votes');
 
 const photoSchema = new mongoose.Schema({
     url: {
@@ -53,17 +54,18 @@ const restaurantSchema = new mongoose.Schema({
         type: String, 
         required: true,
     }],
-    voteCount: {
+    memberVotes: [memberVoteSchema],
+    totalVoteCount: {
         type: Number,
         default: 0
     },
-    positiveVotes: {
-        type: [String],
-        required: true
+    positiveVoteCount: {
+        type: Number,
+        default: 0,
     },
-    negativeVotes: {
-        type: [String],
-        required: true
+    negativeVoteCount: {
+        type: Number,
+        default: 0,
     }
 });
 
