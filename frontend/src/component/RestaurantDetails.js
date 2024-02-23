@@ -66,13 +66,16 @@ const RestaurantDetails = () => {
 
   // Event handler for voting
   const handleVoteClick = async (voteType) => {
-      console.log(
+      
+    const voterName = userName || planDetails.hostName;
+    console.log("Voting as:", voterName);
+    console.log(
         "Vote:",
         voteType,
         "for restaurant:",
         restaurant._id,
         "by user:",
-        userName, 
+        voterName, 
         "in plan:", planCode
       );
 
@@ -80,7 +83,7 @@ const RestaurantDetails = () => {
      await axios
       .post(`http://localhost:4200/plan/vote-restaurant`, {
         planCode,
-        userName,
+        userName: voterName,
         restaurantId: restaurant._id,
         voteType,
       })
