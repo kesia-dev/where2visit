@@ -53,12 +53,29 @@ const JoinPlan = () => {
     }
   };
 
-  const handleJoinPlanClick = () => {
-    if (!userName) {
+  const handleJoinPlanClick = async () => {
+    if (!userName.trim()) {
       setJoinSnackbarOpen(true);
       return;
-    } else {
-      console.log('Navigating to voting page');
+    } 
+
+    try {
+      const response = await axios.post('http://localhost:4200/plan/join', {
+        userName: userName.trim(),
+        planCode: planCode,
+      });
+      console.log('Joined plan successfully:', response.data);
+      localStorage.setItem('userName', userName.trim());
+      // Redirect to the restaurant plan details page:
+      window.location.href = `/restaurant-details/${planCode}`;
+    } catch (error) {
+      console.error('Error joining plan:', error);
+      // Check if the error is specifically because the username already exists:
+      if (error.response && error.response.status === 409) {
+        alert('Username already exists in this plan. Please choose a different name.');
+      } else {
+        alert('An error occurred while joining the plan.');
+      }
     }
   };
 
@@ -68,7 +85,7 @@ const JoinPlan = () => {
         alert('Please enter a valid planCode before joining the plan.');
         return;
       }
-
+      
       try {
         const response = await axios.get('http://localhost:4200/plan/get-plan', {
           params: {
