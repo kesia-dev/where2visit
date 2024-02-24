@@ -209,7 +209,7 @@ const StyledInput = styled(Input)(
   .${inputClasses.input} {
     width: 300px;
     height: 30px;
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.5;
@@ -253,11 +253,11 @@ const Label = styled(({ children, className }) => {
   return (
     <p className={clsx(className, error || showRequiredError ? 'invalid' : '')}>
       {children}
-      {required ? ' *' : ''}
+      {required ? '*' : ''}
     </p>
   );
 })`
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.875rem;
   margin-bottom: 4px;
 
@@ -287,6 +287,8 @@ const HelperText = styled((props) => {
 })`
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 0.875rem;
+  color: red;
+  margin-top: 5px;
 `;
 
 const blue = {

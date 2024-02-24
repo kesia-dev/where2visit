@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius, addCuisine, addPrice, addRating } from '../features/userOptions/optionsSlice';
+import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius } from '../features/userOptions/optionsSlice';
 import { useNavigate } from 'react-router-dom';
-import { Container, Paper, MobileStepper, Box, Typography, Button, Grid } from '@mui/material';
+import { Container, Paper, MobileStepper, Box, Typography, Button, Grid, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
 import "../styling/Planning.css";
@@ -48,30 +49,52 @@ const PlanningCard = () => {
   ];
 
   const options = useSelector(state => state.options);
-  const { term, numberOfResults: results, numberOfMatches: matches } = options;
+  const { term, numberOfResults: results, numberOfMatches: matches, cuisine, priceRange: price } = options;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = React.useState(0);
 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  // Function to close Snackbars
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(prev => !prev ? prev : !prev);
+  };
+
+  const handleSnackbar = (message) => {
+    setSnackbarMessage(message);
+    setOpenSnackbar(true);
+  };
+
   const handleNext = () => {
+
+    if (step === 0 && term.length < 4) {
+      handleSnackbar('Please select one option.');
+      return;
+    }
+
+    if (step === 2) {
+      if (cuisine === "") {
+        handleSnackbar('Please select Cuisine Type.');
+        return;
+      }
+      if (price === "") {
+        handleSnackbar('Please select Price Range.');
+        return;
+      }
+    }
+
     setStep(prevStep => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
     window.scroll({
       top: 0,
       left: 0,
       behavior: 'smooth'
     });
-  };
-
-
-  // Function to check if a button is selected
-  const isAdded = (state, buttonLabel) => {
-    return state === buttonLabel;
-  };
-
-  // Function will take user back to the last visited page
-  const goBackHistory = () => {
-    navigate(-1);
   };
 
   const handlePrevious = () => {
@@ -83,11 +106,20 @@ const PlanningCard = () => {
     });
   };
 
+  // Function to check if a button is selected
+  const isAdded = (state, buttonLabel) => {
+    return state === buttonLabel;
+  };
+
+  // Function will take user back to the last visited page
+  const goBackHistory = () => {
+    navigate(-1);
+  };
+
   const handleTerm = value => dispatch(addTerm(value));
 
   const handleResults = (value) => {
     dispatch(addNumberOfResults(value));
-    console.log(results);
     handleNext();
   };
 
@@ -101,7 +133,7 @@ const PlanningCard = () => {
         onClick={() => onClickHandler(label)}
         style={{
           backgroundColor: isAdded(state, label) ? '#153a50' : '#aed3e9',
-          color: isAdded(state, label) ? '#aed3e9' : '#153a50',          
+          color: isAdded(state, label) ? '#aed3e9' : '#153a50',
         }}
       >
         {label}
@@ -120,7 +152,20 @@ const PlanningCard = () => {
     radius: 5,
   });
 
+  // Next button for step 2
   const handleClickNextButtonForm = () => {
+
+    if (
+      formData.planName === "" ||
+      formData.hostName === "" ||
+      formData.date === "" ||
+      formData.time === "" ||
+      formData.location === ""
+    ) {
+      handleSnackbar('Please fill out all fields.');
+      return;
+    }
+
     dispatch(addPlanName(formData.planName));
     dispatch(addHostName(formData.hostName));
     dispatch(addDate(formData.date));
@@ -134,6 +179,17 @@ const PlanningCard = () => {
   const completePlan = async () => {
     console.log("Plan complete: Save info to DB and do API call");
     console.log("States to be shared: ", options);
+
+    if (step > 2) {
+      if (!results) {
+        handleSnackbar('Please select Number of Results.');
+        return;
+      }
+      if (!matches) {
+        handleSnackbar('Please select Number of Matches.');
+        return;
+      }
+    }
 
     try {
       // API call to save details to DB and search restaurants
@@ -357,7 +413,7 @@ const PlanningCard = () => {
                     variant="p"
                     color="text.secondary"
                     align="left"
-                    marginTop={3}                                        
+                    marginTop={3}
                     fontFamily={'Inter'}
                     fontWeight={400}
                     fontSize={'16px'}
@@ -365,7 +421,7 @@ const PlanningCard = () => {
                     letterSpacing={'-0.32px'}
                     sx={{
                       width: '135px',
-                      color: 'black',                
+                      color: 'black',
                     }}
                   > Number of Results
                   </Typography>
@@ -465,6 +521,22 @@ const PlanningCard = () => {
               </>
             )}
 
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={4000}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+              <MuiAlert
+                elevation={6}
+                variant="filled"
+                onClose={handleClose}
+                severity="error"
+                sx={{ width: '100%' }}
+              >
+                {snackbarMessage}
+              </MuiAlert>
+            </Snackbar>
           </Box>
         </Paper>
       </Container>
