@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+// clipboard-copy
+import copy from "clipboard-copy";
+// Custom Components
 import VotingDetailsDialog from "./VotingDetailsDialog";
 import MemberDetailsDialog from "./MemberDetailsDialog";
+import ViewPollsDialog from "./ViewPollsDialog";
 import GoogleMapEmbed from "./GoogleMapEmbed";
-import copy from "clipboard-copy";
+// MUI
 import Rating from "@mui/material/Rating";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -17,6 +21,9 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Popper from "@mui/material/Popper";
 import Fab from "@mui/material/Fab";
+import Alert from "@mui/material/Alert";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+// Icons
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
 import ThumbDownTwoToneIcon from "@mui/icons-material/ThumbDownTwoTone";
@@ -27,7 +34,19 @@ import RestaurantRoundedIcon from "@mui/icons-material/RestaurantRounded";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
-import Alert from "@mui/material/Alert";
+
+// theme to override the MUI Dialog component
+const theme = createTheme({
+  components: {
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          background: "none",
+        },
+      },
+    },
+  },
+});
 
 const RestaurantDetails = () => {
   const [copyFeedback, setCopyFeedback] = useState("");
@@ -56,9 +75,12 @@ const RestaurantDetails = () => {
     fetchData();
   }, [planCode]);
 
-//   console.log("Restaurants:", planDetails.restaurants);
+  //   console.log("Restaurants:", planDetails.restaurants);
+
+  // Get the members of the plan
   const members = planDetails.participants;
-//   console.log("Members:", members);
+  console.log("Members:", members);
+  // Get the username from local storage
   const userName = localStorage.getItem("userName");
   console.log("User:", userName);
   // Use the currentRestaurantIndex to display the corresponding restaurant
@@ -68,23 +90,24 @@ const RestaurantDetails = () => {
 
   // Event handler for voting
   const handleVoteClick = async (voteType) => {
-      
     const voterName = userName || planDetails.hostName;
-    console.log("Voting as:", voterName);
     console.log(
-        "Vote:",
-        voteType,
-        "for restaurant:",
-        restaurant._id,
-        "by user:",
-        voterName, 
-        "in plan:", planCode
-      );
-    // Clear the alert message: 
+      "Vote:",
+      voteType,
+      "by user:",
+      voterName,
+      "for restaurant:",
+      restaurant.name,
+      "with id:",
+      restaurant._id,
+      "in plan:",
+      planCode
+    );
+    // Clear the alert message:
     setShowAlert(false);
     setAlertMessage("");
     // Send the vote to the server
-     await axios
+    await axios
       .post(`http://localhost:4200/plan/vote-restaurant`, {
         planCode,
         userName: voterName,
@@ -94,10 +117,15 @@ const RestaurantDetails = () => {
       .then((res) => {
         console.log("Vote response:", res.data);
       })
-     .catch((error) => {
+      .catch((error) => {
         console.error("Error voting:", error);
 
-        if (error.response && error.response.status === 400 && error.response.data.error === "User has already voted for this restaurant") {
+        if (
+          error.response &&
+          error.response.status === 400 &&
+          error.response.data.error ===
+            "User has already voted for this restaurant"
+        ) {
           setAlertMessage("You have already voted for this restaurant");
           setShowAlert(true);
         } else {
@@ -117,33 +145,34 @@ const RestaurantDetails = () => {
     day: "numeric",
   });
 
-
-  console.log("date:", planDetails.dateOfEvent);
-  console.log("time:", planDetails.timeOfEvent);
-  console.log("formatted date:", formattedDate);
-
-
   // Get the number of positive votes for the current restaurant
   const positiveVoteCount = restaurant.positiveVoteCount
     ? restaurant.positiveVoteCount
     : 0;
-  console.log("vote count:", positiveVoteCount);
+  console.log("upvote count:", positiveVoteCount);
 
-  // Filter memberVotes to get the usernames associated with positive votes
-  const positiveMemberVotes = restaurant.memberVotes ? restaurant.memberVotes.filter(
-    (memberVote) => memberVote.voteType === "positive"
-    ) : [];
+  // Filter memberVotes to return only positive votes
+  const filterPositiveVotes = restaurant.memberVotes
+    ? restaurant.memberVotes.filter(
+        (memberVote) => memberVote.voteType === "positive"
+      )
+    : [];
+  console.log("filtered positive memberVotes:", filterPositiveVotes);
 
-    const getPositiveMemberVotes = positiveMemberVotes.map((memberVote) => memberVote.username);
-    console.log("GET positive member votes:", getPositiveMemberVotes);
-
-    console.log("positive member votes:", positiveMemberVotes);
+  // Get the usernames of the members who voted positively
+  const getPositiveVoters = filterPositiveVotes.map(
+    (memberVote) => memberVote.username
+  );
+  console.log("positive voters:", getPositiveVoters);
 
   //   Event handlers for the arrow buttons
   const handleNextClick = () => {
     setCurrentRestaurantIndex(
       (prevIndex) => (prevIndex + 1) % planDetails.restaurants.length
     );
+    // Clear the alert message:
+    setShowAlert(false);
+    setAlertMessage("");
   };
 
   const handlePrevClick = () => {
@@ -152,6 +181,9 @@ const RestaurantDetails = () => {
         (prevIndex - 1 + planDetails.restaurants.length) %
         planDetails.restaurants.length
     );
+    // Clear the alert message:
+    setShowAlert(false);
+    setAlertMessage("");
   };
 
   // copy handler
@@ -165,7 +197,6 @@ const RestaurantDetails = () => {
       console.error("Error copying to clipboard:", error);
       setCopyFeedback("Error copying to clipboard");
     }
-
     // Clear the feedback after a short delay
     setTimeout(() => {
       setCopyFeedback("");
@@ -205,11 +236,6 @@ const RestaurantDetails = () => {
           pb: 6,
         }}
       >
-        {showAlert && (
-          <Alert severity="warning" onClose ={() => setShowAlert(false)}>
-            {alertMessage}
-          </Alert>
-        )}
         {/* Details about the event */}
         <Box
           sx={{
@@ -386,28 +412,33 @@ const RestaurantDetails = () => {
             </Box>
           </CardContent>
           {/* Floating Action Buttons */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              position: "absolute",
-              left: "90%",
-              right: "7%",
-              top: "1%",
-              bottom: "45%",
-              justifyContent: "space-evenly",
-              alignItems: "center",
-            }}
-          >
-            {/* See Likes */}
-            <VotingDetailsDialog positiveVoteCount={positiveVoteCount} getPositiveMemberVotes={getPositiveMemberVotes} />
-            {/* See Members */}
-            <MemberDetailsDialog members={members} />
-            {/* See More Photos */}
-            <Fab sx={{ backgroundColor: "#fff" }} size="medium">
-              <PhotoTwoToneIcon sx={{ color: "#2A759F", fontSize: 35 }} />
-            </Fab>
-          </Box>
+          <ThemeProvider theme={theme}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                position: "absolute",
+                left: "90%",
+                right: "7%",
+                top: "1%",
+                bottom: "45%",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+              }}
+            >
+              {/* See Likes */}
+              <VotingDetailsDialog
+                positiveVoteCount={positiveVoteCount}
+                getPositiveVoters={getPositiveVoters}
+              />
+              {/* See Members */}
+              <MemberDetailsDialog members={members} />
+              {/* See More Photos */}
+              <Fab sx={{ backgroundColor: "#fff" }} size="medium">
+                <PhotoTwoToneIcon sx={{ color: "#2A759F", fontSize: 35 }} />
+              </Fab>
+            </Box>
+          </ThemeProvider>
           <CardMedia
             component="img"
             height="400px"
@@ -455,7 +486,13 @@ const RestaurantDetails = () => {
             </Box>
           </CardContent>
         </Card>
-        {/* Vote Navigation */}
+        {/* Restaurant Navigation & Voting */}
+        {/* Voting Alert */}
+        {showAlert && (
+          <Alert severity="warning" onClose={() => setShowAlert(false)}>
+            {alertMessage}
+          </Alert>
+        )}
         <Box
           sx={{
             m: "1rem auto",
@@ -477,7 +514,7 @@ const RestaurantDetails = () => {
               />
             </Button>
           </Box>
-          {/* Like/Dislike Buttons */}
+          {/* Voting Buttons */}
           <Box
             sx={{
               display: "flex",
@@ -585,6 +622,7 @@ const RestaurantDetails = () => {
               Menu
             </Button>
           </Box>
+          {/* View Directions Button - to be decided on */}
           {/* <Box sx={{ display: "flex" }}>
             <Button
               variant="outlined"
@@ -608,25 +646,12 @@ const RestaurantDetails = () => {
           </Box> */}
           {/* Map */}
           <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
-          {/* <Card
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              m: 1,
-              p: 0,
-              borderRadius: "16px",
-              border: "2px solid black",
-              boxSizing: "content-box",
-            }}
-          >
-            <CardMedia
-              component="iframe"
-              src={restaurant.googleStaticMapUrl}
-              alt="Map"
-              width="100%"
-              height="170px"
-            />
-          </Card> */}
+          {/* View Polls */}
+          <ThemeProvider theme={theme}>
+            <Box sx={{ display: "flex" }}>
+              <ViewPollsDialog />
+            </Box>
+          </ThemeProvider>
         </Box>
       </Paper>
     </Container>
