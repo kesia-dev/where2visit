@@ -20,7 +20,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function VotingDetailsDialog({  positiveVoteCount, getPositiveMemberVotes }) {
+export default function VotingDetailsDialog({  positiveVoteCount, getPositiveVoters }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -95,7 +95,7 @@ export default function VotingDetailsDialog({  positiveVoteCount, getPositiveMem
         </Box>
         <DialogContent>
           <List dense sx={{ justifyContent: "center", p: 0 }}>
-            {getPositiveMemberVotes.length === 0 && (
+            {getPositiveVoters.length === 0 && (
               <ListItem sx={{ textAlign: "center", m: "0 auto", p: 0 }} key={0}>
                 <ListItemText
                   primary={noVotes}
@@ -109,7 +109,7 @@ export default function VotingDetailsDialog({  positiveVoteCount, getPositiveMem
               </ListItem>
             )}
 
-            {getPositiveMemberVotes.map((member, index) => (
+            {getPositiveVoters.map((member, index) => (
               <ListItem
                 key={index}
                 sx={{ textAlign: "center", m: "0 auto", p: 0 }}
