@@ -159,10 +159,14 @@ const PlanningCard = () => {
       formData.planName === "" ||
       formData.hostName === "" ||
       formData.date === "" ||
-      formData.time === "" ||
-      formData.location === ""
+      formData.time === ""
     ) {
       handleSnackbar('Please fill out all fields.');
+      return;
+    }
+
+    if (formData.location === "") {
+      handleSnackbar('Select a valid location.')
       return;
     }
 
@@ -420,10 +424,11 @@ const PlanningCard = () => {
                     lineHeight={'21px'}
                     letterSpacing={'-0.32px'}
                     sx={{
-                      width: '135px',
+                      width: '145px',
                       color: 'black',
                     }}
                   > Number of Results
+                    <span className='title-star'>*</span>
                   </Typography>
                 </Grid>
 
@@ -487,10 +492,11 @@ const PlanningCard = () => {
                     lineHeight={'21px'}
                     letterSpacing={'-0.32px'}
                     sx={{
-                      width: '145px',
+                      width: '155px',
                       color: 'black',
                     }}
                   > Number of Matches
+                  <span className='title-star'>*</span>
                   </Typography>
                 </Grid>
 
