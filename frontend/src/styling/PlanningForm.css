@@ -3,10 +3,8 @@
   position: relative;
 }
 
-.formCheckbox {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+.required {
+  color: #c73434;
 }
 
 .dateTimePicker {
@@ -18,6 +16,33 @@
   border: 1px solid #DAE2ED;
   box-shadow: 0px 2px 2px #F3F6F9;
 }
+
+.input-form {
+  width: 300px;
+  height: 30px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  color: #1C2025;
+  background: #fff;
+  border: 1px solid #DAE2ED;
+  box-shadow: 0px 2px 2px #F3F6F9;
+}
+
+.input-form:hover {
+  border-color: #3399FF;
+}
+
+.input-form:focus {
+  outline: 0;
+  border-color: #3399FF;
+  box-shadow: 0 0 0 3px #b6daff;
+}
+
 
 .locationButton {
   border: none;
