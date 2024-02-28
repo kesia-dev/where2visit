@@ -1,4 +1,6 @@
 const express = require('express');
+const http = require('http');
+const WebSocket = require('ws');
 require('dotenv').config();
 const connectToDatabase = require('./config/db');
 const authRouter = require('./routes/authRoute');
@@ -8,14 +10,49 @@ const restaurants = require('./routes/googleMapsApiRoute');
 const restaurantsSearchFromYelp = require('./routes/yelpSearchApiRoute');
 const voteRestaurant = require('./routes/votingRoute');
 const joinPlan = require('./routes/joinPlanRoute');
+const VotingTimerService = require('./services/votingTimerService');
 
 const app = express();
 const cors = require('cors');
 app.use(express.json());
 app.use(cors())
-
 const port = process.env.PORT || 3000;
+// Create HTTP server:
+const server = http.createServer(app);
+// Add WebSocket support:
+const wss = new WebSocket.Server({ server });
+// Instantiate VotingTimerService with the web socket server:
+const votingTimerService = new VotingTimerService(wss);
 
+// Handle WebSocket connections:
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+
+  ws.on('message', (message) => {
+    try {
+      const parsedMessage = JSON.parse(message);
+      // Determine the action to take based on the message type:
+      switch (parsedMessage.action) {
+        case 'start-timer':
+          // Start the timer only if it's not already running:
+          if (!votingTimerService.isTimerRunning()) {
+            votingTimerService.startTimer(parsedMessage.duration || 3600);
+          }
+          break;
+        case 'end-timer':
+          // Eventually to End the timer,once login and registration is settled, validation that the sender is the host can be included in the logic below:
+          votingTimerService.endTimer();
+          break;
+      }
+    } catch (error) {
+      console.error('Error processing message:', error);
+    }
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+});
 
 connectToDatabase();
 
@@ -28,7 +65,7 @@ app.use('/plan', joinPlan);
 app.use('/maps', restaurants);
 app.use('/yelp', restaurantsSearchFromYelp);
 
-// Start the server
-app.listen(port, () => {
+// Start the server to ensure both HTTP and WebSocket requests are handled:
+server.listen(port, () => {
   console.log(`Server is running on port # ${port}`);
 });
