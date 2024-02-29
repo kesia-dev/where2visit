@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 // clipboard-copy
 import copy from "clipboard-copy";
 // Custom Components
@@ -34,6 +34,10 @@ import RestaurantRoundedIcon from "@mui/icons-material/RestaurantRounded";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
+import VotingSessionTimer from "./VotingSessionTimer";
+// Hooks
+import useWebSocket from "../hooks/useWebSocket";
+import EndVoteButton from "./EndVoteButton";
 
 // theme to override the MUI Dialog component
 const theme = createTheme({
@@ -55,11 +59,18 @@ const RestaurantDetails = () => {
   const [currentRestaurantIndex, setCurrentRestaurantIndex] = useState(0);
   const [alertMessage, setAlertMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [isPollsDialogOpen, setIsPollsDialogOpen] = useState(false);
   const [positiveVote, setPositiveVote] = useState(false);
   const [negativeVote, setNegativeVote] = useState(false);
 
   // Access the code and username parameter from the URL
   const { planCode } = useParams();
+  // Event handler for the WebSocket onSessionEnd event: 
+  const onSessionEnd = useCallback(() => {
+    setIsPollsDialogOpen(true);
+  }, []);
+  // Use the WebSocket hook to get the time left for the voting session:
+  const { timeLeft, sendMessage, socket } = useWebSocket("ws://localhost:4200", onSessionEnd);
 
   // Fetch the plan details from the server
   useEffect(() => {
@@ -69,7 +80,6 @@ const RestaurantDetails = () => {
           `http://localhost:4200/plan/get-plan?planCode=${planCode}`
         );
         setPlanDetails(res.data);
-        console.log("Plan details:", res.data);
       } catch (error) {
         console.error("Error getting plan details:", error);
       }
@@ -77,19 +87,55 @@ const RestaurantDetails = () => {
     fetchData();
   }, [planCode]);
 
+  // Sending WebSocket message only when plan details are fetched and the WebSocket connection is open:
+  useEffect(() => {
+    const sendStartTimerMessage = () => {
+      if (socket.current && socket.current.readyState === WebSocket.OPEN) {
+        sendMessage(JSON.stringify({ action: "start-timer", planCode }));
+      }
+    };
+
+    if (planDetails && Object.keys(planDetails).length) {
+      sendStartTimerMessage();
+    }
+  }, [planDetails, sendMessage, socket, planCode]);
+
+  const navigate = useNavigate();
+
+  // Handle timer end:
+  const onTimerEnd = useCallback(() => {
+    // Redirect to the final poll page:
+    navigate(`/final-poll/${planCode}`);
+  }, [navigate, planCode]);
+
+  const endVotingSession = () => {
+    if (socket.current && socket.current.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({ action: 'end-timer', planCode: planCode });
+      sendMessage(message);
+      console.log('Sent end-timer message to server');
+      setIsPollsDialogOpen(true);
+    }
+  };
+
+  // React to changes in timeLeft to determine if the timer has ended
+  useEffect(() => {
+    if (timeLeft === 0) {
+      onTimerEnd();
+    }
+  }, [timeLeft, onTimerEnd]);
+  
+ 
+
   // Get the members of the plan
   const members = planDetails.participants;
-//   console.log("Plan Members:", members);
-
-  // Get the username from local storage
+  // Get the the current user's username who joined the session from local storage
   const userName = localStorage.getItem("userName");
-  console.log("Current User:", userName || planDetails.hostName);
-
+  // Determine if the user is the host
+  const isHost = planDetails.hostName === userName;
   // Use the currentRestaurantIndex to display the corresponding restaurant
   const restaurant = planDetails.restaurants
     ? planDetails.restaurants[currentRestaurantIndex]
     : 0;
-//   console.log("Current restaurant:", restaurant);
 
   // Event handler for positive votes using useEffect
   useEffect(() => {
@@ -177,7 +223,6 @@ const RestaurantDetails = () => {
   const positiveVoteCount = planDetails.restaurants
     ? planDetails.restaurants[currentRestaurantIndex].positiveVoteCount
     : 0;
-//   console.log("upvote count:", restaurant.positiveVoteCount);
 
   // Filter memberVotes to return only positive votes
   const filterPositiveVotes = planDetails.restaurants
@@ -185,13 +230,12 @@ const RestaurantDetails = () => {
         (memberVote) => memberVote.voteType === "positive"
       )
     : [];
-//   console.log("filtered positive memberVotes:", filterPositiveVotes);
 
   // Get the usernames of the members who voted positively
   const getPositiveVoters = filterPositiveVotes.map(
     (memberVote) => memberVote.username
   );
-  console.log("positive voters:", getPositiveVoters);
+  // console.log("positive voters:", getPositiveVoters);
 
   // Event handlers for the arrow buttons
   const handleNextClick = () => {
@@ -392,6 +436,11 @@ const RestaurantDetails = () => {
             </Button>
           </Box>
         </Box>
+        <Divider sx={{ width: "100%", m: 0 }} />
+        {/* Timer */}
+        <VotingSessionTimer 
+          timeLeft={timeLeft}
+        />
         <Divider sx={{ width: "100%", m: 0 }} />
         {/* Restaurant details */}
         <Card
@@ -686,7 +735,32 @@ const RestaurantDetails = () => {
           {/* View Polls */}
           <ThemeProvider theme={theme}>
             <Box sx={{ display: "flex" }}>
-              <ViewPollsDialog />
+            <Button
+              onClick={() => setIsPollsDialogOpen(true)}
+              variant="outlined"
+              sx={{
+                textDecoration: "none",
+                color: "#333",
+                borderRadius: "16px",
+                border: "2px solid black",
+                p: 1.5,
+                m: 1,
+                width: "100%",
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              View Poll Results
+            </Button>
+              <ViewPollsDialog 
+                isOpen={isPollsDialogOpen}
+                onClose={() => setIsPollsDialogOpen(false)}
+              />
+              {isHost && (
+              <EndVoteButton 
+                endVotingSession={endVotingSession}
+              />
+              )}
             </Box>
           </ThemeProvider>
         </Box>

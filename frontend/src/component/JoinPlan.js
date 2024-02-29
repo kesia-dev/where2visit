@@ -65,13 +65,15 @@ const JoinPlan = () => {
         planCode: planCode,
       });
       console.log('Joined plan successfully:', response.data);
+      // Refresh localStorage before setting the new username, purely for development purposes:
+      localStorage.removeItem('userName');
       localStorage.setItem('userName', userName.trim());
       // Redirect to the restaurant plan details page:
       window.location.href = `/restaurant-details/${planCode}`;
     } catch (error) {
-      console.error('Error joining plan:', error);
-      // Check if the error is specifically because the username already exists:
-      if (error.response && error.response.status === 409) {
+      if (error.response && error.response.status === 403) {
+        alert('This plan is no longer active. The session has been ended by the host');
+      } else if (error.response && error.response.status === 409) {
         alert('Username already exists in this plan. Please choose a different name.');
       } else {
         alert('An error occurred while joining the plan.');
