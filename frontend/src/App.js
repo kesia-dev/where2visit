@@ -13,6 +13,7 @@ import Instructions from './component/Instructions.js';
 import Footer from './component/Footer.js';
 import '@fontsource/inter';
 import '@fortawesome/fontawesome-free/css/all.css';
+import WaitingPage from './component/WaitingPage';
 
 const domain = "dev-rkjah3umfq8c82at.us.auth0.com"
 const clientId = "xbeT4PtSPVwbkexbBRsCKmzveb3aNIE0"
@@ -35,6 +36,7 @@ function App() {
             <Route path="/join-plan/:planCode" element={<JoinPlan />} />
             <Route path="/restaurant-details/:planCode" element={<RestaurantDetails />} />
             <Route path="/final-poll/:planCode" element={<FinalPollResult />} />
+            <Route path="/waiting-page" element={<WaitingPage />} />
             {/* Add other routes as needed */}
           </Routes>
           <Footer />
