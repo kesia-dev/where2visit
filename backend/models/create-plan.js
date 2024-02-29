@@ -5,7 +5,7 @@ const createPlanSchema = new mongoose.Schema({
     planName: {
         type: String,
         required: true,
-        unique: true,
+        unique: false,
     },
     hostName: {
         type: String,
