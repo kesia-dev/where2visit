@@ -72,7 +72,7 @@ const JoinPlan = () => {
       window.location.href = `/restaurant-details/${planCode}`;
     } catch (error) {
       if (error.response && error.response.status === 403) {
-        alert('The plan session has been ended by the host.');
+        alert('This plan is no longer active. The session has been ended by the host');
       } else if (error.response && error.response.status === 409) {
         alert('Username already exists in this plan. Please choose a different name.');
       } else {
