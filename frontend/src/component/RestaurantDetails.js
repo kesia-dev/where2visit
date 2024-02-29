@@ -55,6 +55,8 @@ const RestaurantDetails = () => {
   const [currentRestaurantIndex, setCurrentRestaurantIndex] = useState(0);
   const [alertMessage, setAlertMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [positiveVote, setPositiveVote] = useState(false);
+  const [negativeVote, setNegativeVote] = useState(false);
 
   // Access the code and username parameter from the URL
   const { planCode } = useParams();
@@ -75,64 +77,90 @@ const RestaurantDetails = () => {
     fetchData();
   }, [planCode]);
 
-  //   console.log("Restaurants:", planDetails.restaurants);
-
   // Get the members of the plan
   const members = planDetails.participants;
-  console.log("Members:", members);
+//   console.log("Plan Members:", members);
+
   // Get the username from local storage
   const userName = localStorage.getItem("userName");
-  console.log("User:", userName);
+  console.log("Current User:", userName || planDetails.hostName);
+
   // Use the currentRestaurantIndex to display the corresponding restaurant
   const restaurant = planDetails.restaurants
     ? planDetails.restaurants[currentRestaurantIndex]
     : 0;
+//   console.log("Current restaurant:", restaurant);
 
-  // Event handler for voting
-  const handleVoteClick = async (voteType) => {
-    const voterName = userName || planDetails.hostName;
-    console.log(
-      "Vote:",
-      voteType,
-      "by user:",
-      voterName,
-      "for restaurant:",
-      restaurant.name,
-      "with id:",
-      restaurant._id,
-      "in plan:",
-      planCode
-    );
-    // Clear the alert message:
-    setShowAlert(false);
-    setAlertMessage("");
-    // Send the vote to the server
-    await axios
-      .post(`http://localhost:4200/plan/vote-restaurant`, {
-        planCode,
-        userName: voterName,
-        restaurantId: restaurant._id,
+  // Event handler for positive votes using useEffect
+  useEffect(() => {
+    const handleVoteClick = async (voteType) => {
+      const voterName = userName || planDetails.hostName;
+      console.log(
+        "Vote:",
         voteType,
-      })
-      .then((res) => {
-        console.log("Vote response:", res.data);
-      })
-      .catch((error) => {
-        console.error("Error voting:", error);
+        "by user:",
+        voterName,
+        "for restaurant:",
+        restaurant.name,
+        "with id:",
+        restaurant._id,
+        "in plan:",
+        planCode
+      );
+      // Send the vote to the server
+      await axios
+        .post(`http://localhost:4200/plan/vote-restaurant`, {
+          planCode,
+          userName: voterName,
+          restaurantId: restaurant._id,
+          voteType,
+        })
+        .then((res) => {
+          console.log("Vote response:", res.data);
+          setPlanDetails(res.data.planDetails);
+        })
+        .catch((error) => {
+          console.error("Error voting:", error);
+          if (
+            error.response &&
+            error.response.status === 400 &&
+            error.response.data.error ===
+              "User has already voted for this restaurant"
+          ) {
+            setAlertMessage("You have already voted for this restaurant");
+            setShowAlert(true);
+          } else {
+            setAlertMessage("Error occurred while submitting your vote.");
+            setShowAlert(true);
+          }
+        });
+    };
+    if (positiveVote) {
+      setPositiveVote(false);
+      handleVoteClick("positive");
+    }
+    if (negativeVote) {
+      setNegativeVote(false);
+      handleVoteClick("negative");
+    }
+  }, [
+    positiveVote,
+    negativeVote,
+    restaurant.positiveVoteCount,
+    restaurant.memberVotes,
+    planCode,
+    userName,
+    restaurant._id,
+    restaurant.name,
+    planDetails.hostName,
+  ]);
 
-        if (
-          error.response &&
-          error.response.status === 400 &&
-          error.response.data.error ===
-            "User has already voted for this restaurant"
-        ) {
-          setAlertMessage("You have already voted for this restaurant");
-          setShowAlert(true);
-        } else {
-          setAlertMessage("Error occurred while submitting your vote.");
-          setShowAlert(true);
-        }
-      });
+  // View Directions button
+  const handleDirectionsClick = () => {
+    window.open(
+      `https://www.google.com/maps/dir//${restaurant.name},${restaurant.address}`,
+      "_blank"
+    );
   };
 
   // Create a new Date object from the date and time strings
@@ -146,18 +174,18 @@ const RestaurantDetails = () => {
   });
 
   // Get the number of positive votes for the current restaurant
-  const positiveVoteCount = restaurant.positiveVoteCount
-    ? restaurant.positiveVoteCount
+  const positiveVoteCount = planDetails.restaurants
+    ? planDetails.restaurants[currentRestaurantIndex].positiveVoteCount
     : 0;
-  console.log("upvote count:", positiveVoteCount);
+//   console.log("upvote count:", restaurant.positiveVoteCount);
 
   // Filter memberVotes to return only positive votes
-  const filterPositiveVotes = restaurant.memberVotes
-    ? restaurant.memberVotes.filter(
+  const filterPositiveVotes = planDetails.restaurants
+    ? planDetails.restaurants[currentRestaurantIndex].memberVotes.filter(
         (memberVote) => memberVote.voteType === "positive"
       )
     : [];
-  console.log("filtered positive memberVotes:", filterPositiveVotes);
+//   console.log("filtered positive memberVotes:", filterPositiveVotes);
 
   // Get the usernames of the members who voted positively
   const getPositiveVoters = filterPositiveVotes.map(
@@ -165,22 +193,24 @@ const RestaurantDetails = () => {
   );
   console.log("positive voters:", getPositiveVoters);
 
-  //   Event handlers for the arrow buttons
+  // Event handlers for the arrow buttons
   const handleNextClick = () => {
-    setCurrentRestaurantIndex(
-      (prevIndex) => (prevIndex + 1) % planDetails.restaurants.length
-    );
+    setCurrentRestaurantIndex((prevIndex) => {
+      const nextIndex = (prevIndex + 1) % planDetails.restaurants.length;
+      return nextIndex;
+    });
     // Clear the alert message:
     setShowAlert(false);
     setAlertMessage("");
   };
 
   const handlePrevClick = () => {
-    setCurrentRestaurantIndex(
-      (prevIndex) =>
+    setCurrentRestaurantIndex((prevIndex) => {
+      const nextIndex =
         (prevIndex - 1 + planDetails.restaurants.length) %
-        planDetails.restaurants.length
-    );
+        planDetails.restaurants.length;
+      return nextIndex;
+    });
     // Clear the alert message:
     setShowAlert(false);
     setAlertMessage("");
@@ -378,7 +408,7 @@ const RestaurantDetails = () => {
           <CardContent
             sx={{
               background:
-                "linear-gradient(-180deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0.1) 115%)",
+                "linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(34, 34, 34, 0.357292) 65.1%, rgba(208, 208, 208, 0) 100%)",
               position: "absolute",
               width: "100%",
               p: 2,
@@ -390,7 +420,10 @@ const RestaurantDetails = () => {
                 variant="body1"
                 sx={{ color: "#fff", fontSize: "0.9rem" }}
               >
-                {currentRestaurantIndex + 1}/{planDetails.numberOfResults}{" "}
+                {currentRestaurantIndex + 1}/
+                {planDetails.restaurants
+                  ? planDetails.restaurants.length
+                  : planDetails.numberOfResults}{" "}
                 Restaurants
               </Typography>
               <Typography
@@ -453,7 +486,7 @@ const RestaurantDetails = () => {
           <CardContent
             sx={{
               background:
-                "linear-gradient(-180deg, rgba(255,255,255,0.15) -5%, rgba(0,0,0,0.6) 100%)",
+                "linear-gradient(180deg, rgba(208, 208, 208, 0) 0%, rgba(34, 34, 34, 0.357292) 34.9%, rgba(0, 0, 0, 0.7) 100%)",
               position: "absolute",
               width: "100%",
               p: 2,
@@ -508,7 +541,7 @@ const RestaurantDetails = () => {
               right: "80%",
             }}
           >
-            <Button onClick={handlePrevClick}>
+            <Button onClick={() => handlePrevClick()}>
               <KeyboardDoubleArrowLeftIcon
                 sx={{ color: "#C79E34", fontSize: 40 }}
               />
@@ -525,8 +558,9 @@ const RestaurantDetails = () => {
             }}
           >
             <Button
-              onClick={() => handleVoteClick("negative")}
-              variant="outlined"
+            //   value={"negative"}
+              onClick={() => setNegativeVote(true)}
+                variant="outlined"
               sx={{
                 border: "3px solid #9E2A2A",
                 borderRadius: "50%",
@@ -539,8 +573,9 @@ const RestaurantDetails = () => {
               <ThumbDownTwoToneIcon sx={{ color: "#9E2A2A", fontSize: 40 }} />
             </Button>
             <Button
-              onClick={() => handleVoteClick("positive")}
-              variant="outlined"
+            //   value={"positive"}
+              onClick={() => setPositiveVote(true)}
+                variant="outlined"
               sx={{
                 border: "3px solid #299F75",
                 borderRadius: "50%",
@@ -553,6 +588,7 @@ const RestaurantDetails = () => {
               <ThumbUpTwoToneIcon sx={{ color: "#299F75", fontSize: 40 }} />
             </Button>
           </Box>
+
           <Box
             sx={{
               display: "flex",
@@ -561,7 +597,7 @@ const RestaurantDetails = () => {
               left: "80%",
             }}
           >
-            <Button onClick={handleNextClick}>
+            <Button onClick={() => handleNextClick()}>
               <KeyboardDoubleArrowRightIcon
                 sx={{ color: "#C79E34", fontSize: 40 }}
               />
@@ -623,8 +659,9 @@ const RestaurantDetails = () => {
             </Button>
           </Box>
           {/* View Directions Button - to be decided on */}
-          {/* <Box sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex" }}>
             <Button
+              onClick={handleDirectionsClick}
               variant="outlined"
               sx={{
                 textDecoration: "none",
@@ -643,7 +680,7 @@ const RestaurantDetails = () => {
               />
               View Directions
             </Button>
-          </Box> */}
+          </Box>
           {/* Map */}
           <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
           {/* View Polls */}
