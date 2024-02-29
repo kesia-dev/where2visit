@@ -62,7 +62,7 @@ exports.vote = async (req, res) => {
 
     await plan.save();
 
-    res.json({ message: 'Vote successfully recorded' });
+    res.json({ message: 'Vote successfully recorded', planDetails: plan});
   } catch (error) {
     console.error('Voting Error:', error);
     res.status(500).json({ error: 'Server error during voting process' });
