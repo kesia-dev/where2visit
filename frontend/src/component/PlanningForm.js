@@ -36,16 +36,20 @@ const PlanningForm = ({ formData, setFormData }) => {
 
   // For user-entered address or city:
   const [locationInput, setLocationInput] = useState(formData.locationName);
-  const [openSnackbarGeo, setOpenSnackbarGeo] = useState(false);
-  const [openSnackbarSearch, setOpenSnackbarSearch] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   // Function to close Snackbars
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    setOpenSnackbarGeo(prev => !prev ? prev : !prev);
-    setOpenSnackbarSearch(prev => !prev ? prev : !prev);
+    setOpenSnackbar(prev => !prev ? prev : !prev);
+  };
+
+  const handleSnackbar = (message) => {
+    setSnackbarMessage(message);
+    setOpenSnackbar(true);
   };
 
   // Config for Place Autocomplete API
@@ -95,9 +99,9 @@ const PlanningForm = ({ formData, setFormData }) => {
           const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_API_KEY}`);
           const address = response.data.results.at(-4).formatted_address;
           if (!address) {
-            setOpenSnackbarGeo(true);
+            handleSnackbar("Geolocation couldn't be found. Please, try searching by city.");
+            return;
           }
-
           setLocationInput(address);
           setFormData({
             ...formData,
@@ -109,7 +113,7 @@ const PlanningForm = ({ formData, setFormData }) => {
           });
         } catch (error) {
           console.error("Reverse geocoding error:", error);
-          setOpenSnackbarGeo(true);
+          handleSnackbar("Geolocation couldn't be found. Please, try searching by city.");
         }
       });
     } else {
@@ -186,7 +190,7 @@ const PlanningForm = ({ formData, setFormData }) => {
         </FormControl>
 
         <Snackbar
-          open={openSnackbarGeo}
+          open={openSnackbar}
           autoHideDuration={4000}
           onClose={handleClose}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -198,30 +202,11 @@ const PlanningForm = ({ formData, setFormData }) => {
             severity="error"
             sx={{ width: '100%' }}
           >
-            Geolocation couldn't be found. Please, try searching by city.
-          </MuiAlert>
-        </Snackbar>
-
-        <Snackbar
-          open={openSnackbarSearch}
-          autoHideDuration={4000}
-          onClose={handleClose}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={handleClose}
-            severity="error"
-            sx={{ width: '100%' }}
-          >
-            Typed location couldn't be found. Please, try searching another location.
+            {snackbarMessage}
           </MuiAlert>
         </Snackbar>
 
       </Box>
-
-
     </>
   );
 };
