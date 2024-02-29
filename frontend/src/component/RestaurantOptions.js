@@ -199,6 +199,7 @@ const RestaurantOptions = () => {
               color: 'black'
             }}
           > {title}
+            {title !== 'Rating (Optional)' && <span className="required">*</span>}
           </Typography>
         </Grid>
 

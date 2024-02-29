@@ -123,22 +123,37 @@ const PlanningCard = () => {
     handleNext();
   };
 
-  const handleMatches = (value) => dispatch(addNumberOfMatches(value));
+  const handleMatches = (value) => {
+    if (value <= Number(results) ) {
+      dispatch(addNumberOfMatches(value));
+    }
+  };
 
   const renderFinalStepButtons = (buttonLabels, onClickHandler, state) => {
-    return buttonLabels.map((label, index) => (
-      <Button
-        key={index}
-        variant="outlined"
-        onClick={() => onClickHandler(label)}
-        style={{
-          backgroundColor: isAdded(state, label) ? '#153a50' : '#aed3e9',
-          color: isAdded(state, label) ? '#aed3e9' : '#153a50',
-        }}
-      >
-        {label}
-      </Button>
-    ));
+    return buttonLabels.map((label, index) => {
+      let disabled = false;
+
+      // Check if the button is for "Number of Matches" and "Number of Results" is 3
+      // Disable number of matches higher than number of results selected
+      if (step >= 3 && label === '5' && index === 2 && results === '3') {
+        disabled = true;
+      }
+
+      return (
+        <Button
+          key={index}
+          variant="outlined"
+          onClick={() => onClickHandler(label)}
+          style={{
+            backgroundColor: disabled ? '#E0E0E0' : isAdded(state, label) ? '#153a50' : '#aed3e9',
+            color: disabled ? '#BDBDBD' : isAdded(state, label) ? '#aed3e9' : '#153a50',
+          }}
+          disabled={disabled} 
+        >
+          {label}
+        </Button>
+      );
+    });
   };
 
 
@@ -159,10 +174,14 @@ const PlanningCard = () => {
       formData.planName === "" ||
       formData.hostName === "" ||
       formData.date === "" ||
-      formData.time === "" ||
-      formData.location === ""
+      formData.time === ""
     ) {
       handleSnackbar('Please fill out all fields.');
+      return;
+    }
+
+    if (formData.location === "") {
+      handleSnackbar('Select a valid location.');
       return;
     }
 
@@ -420,10 +439,11 @@ const PlanningCard = () => {
                     lineHeight={'21px'}
                     letterSpacing={'-0.32px'}
                     sx={{
-                      width: '135px',
+                      width: '145px',
                       color: 'black',
                     }}
                   > Number of Results
+                    <span className='title-star'>*</span>
                   </Typography>
                 </Grid>
 
@@ -487,10 +507,11 @@ const PlanningCard = () => {
                     lineHeight={'21px'}
                     letterSpacing={'-0.32px'}
                     sx={{
-                      width: '145px',
+                      width: '155px',
                       color: 'black',
                     }}
                   > Number of Matches
+                    <span className='title-star'>*</span>
                   </Typography>
                 </Grid>
 

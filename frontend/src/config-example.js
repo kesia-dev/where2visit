@@ -1,0 +1,3 @@
+const GOOGLE_MAPS_API_KEY = 'INSERT_KEY_HERE'
+
+export default GOOGLE_MAPS_API_KEY;
