@@ -20,6 +20,7 @@ const generateRoomId = () => {
 };
 
 exports.createPlan = async (req, res) => {
+  console.log('Create Plan Request:', req.body);
   try {
     const getRoomId = generateRoomId();
 
@@ -67,9 +68,9 @@ exports.createPlan = async (req, res) => {
       participants,
       roomId: getRoomId
     });
-
+    console.log('Before saving plan', newPlan);
     await newPlan.save();
-
+    console.log('After saving plan');
     return res.status(201).json({ 
       message: 'Plan registered successfully', 
       roomId: getRoomId,
@@ -77,6 +78,7 @@ exports.createPlan = async (req, res) => {
       restaurantIds: newPlan.restaurants.map(restaurant => restaurant._id)
     });
   } catch (error) {
+    console.error('Error in createPlan:', error);
     return res.status(500).json({ error: 'Failed to create plan' });
   }
 };

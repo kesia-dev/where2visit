@@ -1,27 +1,27 @@
 import * as React from "react";
+import { useParams } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import DialogContentText from '@mui/material/DialogContentText';
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
-import Fab from "@mui/material/Fab";
-import Badge from "@mui/material/Badge";
-import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
+import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
 import CloseIcon from "@mui/icons-material/Close";
 
-const noVotes = "No votes yet";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function VotingDetailsDialog({  positiveVoteCount, getPositiveVoters }) {
+export default function ViewPollsDialog() {
   const [open, setOpen] = React.useState(false);
+
+    // Access the code and username parameter from the URL
+    const { planCode } = useParams();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -33,15 +33,23 @@ export default function VotingDetailsDialog({  positiveVoteCount, getPositiveVot
 
   return (
     <React.Fragment>
-      <Fab
+      <Button
         onClick={handleClickOpen}
-        sx={{ backgroundColor: "#fff" }}
-        size="medium"
+        variant="outlined"
+        sx={{
+          textDecoration: "none",
+          color: "#333",
+          borderRadius: "16px",
+          border: "2px solid black",
+          p: 1.5,
+          m: 1,
+          width: "100%",
+          textTransform: "none",
+          fontWeight: 600,
+        }}
       >
-        <Badge badgeContent={positiveVoteCount} color="info">
-          <ThumbUpTwoToneIcon sx={{ color: "#2A759F", fontSize: 35 }} />
-        </Badge>
-      </Fab>
+        View Poll Results
+      </Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -68,7 +76,7 @@ export default function VotingDetailsDialog({  positiveVoteCount, getPositiveVot
             fontSize: "1.75rem",
           }}
         >
-          {"Voted"}
+          {"Thank You For Voting"}
         </DialogTitle>
         <Box
           sx={{
@@ -79,72 +87,35 @@ export default function VotingDetailsDialog({  positiveVoteCount, getPositiveVot
             p: 0,
           }}
         >
-          <Button
-            variant="outlined"
-            sx={{
-              border: "3px solid #299F75",
-              borderRadius: "50%",
-              p: 1,
-              m: 0,
-              boxShadow:
-                "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-            }}
-          >
-            <ThumbUpTwoToneIcon sx={{ color: "#299F75", fontSize: 40 }} />
-          </Button>
+            <LocationOnSharpIcon sx={{ color: "#2A759F", fontSize: 40, border: "none" }} />
         </Box>
         <DialogContent>
-          <List dense sx={{ justifyContent: "center", p: 0 }}>
-            {getPositiveVoters.length === 0 && (
-              <ListItem sx={{ textAlign: "center", m: "0 auto", p: 0 }} key={0}>
-                <ListItemText
-                  primary={noVotes}
-                  primaryTypographyProps={{
-                    fontSize: 16,
-                    fontWeight: "medium",
-                    letterSpacing: 0.5,
-                  }}
-                  sx={{ p: 0, m: 0.25 }}
-                />
-              </ListItem>
-            )}
+            <DialogContentText id="alert-dialog-slide-description">
+                Let's see what your friends have voted for!
+            </DialogContentText>
 
-            {getPositiveVoters.map((member, index) => (
-              <ListItem
-                key={index}
-                sx={{ textAlign: "center", m: "0 auto", p: 0 }}
-              >
-                <ListItemText
-                  primary={member}
-                  primaryTypographyProps={{
-                    fontSize: 16,
-                    fontWeight: "medium",
-                    letterSpacing: 0.5,
-                  }}
-                  sx={{ p: 0, m: 0.25 }}
-                />
-              </ListItem>
-            ))}
-          </List>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button
             variant="contained"
             onClick={handleClose}
+            component={Link} to={`/final-poll/${planCode}`}
             sx={{
               justifyContent: "center",
               display: "flex",
               textTransform: "none",
               fontSize: "1rem",
               borderRadius: "16px",
-              backgroundColor: "#3592C6",
+              backgroundColor: "#2A759F",
+              boxShadow:
+              "0px 2px 4px -1px rgba(0,0,0,0.1),0px 4px 5px 0px rgba(0,0,0,0.1),0px 1px 10px 0px rgba(0,0,0,0.12)",
               m: 2,
               mt: 0,
               p: 1,
             }}
             fullWidth
           >
-            Continue Voting
+            View Polls
           </Button>
         </DialogActions>
       </Dialog>

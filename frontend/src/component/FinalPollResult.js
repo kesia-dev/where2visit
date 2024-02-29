@@ -1,12 +1,16 @@
-import React, { useState } from "react";
-import plan from "../mock-data/plan-MQIJR";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
-import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
+// Custom Components
+import GoogleMapEmbed from "./GoogleMapEmbed";
+import ResultLinearProgress from "./ResultLinearProgress";
+// MUI
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -14,31 +18,16 @@ import Rating from "@mui/material/Rating";
 import Fab from "@mui/material/Fab";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import LinearProgress from "@mui/material/LinearProgress";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+// Icons
 import LaunchRoundedIcon from "@mui/icons-material/LaunchRounded";
 import PhotoTwoToneIcon from "@mui/icons-material/PhotoTwoTone";
 import RestaurantRoundedIcon from "@mui/icons-material/RestaurantRounded";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
+import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
+import ThumbDownTwoToneIcon from "@mui/icons-material/ThumbDownTwoTone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-const poll = {
-  up_votes: 5,
-  member_count: 9,
-  matches: 3,
-  voted_members: [
-    "John",
-    "Jane",
-    "Alice",
-    "Sam",
-    "Tom",
-    "John",
-    "Jane",
-    "Alice",
-    "Sam",
-  ],
-};
 
 const theme = createTheme({
   components: {
@@ -78,57 +67,86 @@ const theme = createTheme({
 
 const FinalPollResult = () => {
   const [currentRestaurantIndex, setCurrentRestaurantIndex] = useState(0);
-
-  // Use the currentRestaurantIndex to display the corresponding restaurant
-  const restaurant = plan.restaurants[currentRestaurantIndex];
+  const [planDetails, setPlanDetails] = useState({});
+  const [orderedRestaurants, setOrderedRestaurants] = useState([]);
 
   // Access the 'code' parameter from the URL
-  const { code } = useParams();
+  const { planCode } = useParams();
+
+  // Fetch the plan details from the server
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:4200/plan/get-plan?planCode=${planCode}`
+        );
+        console.log("Plan details:", res.data);
+        setPlanDetails(res.data);
+      } catch (error) {
+        console.error("Error getting plan details:", error);
+      }
+    };
+    if (planCode) {
+      fetchData();
+    }
+  }, [planCode]);
+
+  // Sort the restaurants by the number of positive votes
+  useEffect(() => {
+    if (planDetails.restaurants) {
+      planDetails.restaurants.sort((a, b) => {
+        return b.positiveVoteCount - a.positiveVoteCount;
+      });
+    }
+    setOrderedRestaurants(planDetails.restaurants);
+    setCurrentRestaurantIndex(0);
+  }, [planDetails]);
+
+  console.log("Ordered restaurants:", orderedRestaurants);
+
+  // Use the currentRestaurantIndex to display the corresponding restaurant
+  const restaurant = planDetails.restaurants
+    ? planDetails.restaurants[currentRestaurantIndex]
+    : 0;
+
+  // View Directions button
+  const handleDirectionsClick = () => {
+    window.open(
+      `https://www.google.com/maps/dir//${restaurant.name},${restaurant.address}`,
+      "_blank"
+    );
+  };
 
   // Create a new Date object from the date and time strings
-  const eventDateTime = new Date(`${plan.dateOfEvent}T${plan.timeOfEvent}`);
+  const eventDate = new Date(`${planDetails.dateOfEvent}`);
 
   // Format the date and time
-  const formattedDate = eventDateTime.toLocaleDateString("en-US", {
+  const formattedDate = eventDate.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-  const formattedTime = eventDateTime.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
 
-  // Normalize the progress bar value
-  const MIN = 0;
-  const MAX = poll.member_count;
-  const normalize = (value) => ((value - MIN) * 100) / (MAX - MIN);
-  const normalizedProgress = normalize(poll.up_votes);
-
+  // Share the plan details
   const handleShareClick = () => {
     if (navigator.share) {
       navigator
         .share({
           title: "The results are in!",
-          text: `Looks like the majority has chosen ${restaurant.name}! The plan is set for ${plan.date} @ ${plan.time}.`,
+          text: `Looks like the majority has chosen ${restaurant.name}! The plan is set for ${planDetails.formattedDate} @ ${planDetails.timeOfEvent}.`,
           url: window.location.href,
         })
         .then(() => console.log("Successfully shared"))
         .catch((error) => console.log("Error sharing:", error));
     } else {
-      alert(`Share the code: ${code}`);
+      alert(`Share the code: ${planCode}`);
     }
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="md"
-      sx={{ m: "0 auto", mt: 0.0115, p: 0 }}
-    >
+    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0 }}>
       <Paper
-        elevation={5}
+        elevation={1}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -144,12 +162,16 @@ const FinalPollResult = () => {
             justifyContent: "center",
           }}
         >
-          <Typography variant="body1" sx={{ fontSize: "20px", color: "#333" }}>
-            <strong>{plan.planName}</strong> hosted by {plan.hostName}
+          <Typography
+            variant="body1"
+            sx={{ fontSize: "20px", color: "#333", mx: 2 }}
+          >
+            <strong>{planDetails.planName}</strong> hosted by{" "}
+            {planDetails.hostName}
           </Typography>
           <Typography variant="body2" sx={{ fontSize: "18px", color: "#777" }}>
             {/* Display the formatted date and time  */}
-            {formattedDate} @ {formattedTime}
+            {formattedDate} @ {planDetails.timeOfEvent}
           </Typography>
         </Box>
         <Divider sx={{ width: "100%", m: 0 }} />
@@ -219,7 +241,7 @@ const FinalPollResult = () => {
           <CardContent
             sx={{
               background:
-                "linear-gradient(-180deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0.1) 115%)",
+                "linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(34, 34, 34, 0.357292) 65.1%, rgba(208, 208, 208, 0) 100%)",
               position: "absolute",
               width: "100%",
               p: 2,
@@ -233,7 +255,7 @@ const FinalPollResult = () => {
               <Typography variant="body1" sx={{ color: "#fff" }}>
                 <Rating
                   name="restaurant-rating"
-                  value={restaurant.rating}
+                  value={restaurant.rating ? restaurant.rating : 0}
                   precision={0.1}
                   readOnly
                   sx={{ verticalAlign: "bottom", mr: 1 }}
@@ -266,7 +288,7 @@ const FinalPollResult = () => {
             height="400px"
             width="100%"
             resize="cover"
-            image={restaurant.photos[0].url}
+            image={restaurant.photos ? restaurant.photos[0].url : ""}
             alt={restaurant.name}
             padding="0"
             position="absolute"
@@ -275,11 +297,11 @@ const FinalPollResult = () => {
           <CardContent
             sx={{
               background:
-                "linear-gradient(-180deg, rgba(255,255,255,0.15) -5%, rgba(0,0,0,0.6) 100%)",
+                "linear-gradient(180deg, rgba(208, 208, 208, 0) 0%, rgba(34, 34, 34, 0.357292) 34.9%, rgba(0, 0, 0, 0.7) 100%)",
               position: "absolute",
               width: "100%",
               p: 2,
-              top: "80%",
+              top: "77%",
               bottom: "0%",
               boxSizing: "border-box",
             }}
@@ -292,7 +314,10 @@ const FinalPollResult = () => {
                 }}
               >
                 <Typography variant="body1" sx={{ color: "#fff" }}>
-                  {restaurant.price} • {restaurant.categories.join(", ")}
+                  {restaurant.price} •{" "}
+                  {restaurant.categories
+                    ? restaurant.categories.join(", ")
+                    : ""}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#fff" }}>
                   {restaurant.distanceFromUser}
@@ -359,6 +384,7 @@ const FinalPollResult = () => {
           </Box>
           <Box sx={{ display: "flex" }}>
             <Button
+              onClick={handleDirectionsClick}
               variant="outlined"
               sx={{
                 textDecoration: "none",
@@ -379,25 +405,7 @@ const FinalPollResult = () => {
             </Button>
           </Box>
           {/* Map */}
-          <Card
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              m: 1,
-              p: 0,
-              borderRadius: "16px",
-              border: "2px solid black",
-              boxSizing: "content-box",
-            }}
-          >
-            <CardMedia
-              component="img"
-              image={restaurant.googleStaticMapUrl}
-              alt="Map"
-              width="100%"
-              height="170px"
-            />
-          </Card>
+          <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
         </Box>
         <Box sx={{ mx: 2, mt: 0.5, alignItems: "center" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: -1, px: 1 }}>
@@ -405,43 +413,76 @@ const FinalPollResult = () => {
           </Typography>
           <ThemeProvider theme={theme}>
             <List component="ol" marker="decimal">
-              {plan.restaurants
-                .slice(0, plan.numberOfMatches)
-                .map((restaurant, index) => (
-                  <ListItem key={index}>
-                    <Box
-                      sx={{
-                        display: "inline-flex",
-                        width: "90%",
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        sx={{ py: 1, m: 0, fontWeight: 600, width: "95%" }}
-                      >
-                        {restaurant.name}
-                      </Typography>
-                      <Typography
-                        variant="body2"
+              {planDetails.restaurants &&
+                planDetails.restaurants
+                  .slice(0, planDetails.numberOfMatches)
+                  .map((restaurant, index) => (
+                    <ListItem key={index}>
+                      <Box
                         sx={{
-                          color: "#777",
-                          py: 1,
-                          m: 0,
-                          textAnchor: "end",
-                          width: "20%",
+                          display: "inline-flex",
+                          width: "95%",
                         }}
                       >
-                        {poll.up_votes} votes
-                      </Typography>
-                    </Box>
-                    <Box sx={{ width: "100%" }}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={normalizedProgress}
-                      />
-                    </Box>
-                  </ListItem>
-                ))}
+                        <Typography
+                          variant="body1"
+                          sx={{ py: 1, m: 0, fontWeight: 600, width: "95%" }}
+                        >
+                          {"  "}
+                          {restaurant.name}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#777",
+                            py: 1,
+                            m: 0,
+                            textAnchor: "end",
+                            textAlign: "right",
+                            display: "flex",
+                            fontSize: 16,                            
+                            alignItems: "center",
+                          }}
+                        >
+                          {restaurant.positiveVoteCount}{" "}
+                          <ThumbUpTwoToneIcon
+                            sx={{
+                              mx: 0.75,
+                              color: "#299F75",
+                              fontSize: 16,
+                            }}
+                          />
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#777",
+                            py: 1,
+                            m: 0,
+                            textAnchor: "end",
+                            textAlign: "right",
+                            display: "flex",
+                            fontSize: 16,
+                            alignItems: "center",
+                          }}
+                        >
+                          {restaurant.negativeVoteCount}{" "}
+                          <ThumbDownTwoToneIcon
+                            sx={{
+                              ml: 0.75,
+                              color: "#9E2A2A",
+                              fontSize: 16,
+                            }}
+                          />
+                        </Typography>
+                      </Box>
+                      <Box sx={{ width: "100%" }}>
+                        <ResultLinearProgress
+                          key={index}
+                          positiveVoteCount={restaurant.positiveVoteCount}
+                          totalVoteCount={restaurant.totalVoteCount}
+                        />
+                      </Box>
+                    </ListItem>
+                  ))}
             </List>
           </ThemeProvider>
         </Box>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius, addCuisine, addPrice, addRating } from '../features/userOptions/optionsSlice';
+import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius } from '../features/userOptions/optionsSlice';
 import { useNavigate } from 'react-router-dom';
-import { Container, Paper, MobileStepper, Box, Typography, Button, Grid } from '@mui/material';
+import { Container, Paper, MobileStepper, Box, Typography, Button, Grid, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
 import "../styling/Planning.css";
@@ -36,8 +37,7 @@ const PlanningCard = () => {
       buttonLabel1: "3",
       buttonLabel2: "5",
       buttonLabel3: "10",
-      buttonLabel4: "15+",
-
+      buttonLabel4: "15",
     },
     {
       title: `<span class="title-star">*</span> How many <span class="title-color"> matches </span> do you want?`,
@@ -45,35 +45,56 @@ const PlanningCard = () => {
       buttonLabel1: "1",
       buttonLabel2: "3",
       buttonLabel3: "5",
-      buttonLabel4: "Custom"
     },
   ];
 
   const options = useSelector(state => state.options);
-  const { term, numberOfResults: results, numberOfMatches: matches } = options;
+  const { term, numberOfResults: results, numberOfMatches: matches, cuisine, priceRange: price } = options;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [step, setStep] = React.useState(0);
 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  // Function to close Snackbars
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(prev => !prev ? prev : !prev);
+  };
+
+  const handleSnackbar = (message) => {
+    setSnackbarMessage(message);
+    setOpenSnackbar(true);
+  };
+
   const handleNext = () => {
+
+    if (step === 0 && term.length < 4) {
+      handleSnackbar('Please select one option.');
+      return;
+    }
+
+    if (step === 2) {
+      if (cuisine === "") {
+        handleSnackbar('Please select Cuisine Type.');
+        return;
+      }
+      if (price === "") {
+        handleSnackbar('Please select Price Range.');
+        return;
+      }
+    }
+
     setStep(prevStep => (prevStep < steps.length - 1 ? prevStep + 1 : prevStep));
     window.scroll({
       top: 0,
       left: 0,
       behavior: 'smooth'
     });
-  };
-
-
-  // Function to check if a button is selected
-  const isAdded = (state, buttonLabel) => {
-    return state === buttonLabel;
-  };
-
-  // Function will take user back to the last visited page
-  const goBackHistory = () => {
-    navigate(-1);
   };
 
   const handlePrevious = () => {
@@ -85,30 +106,54 @@ const PlanningCard = () => {
     });
   };
 
+  // Function to check if a button is selected
+  const isAdded = (state, buttonLabel) => {
+    return state === buttonLabel;
+  };
+
+  // Function will take user back to the last visited page
+  const goBackHistory = () => {
+    navigate(-1);
+  };
+
   const handleTerm = value => dispatch(addTerm(value));
 
   const handleResults = (value) => {
     dispatch(addNumberOfResults(value));
-    console.log(results);
     handleNext();
   };
 
-  const handleMatches = (value) => dispatch(addNumberOfMatches(value));
+  const handleMatches = (value) => {
+    if (value <= Number(results) ) {
+      dispatch(addNumberOfMatches(value));
+    }
+  };
 
   const renderFinalStepButtons = (buttonLabels, onClickHandler, state) => {
-    return buttonLabels.map((label, index) => (
-      <Button
-        key={index}
-        variant="outlined"
-        onClick={() => onClickHandler(label)}
-        style={{
-          backgroundColor: isAdded(state, label) ? '#153a50' : '#aed3e9',
-          color: isAdded(state, label) ? '#aed3e9' : '#153a50',          
-        }}
-      >
-        {label}
-      </Button>
-    ));
+    return buttonLabels.map((label, index) => {
+      let disabled = false;
+
+      // Check if the button is for "Number of Matches" and "Number of Results" is 3
+      // Disable number of matches higher than number of results selected
+      if (step >= 3 && label === '5' && index === 2 && results === '3') {
+        disabled = true;
+      }
+
+      return (
+        <Button
+          key={index}
+          variant="outlined"
+          onClick={() => onClickHandler(label)}
+          style={{
+            backgroundColor: disabled ? '#E0E0E0' : isAdded(state, label) ? '#153a50' : '#aed3e9',
+            color: disabled ? '#BDBDBD' : isAdded(state, label) ? '#aed3e9' : '#153a50',
+          }}
+          disabled={disabled} 
+        >
+          {label}
+        </Button>
+      );
+    });
   };
 
 
@@ -122,7 +167,24 @@ const PlanningCard = () => {
     radius: 5,
   });
 
+  // Next button for step 2
   const handleClickNextButtonForm = () => {
+
+    if (
+      formData.planName === "" ||
+      formData.hostName === "" ||
+      formData.date === "" ||
+      formData.time === ""
+    ) {
+      handleSnackbar('Please fill out all fields.');
+      return;
+    }
+
+    if (formData.location === "") {
+      handleSnackbar('Select a valid location.');
+      return;
+    }
+
     dispatch(addPlanName(formData.planName));
     dispatch(addHostName(formData.hostName));
     dispatch(addDate(formData.date));
@@ -136,6 +198,17 @@ const PlanningCard = () => {
   const completePlan = async () => {
     console.log("Plan complete: Save info to DB and do API call");
     console.log("States to be shared: ", options);
+
+    if (step > 2) {
+      if (!results) {
+        handleSnackbar('Please select Number of Results.');
+        return;
+      }
+      if (!matches) {
+        handleSnackbar('Please select Number of Matches.');
+        return;
+      }
+    }
 
     try {
       // API call to save details to DB and search restaurants
@@ -359,17 +432,18 @@ const PlanningCard = () => {
                     variant="p"
                     color="text.secondary"
                     align="left"
-                    marginTop={3}                                        
+                    marginTop={3}
                     fontFamily={'Inter'}
                     fontWeight={400}
                     fontSize={'16px'}
                     lineHeight={'21px'}
                     letterSpacing={'-0.32px'}
                     sx={{
-                      width: '135px',
-                      color: 'black',                
+                      width: '145px',
+                      color: 'black',
                     }}
                   > Number of Results
+                    <span className='title-star'>*</span>
                   </Typography>
                 </Grid>
 
@@ -433,10 +507,11 @@ const PlanningCard = () => {
                     lineHeight={'21px'}
                     letterSpacing={'-0.32px'}
                     sx={{
-                      width: '145px',
+                      width: '155px',
                       color: 'black',
                     }}
                   > Number of Matches
+                    <span className='title-star'>*</span>
                   </Typography>
                 </Grid>
 
@@ -446,7 +521,6 @@ const PlanningCard = () => {
                       steps[4].buttonLabel1,
                       steps[4].buttonLabel2,
                       steps[4].buttonLabel3,
-                      steps[4].buttonLabel4,
                     ],
                     handleMatches,
                     matches
@@ -468,6 +542,22 @@ const PlanningCard = () => {
               </>
             )}
 
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={4000}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+              <MuiAlert
+                elevation={6}
+                variant="filled"
+                onClose={handleClose}
+                severity="error"
+                sx={{ width: '100%' }}
+              >
+                {snackbarMessage}
+              </MuiAlert>
+            </Snackbar>
           </Box>
         </Paper>
       </Container>
