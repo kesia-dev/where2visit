@@ -133,15 +133,15 @@ const PlanningForm = ({ formData, setFormData }) => {
           <HelperText />
         </FormControl>
 
-        <FormControl defaultValue="" required className='inputForm' value={formData.date}>
+        <FormControl defaultValue="" required className='inputForm' >
           <Label>Date of Event</Label>
-          <DatePicker className='dateTimePicker' onChange={(date, dateString) => setFormData({ ...formData, date: dateString })} placeholder='' />
+          <DatePicker className='dateTimePicker' onChange={(date, dateString) => setFormData({ ...formData, date: dateString })} placeholder={formData.date} />
           <HelperText />
         </FormControl>
 
-        <FormControl defaultValue="" required className='inputForm' value={formData.time}>
+        <FormControl defaultValue="" required className='inputForm' >
           <Label>Time of Event</Label>
-          <TimePicker className='dateTimePicker' use12Hours format="h:mm a" onChange={(time, timeString) => setFormData({ ...formData, time: timeString })} placeholder='' />
+          <TimePicker className='dateTimePicker' use12Hours format="h:mm a" onChange={(time, timeString) => setFormData({ ...formData, time: timeString })} placeholder={formData.time} />
           <HelperText />
         </FormControl>
 
