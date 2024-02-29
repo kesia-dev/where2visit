@@ -10,27 +10,40 @@ import DialogContentText from '@mui/material/DialogContentText';
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function ViewPollsDialog({ isOpen }) {
+export default function ViewPollsDialog({ isOpen, onClose }) {
 
   // Access the code and username parameter from the URL
   const { planCode } = useParams();
+
+  const handleClose = (event, reason) => {
+    if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+      onClose();
+    }
+  };
 
   return (
     <React.Fragment>
       <Dialog
         open={isOpen}
+        onClose={handleClose}
         TransitionComponent={Transition}
         keepMounted
         aria-describedby="alert-dialog-slide-description"
         maxWidth="xs"
         fullWidth
-        disableEscapeKeyDown
       >
+        <Button
+          onClick={onClose}
+          sx={{ display: "flex", justifyContent: "right", m: 0, p: 1.5, pb: 0 }}
+        >
+          <CloseIcon sx={{ color: "#222" }} />
+        </Button>
         <DialogTitle
           sx={{
             justifyContent: "center",
@@ -64,6 +77,7 @@ export default function ViewPollsDialog({ isOpen }) {
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button
             variant="contained"
+            onClick={handleClose}
             component={Link} to={`/final-poll/${planCode}`}
             sx={{
               justifyContent: "center",
