@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 // Custom Components
 import GoogleMapEmbed from "./GoogleMapEmbed";
 import ResultLinearProgress from "./ResultLinearProgress";
-// MUI 
+// MUI
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -24,6 +24,8 @@ import LaunchRoundedIcon from "@mui/icons-material/LaunchRounded";
 import PhotoTwoToneIcon from "@mui/icons-material/PhotoTwoTone";
 import RestaurantRoundedIcon from "@mui/icons-material/RestaurantRounded";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
+import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
+import ThumbDownTwoToneIcon from "@mui/icons-material/ThumbDownTwoTone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
 
@@ -100,12 +102,20 @@ const FinalPollResult = () => {
     setCurrentRestaurantIndex(0);
   }, [planDetails]);
 
-  console.log("Ordered restaurants:", orderedRestaurants);  
+  console.log("Ordered restaurants:", orderedRestaurants);
 
   // Use the currentRestaurantIndex to display the corresponding restaurant
   const restaurant = planDetails.restaurants
     ? planDetails.restaurants[currentRestaurantIndex]
     : 0;
+
+  // View Directions button
+  const handleDirectionsClick = () => {
+    window.open(
+      `https://www.google.com/maps/dir//${restaurant.name},${restaurant.address}`,
+      "_blank"
+    );
+  };
 
   // Create a new Date object from the date and time strings
   const eventDate = new Date(`${planDetails.dateOfEvent}`);
@@ -134,13 +144,9 @@ const FinalPollResult = () => {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="md"
-      sx={{ m: "0 auto", mt: 0.0115, p: 0 }}
-    >
+    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0 }}>
       <Paper
-        elevation={5}
+        elevation={1}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -235,7 +241,7 @@ const FinalPollResult = () => {
           <CardContent
             sx={{
               background:
-                "linear-gradient(-180deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0.1) 115%)",
+                "linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(34, 34, 34, 0.357292) 65.1%, rgba(208, 208, 208, 0) 100%)",
               position: "absolute",
               width: "100%",
               p: 2,
@@ -291,7 +297,7 @@ const FinalPollResult = () => {
           <CardContent
             sx={{
               background:
-                "linear-gradient(-180deg, rgba(255,255,255,0.15) -5%, rgba(0,0,0,0.6) 100%)",
+                "linear-gradient(180deg, rgba(208, 208, 208, 0) 0%, rgba(34, 34, 34, 0.357292) 34.9%, rgba(0, 0, 0, 0.7) 100%)",
               position: "absolute",
               width: "100%",
               p: 2,
@@ -378,6 +384,7 @@ const FinalPollResult = () => {
           </Box>
           <Box sx={{ display: "flex" }}>
             <Button
+              onClick={handleDirectionsClick}
               variant="outlined"
               sx={{
                 textDecoration: "none",
@@ -421,20 +428,50 @@ const FinalPollResult = () => {
                           variant="body1"
                           sx={{ py: 1, m: 0, fontWeight: 600, width: "95%" }}
                         >
-                          {"  "}{restaurant.name}
+                          {"  "}
+                          {restaurant.name}
                         </Typography>
                         <Typography
-                          variant="body2"
                           sx={{
                             color: "#777",
                             py: 1,
                             m: 0,
                             textAnchor: "end",
                             textAlign: "right",
-                            width: "18%",
+                            display: "flex",
+                            fontSize: 16,                            
+                            alignItems: "center",
                           }}
                         >
-                          {restaurant.positiveVoteCount} votes
+                          {restaurant.positiveVoteCount}{" "}
+                          <ThumbUpTwoToneIcon
+                            sx={{
+                              mx: 0.75,
+                              color: "#299F75",
+                              fontSize: 16,
+                            }}
+                          />
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#777",
+                            py: 1,
+                            m: 0,
+                            textAnchor: "end",
+                            textAlign: "right",
+                            display: "flex",
+                            fontSize: 16,
+                            alignItems: "center",
+                          }}
+                        >
+                          {restaurant.negativeVoteCount}{" "}
+                          <ThumbDownTwoToneIcon
+                            sx={{
+                              ml: 0.75,
+                              color: "#9E2A2A",
+                              fontSize: 16,
+                            }}
+                          />
                         </Typography>
                       </Box>
                       <Box sx={{ width: "100%" }}>
