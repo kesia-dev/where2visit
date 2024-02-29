@@ -5,7 +5,6 @@ const createPlanSchema = new mongoose.Schema({
     planName: {
         type: String,
         required: true,
-        unique: false,
     },
     hostName: {
         type: String,
@@ -62,6 +61,10 @@ const createPlanSchema = new mongoose.Schema({
         }
     }],
     restaurants: [restaurantSchema],
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
     roomId: {
         type: String,
         required: true,
