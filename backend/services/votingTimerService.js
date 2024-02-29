@@ -1,17 +1,32 @@
 const WebSocket = require('ws');
+const Plan = require('../models/create-plan');
 
 class VotingTimerService {
   constructor(webSocketServer) {
     this.webSocketServer = webSocketServer;
     this.timer = null;
     this.duration = 0; 
+    this.sessionActive = true;
+    this.reset();
+  }
+
+  reset() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+    this.duration = 0;
+    this.sessionActive = true;  
   }
 
   startTimer(duration) {
-		// If the timer is already running, clear it:
-    this.endTimer();
+    if (!this.sessionActive) {
+      console.log('Session is ended.');
+      return;
+    }
     this.duration = duration;
     this.timer = setInterval(() => this.tick(), 1000);
+    this.sessionActive = true;
   }
 
   tick() {
@@ -34,13 +49,18 @@ class VotingTimerService {
     });
   }
 
-  endTimer() {
-		// Clear the timer and broadcast the end of voting:
-    if(this.timer) {
-      clearInterval(this.timer);
-      this.timer = null;
-    }
+  async endTimer(planCode) {
+    clearInterval(this.timer);
+    this.timer = null;
     this.broadcastEndOfVoting();
+    this.sessionActive = false;
+
+    // Update the plan in the database to reflect that the voting has ended:
+    try {
+      await Plan.updateOne({ roomId: planCode }, { isActive: false });
+    } catch (error) {
+      console.error('Error updating plan session status:', error);
+    }
   }
 
   broadcastEndOfVoting() {
@@ -57,6 +77,10 @@ class VotingTimerService {
 		// Return true if the timer is running, false otherwise:
 		return !!this.timer;
 	}
+
+  isSessionActive() {
+    return this.sessionActive;
+  }
 }
 
 module.exports = VotingTimerService;
