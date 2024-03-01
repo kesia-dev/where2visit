@@ -36,7 +36,7 @@ function App() {
             <Route path="/join-plan/:planCode" element={<JoinPlan />} />
             <Route path="/restaurant-details/:planCode" element={<RestaurantDetails />} />
             <Route path="/final-poll/:planCode" element={<FinalPollResult />} />
-            <Route path="/waiting-page" element={<WaitingPage />} />
+            <Route path="/waiting-page/:planCode" element={<WaitingPage />} />
             {/* Add other routes as needed */}
           </Routes>
           <Footer />
