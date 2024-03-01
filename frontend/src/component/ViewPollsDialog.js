@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -10,27 +10,42 @@ import DialogContentText from '@mui/material/DialogContentText';
 import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function ViewPollsDialog({ isOpen }) {
+export default function ViewPollsDialog({ isOpen, onClose, sessionActive, isHost }) {
 
   // Access the code and username parameter from the URL
   const { planCode } = useParams();
+
+  const handleClose = (event, reason) => {
+    if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+      onClose();
+    }
+  };
+
+  const navigate = useNavigate();
 
   return (
     <React.Fragment>
       <Dialog
         open={isOpen}
+        onClose={handleClose}
         TransitionComponent={Transition}
         keepMounted
         aria-describedby="alert-dialog-slide-description"
         maxWidth="xs"
         fullWidth
-        disableEscapeKeyDown
       >
+        <Button
+          onClick={onClose}
+          sx={{ display: "flex", justifyContent: "right", m: 0, p: 1.5, pb: 0 }}
+        >
+          <CloseIcon sx={{ color: "#222" }} />
+        </Button>
         <DialogTitle
           sx={{
             justifyContent: "center",
@@ -64,7 +79,14 @@ export default function ViewPollsDialog({ isOpen }) {
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button
             variant="contained"
-            component={Link} to={`/final-poll/${planCode}`}
+            onClick={() => {
+
+              if (isHost || !sessionActive) {
+                navigate(`/final-poll/${planCode}`);
+              } else {
+                navigate(`/waiting-page/${planCode}`, { state: {sessionActive: sessionActive} });
+              }
+            }}
             sx={{
               justifyContent: "center",
               display: "flex",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 // clipboard-copy
 import copy from "clipboard-copy";
 // Custom Components
@@ -68,13 +68,12 @@ const RestaurantDetails = () => {
   const { planCode } = useParams();
   // Event handler for the WebSocket onSessionEnd event:
   const onSessionEnd = useCallback(() => {
+    console.log('Voting session ended by the host');
     setIsPollsDialogOpen(true);
   }, []);
   // Use the WebSocket hook to get the time left for the voting session:
-  const { timeLeft, sendMessage, socket } = useWebSocket(
-    "ws://localhost:4200",
-    onSessionEnd
-  );
+
+  const { timeLeft, sendMessage, socket, sessionActive } = useWebSocket("ws://localhost:4200", onSessionEnd);
 
   // Fetch the plan details from the server
   useEffect(() => {
@@ -104,13 +103,17 @@ const RestaurantDetails = () => {
     }
   }, [planDetails, sendMessage, socket, planCode]);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (!sessionActive) {
+      setIsPollsDialogOpen(true);
+    }
+  }, [sessionActive]);
 
   // Handle timer end:
   const onTimerEnd = useCallback(() => {
-    // Redirect to the final poll page:
-    navigate(`/final-poll/${planCode}`);
-  }, [navigate, planCode]);
+    console.log('Timer ended on the client side');
+    setIsPollsDialogOpen(true);
+  }, []);
 
   const endVotingSession = () => {
     if (socket.current && socket.current.readyState === WebSocket.OPEN) {
@@ -446,7 +449,10 @@ const RestaurantDetails = () => {
         </Box>
         <Divider sx={{ width: "100%", m: 0 }} />
         {/* Timer */}
-        <VotingSessionTimer timeLeft={timeLeft} />
+        <VotingSessionTimer 
+          timeLeft={timeLeft}
+          sessionActive={sessionActive}
+        />
         <Divider sx={{ width: "100%", m: 0 }} />
         {/* Restaurant details */}
         <Card
@@ -761,8 +767,14 @@ const RestaurantDetails = () => {
               <ViewPollsDialog
                 isOpen={isPollsDialogOpen}
                 onClose={() => setIsPollsDialogOpen(false)}
+                sessionActive={sessionActive}
+                isHost={isHost}
               />
-              {isHost && <EndVoteButton endVotingSession={endVotingSession} />}
+              {isHost && sessionActive && (
+              <EndVoteButton 
+                endVotingSession={endVotingSession}
+              />
+              )}
             </Box>
           </ThemeProvider>
         </Box>
