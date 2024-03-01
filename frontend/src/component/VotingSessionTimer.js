@@ -9,10 +9,10 @@ const LoadingDots = styled('span')({
     opacity: 0,
     animation: 'blink 1.4s infinite both',
   },
-  '& span:nth-child(2)': {
+  '& span:nth-of-type(2)': {
     animationDelay: '0.2s',
   },
-  '& span:nth-child(3)': {
+  '& span:nth-of-type(3)': {
     animationDelay: '0.4s',
   },
   '@keyframes blink': {
