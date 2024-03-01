@@ -445,6 +445,7 @@ const RestaurantDetails = () => {
         {/* Timer */}
         <VotingSessionTimer 
           timeLeft={timeLeft}
+          sessionActive={sessionActive}
         />
         <Divider sx={{ width: "100%", m: 0 }} />
         {/* Restaurant details */}
