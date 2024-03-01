@@ -8,6 +8,8 @@ import VotingDetailsDialog from "./VotingDetailsDialog";
 import MemberDetailsDialog from "./MemberDetailsDialog";
 import ViewPollsDialog from "./ViewPollsDialog";
 import GoogleMapEmbed from "./GoogleMapEmbed";
+import VotingSessionTimer from "./VotingSessionTimer";
+import EndVoteButton from "./EndVoteButton";
 // MUI
 import Rating from "@mui/material/Rating";
 import Divider from "@mui/material/Divider";
@@ -34,10 +36,9 @@ import RestaurantRoundedIcon from "@mui/icons-material/RestaurantRounded";
 import LocationOnSharpIcon from "@mui/icons-material/LocationOnSharp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
-import VotingSessionTimer from "./VotingSessionTimer";
+
 // Hooks
 import useWebSocket from "../hooks/useWebSocket";
-import EndVoteButton from "./EndVoteButton";
 
 // theme to override the MUI Dialog component
 const theme = createTheme({
@@ -65,12 +66,13 @@ const RestaurantDetails = () => {
 
   // Access the code and username parameter from the URL
   const { planCode } = useParams();
-  // Event handler for the WebSocket onSessionEnd event: 
+  // Event handler for the WebSocket onSessionEnd event:
   const onSessionEnd = useCallback(() => {
     console.log('Voting session ended by the host');
     setIsPollsDialogOpen(true);
   }, []);
   // Use the WebSocket hook to get the time left for the voting session:
+
   const { timeLeft, sendMessage, socket, sessionActive } = useWebSocket("ws://localhost:4200", onSessionEnd);
 
   // Fetch the plan details from the server
@@ -115,9 +117,12 @@ const RestaurantDetails = () => {
 
   const endVotingSession = () => {
     if (socket.current && socket.current.readyState === WebSocket.OPEN) {
-      const message = JSON.stringify({ action: 'end-timer', planCode: planCode });
+      const message = JSON.stringify({
+        action: "end-timer",
+        planCode: planCode,
+      });
       sendMessage(message);
-      console.log('Sent end-timer message to server');
+      console.log("Sent end-timer message to server");
       setIsPollsDialogOpen(true);
     }
   };
@@ -129,6 +134,10 @@ const RestaurantDetails = () => {
     }
   }, [timeLeft, onTimerEnd]);
   
+  
+ 
+
+
  
 
   // Get the members of the plan
@@ -291,23 +300,20 @@ const RestaurantDetails = () => {
         .share({
           title: "Join the Party",
           text: `Join the party with code: ${planCode}`,
-          url: window.location.href,
+          url: window.open(`http://localhost:3000/join-plan/${planCode}`),
         })
         .then(() => console.log("Successfully shared"))
         .catch((error) => console.error("Error sharing:", error));
     } else {
       alert(`Share the code: ${planCode}`);
+      console.log("Web Share API not supported");
     }
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="md"
-      sx={{ m: "0 auto", mt: 0.0115, p: 0 }}
-    >
+    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0 }}>
       <Paper
-        elevation={3}
+        elevation={1}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -613,9 +619,9 @@ const RestaurantDetails = () => {
             }}
           >
             <Button
-            //   value={"negative"}
+              //   value={"negative"}
               onClick={() => setNegativeVote(true)}
-                variant="outlined"
+              variant="outlined"
               sx={{
                 border: "3px solid #9E2A2A",
                 borderRadius: "50%",
@@ -628,9 +634,9 @@ const RestaurantDetails = () => {
               <ThumbDownTwoToneIcon sx={{ color: "#9E2A2A", fontSize: 40 }} />
             </Button>
             <Button
-            //   value={"positive"}
+              //   value={"positive"}
               onClick={() => setPositiveVote(true)}
-                variant="outlined"
+              variant="outlined"
               sx={{
                 border: "3px solid #299F75",
                 borderRadius: "50%",
@@ -741,24 +747,24 @@ const RestaurantDetails = () => {
           {/* View Polls */}
           <ThemeProvider theme={theme}>
             <Box sx={{ display: "flex" }}>
-            <Button
-              onClick={() => setIsPollsDialogOpen(true)}
-              variant="outlined"
-              sx={{
-                textDecoration: "none",
-                color: "#333",
-                borderRadius: "16px",
-                border: "2px solid black",
-                p: 1.5,
-                m: 1,
-                width: "100%",
-                textTransform: "none",
-                fontWeight: 600,
-              }}
-            >
-              View Poll Results
-            </Button>
-              <ViewPollsDialog 
+              <Button
+                onClick={() => setIsPollsDialogOpen(true)}
+                variant="outlined"
+                sx={{
+                  textDecoration: "none",
+                  color: "#333",
+                  borderRadius: "16px",
+                  border: "2px solid black",
+                  p: 1.5,
+                  m: 1,
+                  width: "100%",
+                  textTransform: "none",
+                  fontWeight: 600,
+                }}
+              >
+                View Poll Results
+              </Button>
+              <ViewPollsDialog
                 isOpen={isPollsDialogOpen}
                 onClose={() => setIsPollsDialogOpen(false)}
                 sessionActive={sessionActive}

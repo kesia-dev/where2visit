@@ -1,5 +1,15 @@
 import React from 'react';
 import { Box, Typography, LinearProgress, styled } from '@mui/material';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+    palette: {
+        primary: {
+        main: "#3492C7",
+        },
+    },
+    });
+
 
 const totalDuration = 3600;
 
@@ -46,8 +56,8 @@ const VotingSessionTimer = ({ timeLeft, sessionActive }) => {
   const normalizedTimeLeft = timeLeft !== null ? (timeLeft / totalDuration) * 100 : 100;
 
   return (
-    <Box sx={{ width: '100%', mt: 3 }}>
-      <Typography variant="h6" sx={{ fontSize: "18px", color: "#333", textAlign: 'center', mb: 1 }}>
+    <Box sx={{ width: '95%', my: 1.5, mx: "auto" }}>
+      <Typography variant="body1" sx={{ fontSize: "16px", color: "#333", textAlign: 'center', mb: 0.75 }}>
        {sessionActive ? (
           <>
             <strong>Voting Session Ends In: </strong>
@@ -58,7 +68,9 @@ const VotingSessionTimer = ({ timeLeft, sessionActive }) => {
         )}
       </Typography>
       {/* Displays the progress bar based on the remaining time */}
-      <LinearProgress variant="determinate" value={100 - normalizedTimeLeft} />
+      <ThemeProvider theme={theme}>
+      <LinearProgress variant="determinate" color="primary" value={100 - normalizedTimeLeft} sx={{ height: "10px", borderRadius: "10px", color: "#2A759F"}} />
+      </ThemeProvider>
     </Box>
   );
 }

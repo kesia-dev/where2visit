@@ -68,6 +68,7 @@ const useWebSocket = (url, onSessionEnd) => {
         socket.current.close();
       }
     };
+    // eslint-disable-next-line
   }, [url]);
 
   return { timeLeft, sessionActive, sendMessage, socket };
