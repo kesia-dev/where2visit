@@ -5,6 +5,7 @@ const useWebSocket = (url, onSessionEnd) => {
   const socket = useRef(null);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
   const maxReconnectAttempts = 2;
+  const [sessionActive, setSessionActive] = useState(true);
 
   const connect = () => {
     if (reconnectAttempts >= maxReconnectAttempts) {
@@ -25,7 +26,10 @@ const useWebSocket = (url, onSessionEnd) => {
       if (message.type === 'time-left') {
         setTimeLeft(message.duration);
       } else if (message.type === 'end-voting') {
-        onSessionEnd();
+        setSessionActive(false);
+        if (onSessionEnd) {
+          onSessionEnd();
+        }
       }
     };
 
@@ -66,7 +70,7 @@ const useWebSocket = (url, onSessionEnd) => {
     };
   }, [url]);
 
-  return { timeLeft, sendMessage, socket };
+  return { timeLeft, sessionActive, sendMessage, socket };
 };
 
 export default useWebSocket;
