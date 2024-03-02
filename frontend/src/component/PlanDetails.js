@@ -1,32 +1,87 @@
-import React from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Typography, Box } from '@mui/material';
+import axios from 'axios';
+import GOOGLE_MAPS_API_KEY from '../config';
+import dayjs from 'dayjs';
 
-const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, location }) => {
+const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, latitude, longitude }) => {
+
+  const [address, setAddress] = useState('');
+
+  if (latitude && longitude) {
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_API_KEY}`)
+    .then(response => setAddress(response.data.results.at(-4).formatted_address))
+    .catch(error => console.error('Error fetching address:', error));
+  }
+
   return (
-    <Card elevation={0} sx={{ marginTop: '20px', alignItems: 'center', justifyContent: 'center', background: '#E9D8A3', color: 'black', width: '440px' }}>
-      <CardContent sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-        <Typography variant="h6" gutterBottom sx={{ color: '#333', marginBottom: 2 }}>
-          Plan Details
-        </Typography>
-        <Typography variant="body1" sx={{ color: '#555', marginBottom: 0.5 }}>
-          Room Name: <strong>{planName} </strong>
-        </Typography>
-        <Typography variant="body1" sx={{ color: '#555', marginBottom: 0.5 }}>
-         Host Name:<strong> {hostName} </strong>
-        </Typography>
-        <Typography variant="body1" sx={{ color: '#555', marginBottom: 0.5 }}>
-          Date of Event:<strong> {dateOfEvent} </strong>
-        </Typography>
-        <Typography variant="body1" sx={{ color: '#555', marginBottom: 0.5 }}>
-          Time of Event:<strong> {timeOfEvent} </strong>
-        </Typography>
-        {/*
-          <Typography variant="body1" sx={{ color: '#555', marginBottom: 1 }}>
-            <strong>Location:</strong> {location}
-          </Typography>
-        */}
-      </CardContent>
-    </Card>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'left',
+        justifyContent: "center",
+        width: '385px',
+        margin: '18px',
+        alignItems: 'flex-start'
+      }}>
+
+      <Typography variant="h6" gutterBottom
+        sx={{
+          color: '#1C1C1C',
+          marginBottom: 2,
+          fontFamily: 'inter',
+          fontWeight: 600,
+          fontSize: '20px',
+          lineHeight: '25px',
+          letterSpacing: '0.38px'
+        }}>
+        Plan Details
+      </Typography>
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          textAlign: 'left',
+          justifyContent: "center",
+          width: '100%'
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            textAlign: 'Left',
+            width: '35%'
+          }}
+        >
+          <p className='plan-details-title'>Room Name:</p>
+          <p className='plan-details-title'>Host Name:</p>
+          <p className='plan-details-title'>Date of Event:</p>
+          <p className='plan-details-title'>Time of Event:</p>
+          <p className='plan-details-title'>Location:</p>
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            textAlign: 'Left',
+            width: '328px'
+          }}
+        >
+          <p className='plan-details-info'>{planName}</p>
+          <p className='plan-details-info'>{hostName}</p>
+          <p className='plan-details-info'>{dayjs(dateOfEvent).format('MM/DD/YYYY')}
+          </p>
+          <p className='plan-details-info'>{timeOfEvent}</p>
+          <p className='plan-details-info'>{address}</p>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

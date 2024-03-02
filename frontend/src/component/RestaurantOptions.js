@@ -198,6 +198,7 @@ const RestaurantOptions = () => {
             sx={{
               color: 'black'
             }}
+            className="category-title"
           > {title}
             {title !== 'Rating (Optional)' && <span className="required">*</span>}
           </Typography>

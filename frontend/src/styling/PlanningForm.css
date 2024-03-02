@@ -13,8 +13,19 @@
   padding: 8px 12px;
 
   color: #1C2025;
-  border: 1px solid #DAE2ED;
+  background: #E5E5E5;
+  border: none;
   box-shadow: 0px 2px 2px #F3F6F9;
+}
+
+.dateTimePicker:hover {
+  background: #E5E5E5;
+  border: none;
+}
+
+.dateTimePicker:focus {
+  background: #E5E5E5;
+  border: none;
 }
 
 .input-form {
@@ -28,19 +39,20 @@
   border-radius: 8px;
 
   color: #1C2025;
-  background: #fff;
-  border: 1px solid #DAE2ED;
+  background: #E5E5E5;
+  border: none;
   box-shadow: 0px 2px 2px #F3F6F9;
 }
 
-.input-form:hover {
+/* .input-form:hover {
   border-color: #3399FF;
-}
+} */
 
 .input-form:focus {
   outline: 0;
-  border-color: #3399FF;
-  box-shadow: 0 0 0 3px #b6daff;
+  border: none;
+  /* border-color: #3399FF;
+  box-shadow: 0 0 0 3px #b6daff; */
 }
 
 
