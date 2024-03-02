@@ -20,14 +20,14 @@
     margin: 15px 10px;
   }
 
-  .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.css-1idn90j-MuiGrid-root {
+  .category-title {
     position: relative;
-    left: 110px;
+    left: 100px;
   }
- 
+
   .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-6.css-1osj8n2-MuiGrid-root {
     display: flex;
     justify-content: center;
   }
-  
+
 }
