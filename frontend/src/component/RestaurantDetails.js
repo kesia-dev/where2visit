@@ -14,6 +14,7 @@ import EndVoteButton from "./EndVoteButton";
 import Rating from "@mui/material/Rating";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -51,6 +52,24 @@ const theme = createTheme({
       },
     },
   },
+  // create palette for the theme
+  palette: {
+    primary: {
+      main: "#3492C7",
+    },
+    disabled: {
+      main: "#BDBDBD",
+    },
+    emerald: {
+      main: "#299F75",
+    },
+    rouge: {
+      main: "#C73434",
+    },
+    mustard: {
+      main: "#C79E34",
+    },
+  },
 });
 
 const RestaurantDetails = () => {
@@ -70,12 +89,17 @@ const RestaurantDetails = () => {
 
   // Event handler for the WebSocket onSessionEnd event:
   const onSessionEnd = useCallback(() => {
-    console.log('Voting session ended by the host');
+    console.log("Voting session ended by the host");
     setSessionActive(false);
     setIsPollsDialogOpen(true);
   }, []);
   // Use the WebSocket hook to get the time left for the voting session:
-  const { timeLeft, sendMessage, socket } = useWebSocket("ws://localhost:4200", planCode, onSessionEnd, sessionActive);
+  const { timeLeft, sendMessage, socket } = useWebSocket(
+    "ws://localhost:4200",
+    planCode,
+    onSessionEnd,
+    sessionActive
+  );
 
   // Fetch the plan details from the server
   useEffect(() => {
@@ -95,7 +119,7 @@ const RestaurantDetails = () => {
 
   // Sending WebSocket message only when plan details are fetched and the WebSocket connection is open:
   useEffect(() => {
-     // Check if plan is active before starting the timer
+    // Check if plan is active before starting the timer
     if (planDetails && Object.keys(planDetails).length && sessionActive) {
       const sendStartTimerMessage = () => {
         if (socket.current && socket.current.readyState === WebSocket.OPEN) {
@@ -104,7 +128,7 @@ const RestaurantDetails = () => {
       };
       sendStartTimerMessage();
     }
-  }, [planDetails, sendMessage, socket, planCode, sessionActive]); 
+  }, [planDetails, sendMessage, socket, planCode, sessionActive]);
 
   useEffect(() => {
     // When session ends, show the modal:
@@ -117,7 +141,7 @@ const RestaurantDetails = () => {
 
   // Handle timer end:
   const onTimerEnd = useCallback(() => {
-    console.log('Timer ended on the client side');
+    console.log("Timer ended on the client side");
     setSessionActive(false);
     setIsPollsDialogOpen(true);
   }, []);
@@ -309,201 +333,204 @@ const RestaurantDetails = () => {
 
   return (
     <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0 }}>
-      <Paper
-        elevation={1}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          borderRadius: 0,
-          pb: 6,
-        }}
-      >
-        {/* Details about the event */}
-        <Box
+      <ThemeProvider theme={theme}>
+        <Paper
+          elevation={1}
           sx={{
-            m: 2,
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "column",
+            borderRadius: 0,
+            pb: 6,
           }}
         >
-          <Box>
-            <Typography
-              variant="body1"
-              sx={{ fontSize: "18px", color: "#333" }}
-            >
-              <strong>{planDetails.planName}</strong> hosted by{" "}
-              {planDetails.hostName}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ fontSize: "18px", color: "#777" }}
-            >
-              {/* Display the formatted date and time  */}
-              {formattedDate} @ {planDetails.timeOfEvent}
-            </Typography>
-          </Box>
-          {/* Adjust Selections */}
-          <Button>
-            <TuneRoundedIcon
-              sx={{
-                bgcolor: "#153A50",
-                color: "#85BDDD",
-                p: 1.75,
-                ml: 2,
-                borderRadius: "50%",
-                boxShadow:
-                  "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-              }}
-            />
-          </Button>
-        </Box>
-        <Divider sx={{ width: "100%", m: 0 }} />
-        {/* Share box */}
-        <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
-          <Box sx={{ width: "50%", display: "flex", flexDirection: "column" }}>
-            <Typography
-              variant="body1"
-              sx={{ fontSize: "18px", color: "#333" }}
-            >
-              <strong>Invite Your Friends!</strong>
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ fontSize: "16px", color: "#777" }}
-            >
-              Copy & Share Your Code
-            </Typography>
-          </Box>
+          {/* Details about the event */}
           <Box
             sx={{
-              width: "50%",
+              m: 2,
               display: "flex",
-              alignItems: "center",
-              justifyContent: "space-around",
+              justifyContent: "space-between",
             }}
           >
-            {/* Yellow code box - copies to clipboard on click */}
-            <Button
-              sx={{
-                backgroundColor: "#E9D8AE",
-                color: "#333",
-                border: "2px dashed #666",
-                borderRadius: "8px",
-                padding: "8px",
-                alignItems: "center",
-                width: "fit-content",
-                height: "fit-content",
-                fontWeight: 600,
-                fontSize: "16px",
-                boxShadow:
-                  "0px 2px 4px -1px rgba(0,0,0,0.1),0px 4px 5px 0px rgba(0,0,0,0.1),0px 1px 10px 0px rgba(0,0,0,0.12)",
-              }}
-              onClick={handleCopyClick}
-              type="button"
-              aria-describedby={id}
-            >
-              {planCode}
-            </Button>
-            {copyFeedback && (
-              <Popper id={id} open={open} anchorEl={anchorEl} placement="top">
-                <Box
-                  sx={{
-                    border: 1,
-                    p: 1,
-                    mb: 1,
-                    bgcolor: "background.paper",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "12px", color: "black" }}
-                  >
-                    {copyFeedback}
-                  </Typography>
-                </Box>
-              </Popper>
-            )}
-            {/* Share button */}
-            <Button
-              variant="outlined"
-              sx={{
-                border: "2px solid #85BDDD",
-                borderRadius: "8px",
-                padding: "8px",
-                alignItems: "center",
-                height: "fit-content",
-                fontWeight: 600,
-                fontSize: "16px",
-                boxShadow:
-                  "0px 2px 4px -1px rgba(0,0,0,0.1),0px 4px 5px 0px rgba(0,0,0,0.1),0px 1px 10px 0px rgba(0,0,0,0.12)",
-              }}
-              onClick={handleShareClick}
-            >
-              Share
-            </Button>
-          </Box>
-        </Box>
-        <Divider sx={{ width: "100%", m: 0 }} />
-        {/* Timer */}
-        <VotingSessionTimer 
-          timeLeft={timeLeft}
-          sessionActive={sessionActive}
-        />
-        <Divider sx={{ width: "100%", m: 0 }} />
-        {/* Restaurant details */}
-        <Card
-          key={currentRestaurantIndex}
-          sx={{
-            m: "0 auto",
-            p: 0,
-            justifyContent: "center",
-            width: "100%",
-            position: "relative",
-            borderRadius: 0,
-          }}
-        >
-          <CardContent
-            sx={{
-              background:
-                "linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(34, 34, 34, 0.357292) 65.1%, rgba(208, 208, 208, 0) 100%)",
-              position: "absolute",
-              width: "100%",
-              p: 2,
-              boxSizing: "border-box",
-            }}
-          >
-            <Box sx={{ p: 0 }}>
+            <Box>
               <Typography
                 variant="body1"
-                sx={{ color: "#fff", fontSize: "0.9rem" }}
+                sx={{ fontSize: "18px", color: "#333" }}
               >
-                {currentRestaurantIndex + 1}/
-                {planDetails.restaurants
-                  ? planDetails.restaurants.length
-                  : planDetails.numberOfResults}{" "}
-                Restaurants
+                <strong>{planDetails.planName}</strong> hosted by{" "}
+                {planDetails.hostName}
               </Typography>
               <Typography
-                variant="h4"
-                sx={{ color: "#fff", fontWeight: 600, maxWidth: "88%" }}
+                variant="body2"
+                sx={{ fontSize: "18px", color: "#777" }}
               >
-                {restaurant.name}
-              </Typography>
-              <Typography variant="body1" sx={{ color: "#fff" }}>
-                <Rating
-                  readOnly
-                  name="restaurant-rating"
-                  value={restaurant.rating ? restaurant.rating : 0}
-                  precision={0.1}
-                  sx={{ verticalAlign: "bottom", mr: 1 }}
-                />
-                {restaurant.rating} ({restaurant.reviewCount} Reviews)
+                {/* Display the formatted date and time  */}
+                {formattedDate} @ {planDetails.timeOfEvent}
               </Typography>
             </Box>
-          </CardContent>
-          {/* Floating Action Buttons */}
-          <ThemeProvider theme={theme}>
+            {/* Adjust Selections */}
+            <Button>
+              <TuneRoundedIcon
+                sx={{
+                  bgcolor: "#153A50",
+                  color: "#85BDDD",
+                  p: 1.75,
+                  ml: 2,
+                  borderRadius: "50%",
+                  boxShadow:
+                    "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+                }}
+              />
+            </Button>
+          </Box>
+          <Divider sx={{ width: "100%", m: 0 }} />
+          {/* Share box */}
+          <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
+            <Box
+              sx={{ width: "50%", display: "flex", flexDirection: "column" }}
+            >
+              <Typography
+                variant="body1"
+                sx={{ fontSize: "18px", color: "#333" }}
+              >
+                <strong>Invite Your Friends!</strong>
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: "16px", color: "#777" }}
+              >
+                Copy & Share Your Code
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                width: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-around",
+                mx: "auto",
+              }}
+            >
+              {/* Yellow code box - copies to clipboard on click */}
+              <Button
+                sx={{
+                  backgroundColor: "#E9D8AE",
+                  color: "#333",
+                  border: "2px dashed #666",
+                  borderRadius: "8px",
+                  padding: "8px",
+                  alignItems: "center",
+                  width: "fit-content",
+                  height: "fit-content",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  boxShadow:
+                    "0px 2px 4px -1px rgba(0,0,0,0.1),0px 4px 5px 0px rgba(0,0,0,0.1),0px 1px 10px 0px rgba(0,0,0,0.12)",
+                }}
+                onClick={handleCopyClick}
+                type="button"
+                aria-describedby={id}
+              >
+                {planCode}
+              </Button>
+              {copyFeedback && (
+                <Popper id={id} open={open} anchorEl={anchorEl} placement="top">
+                  <Box
+                    sx={{
+                      border: 1,
+                      p: 1,
+                      mb: 1,
+                      bgcolor: "background.paper",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: "12px", color: "black" }}
+                    >
+                      {copyFeedback}
+                    </Typography>
+                  </Box>
+                </Popper>
+              )}
+              {/* Share button */}
+              <Button
+                variant="outlined"
+                sx={{
+                  border: "2px solid #85BDDD",
+                  borderRadius: "8px",
+                  padding: "8px",
+                  alignItems: "center",
+                  height: "fit-content",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  boxShadow:
+                    "0px 2px 4px -1px rgba(0,0,0,0.1),0px 4px 5px 0px rgba(0,0,0,0.1),0px 1px 10px 0px rgba(0,0,0,0.12)",
+                }}
+                onClick={handleShareClick}
+              >
+                Share
+              </Button>
+            </Box>
+          </Box>
+          <Divider sx={{ width: "100%", m: 0 }} />
+          {/* Timer */}
+          <VotingSessionTimer
+            timeLeft={timeLeft}
+            sessionActive={sessionActive}
+          />
+          <Divider sx={{ width: "100%", m: 0 }} />
+          {/* Restaurant details */}
+          <Card
+            key={currentRestaurantIndex}
+            sx={{
+              m: "0 auto",
+              p: 0,
+              justifyContent: "center",
+              width: "100%",
+              position: "relative",
+              borderRadius: 0,
+            }}
+          >
+            <CardContent
+              sx={{
+                background:
+                  "linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(34, 34, 34, 0.357292) 65.1%, rgba(208, 208, 208, 0) 100%)",
+                position: "absolute",
+                width: "100%",
+                p: 2,
+                boxSizing: "border-box",
+              }}
+            >
+              <Box sx={{ p: 0 }}>
+                <Typography
+                  variant="body1"
+                  sx={{ color: "#fff", fontSize: "0.9rem" }}
+                >
+                  {currentRestaurantIndex + 1}/
+                  {planDetails.restaurants
+                    ? planDetails.restaurants.length
+                    : planDetails.numberOfResults}{" "}
+                  Restaurants
+                </Typography>
+                <Typography
+                  variant="h4"
+                  sx={{ color: "#fff", fontWeight: 600, maxWidth: "88%" }}
+                >
+                  {restaurant.name}
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#fff" }}>
+                  <Rating
+                    readOnly
+                    name="restaurant-rating"
+                    value={restaurant.rating ? restaurant.rating : 0}
+                    precision={0.1}
+                    sx={{ verticalAlign: "bottom", mr: 1 }}
+                  />
+                  {restaurant.rating} ({restaurant.reviewCount} Reviews)
+                </Typography>
+              </Box>
+            </CardContent>
+            {/* Floating Action Buttons */}
             <Box
               sx={{
                 display: "flex",
@@ -529,220 +556,225 @@ const RestaurantDetails = () => {
                 <PhotoTwoToneIcon sx={{ color: "#2A759F", fontSize: 35 }} />
               </Fab>
             </Box>
-          </ThemeProvider>
-          <CardMedia
-            component="img"
-            height="400px"
-            width="100%"
-            resize="cover"
-            image={restaurant.photos ? restaurant.photos[0].url : ""}
-            alt={restaurant.name}
-            padding="0"
-            position="absolute"
-          />
-          {/* Restaurant details */}
-          <CardContent
-            sx={{
-              background:
-                "linear-gradient(180deg, rgba(208, 208, 208, 0) 0%, rgba(34, 34, 34, 0.357292) 34.9%, rgba(0, 0, 0, 0.7) 100%)",
-              position: "absolute",
-              width: "100%",
-              p: 2,
-              top: "77%",
-              bottom: "0%",
-              boxSizing: "border-box",
-            }}
-          >
-            <Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
+            {/* </ThemeProvider> */}
+            <CardMedia
+              component="img"
+              height="400px"
+              width="100%"
+              resize="cover"
+              image={restaurant.photos ? restaurant.photos[0].url : ""}
+              alt={restaurant.name}
+              padding="0"
+              position="absolute"
+            />
+            {/* Restaurant details */}
+            <CardContent
+              sx={{
+                background:
+                  "linear-gradient(180deg, rgba(208, 208, 208, 0) 0%, rgba(34, 34, 34, 0.357292) 34.9%, rgba(0, 0, 0, 0.7) 100%)",
+                position: "absolute",
+                width: "100%",
+                p: 2,
+                top: "77%",
+                bottom: "0%",
+                boxSizing: "border-box",
+              }}
+            >
+              <Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body1" sx={{ color: "#fff" }}>
+                    {restaurant.price} •{" "}
+                    {restaurant.categories
+                      ? restaurant.categories.join(", ")
+                      : ""}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "#fff" }}>
+                    {restaurant.distanceFromUser}
+                  </Typography>
+                </Box>
                 <Typography variant="body1" sx={{ color: "#fff" }}>
-                  {restaurant.price} •{" "}
-                  {restaurant.categories
-                    ? restaurant.categories.join(", ")
-                    : ""}
-                </Typography>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
-                  {restaurant.distanceFromUser}
+                  {restaurant.address}
                 </Typography>
               </Box>
-              <Typography variant="body1" sx={{ color: "#fff" }}>
-                {restaurant.address}
-              </Typography>
+            </CardContent>
+          </Card>
+          {/* Restaurant Navigation & Voting */}
+          {/* Voting Alert */}
+          {showAlert && (
+            <Alert severity="warning" onClose={() => setShowAlert(false)}>
+              {alertMessage}
+            </Alert>
+          )}
+          <Box
+            sx={{
+              m: "1rem auto",
+              display: "flex",
+              position: "relative",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                m: 0,
+                position: "absolute",
+                right: "80%",
+              }}
+            >
+              <Button onClick={() => handlePrevClick()}>
+                <KeyboardDoubleArrowLeftIcon
+                  sx={{ color: "#C79E34", fontSize: 40 }}
+                />
+              </Button>
             </Box>
-          </CardContent>
-        </Card>
-        {/* Restaurant Navigation & Voting */}
-        {/* Voting Alert */}
-        {showAlert && (
-          <Alert severity="warning" onClose={() => setShowAlert(false)}>
-            {alertMessage}
-          </Alert>
-        )}
-        <Box
-          sx={{
-            m: "1rem auto",
-            display: "flex",
-            position: "relative",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              m: 0,
-              position: "absolute",
-              right: "80%",
-            }}
-          >
-            <Button onClick={() => handlePrevClick()}>
-              <KeyboardDoubleArrowLeftIcon
-                sx={{ color: "#C79E34", fontSize: 40 }}
-              />
-            </Button>
-          </Box>
-          {/* Voting Buttons */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              m: "auto 6rem",
-              p: 0,
-            }}
-          >
-            <Button
-              //   value={"negative"}
-              onClick={() => setNegativeVote(true)}
-              variant="outlined"
+            {/* Voting Buttons */}
+            <Box
               sx={{
-                border: "3px solid #9E2A2A",
-                borderRadius: "50%",
-                p: 1,
-                mr: 1,
-                boxShadow:
-                  "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                m: "auto 6rem",
+                p: 0,
               }}
             >
-              <ThumbDownTwoToneIcon sx={{ color: "#9E2A2A", fontSize: 40 }} />
-            </Button>
-            <Button
-              //   value={"positive"}
-              onClick={() => setPositiveVote(true)}
-              variant="outlined"
-              sx={{
-                border: "3px solid #299F75",
-                borderRadius: "50%",
-                p: 1,
-                ml: 1,
-                boxShadow:
-                  "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-              }}
-            >
-              <ThumbUpTwoToneIcon sx={{ color: "#299F75", fontSize: 40 }} />
-            </Button>
-          </Box>
+              <IconButton
+                onClick={() => setNegativeVote(true)}
+                disabled={sessionActive ? false : true}
+                variant="outlined"
+                color="rouge"
+                sx={{
+                  border: "3px solid #9E2A2A",
+                  borderRadius: "50%",
+                  p: 1,
+                  mr: 1,
+                  boxShadow:
+                    "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+                }}
+              >
+                <ThumbDownTwoToneIcon
+                  sx={{
+                    fontSize: 40,
+                  }}
+                />
+              </IconButton>
+              <IconButton
+                onClick={() => setPositiveVote(true)}
+                disabled={sessionActive ? false : true}
+                variant="outlined"
+                color="emerald"
+                sx={{
+                  border: "3px solid #299F75",
+                  borderRadius: "50%",
+                  p: 1,
+                  ml: 1,
+                  boxShadow:
+                    "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+                }}
+              >
+                <ThumbUpTwoToneIcon sx={{ fontSize: 40 }} />
+              </IconButton>
+            </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              m: 0,
-              position: "absolute",
-              left: "80%",
-            }}
-          >
-            <Button onClick={() => handleNextClick()}>
-              <KeyboardDoubleArrowRightIcon
-                sx={{ color: "#C79E34", fontSize: 40 }}
-              />
-            </Button>
-          </Box>
-        </Box>
-        <Divider sx={{ width: "100%", m: 0 }} />
-        {/* Details */}
-        <Box sx={{ pt: 2, mx: 2, alignItems: "center" }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, px: 1 }}>
-            Details
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Button
-              variant="outlined"
-              href={restaurant.yelpRestaurantUrl}
-              target="_blank"
+            <Box
               sx={{
-                textDecoration: "none",
-                color: "#333",
-                borderRadius: "16px",
-                border: "2px solid black",
-                p: 1.5,
-                m: 1,
-                width: "50%",
-                fontWeight: 600,
-                textTransform: "none",
-              }}
-              startIcon={<FontAwesomeIcon icon={faYelp} color="#c73434" />}
-            >
-              Yelp
-            </Button>
-            <Button
-              variant="outlined"
-              href={restaurant.yelpRestaurantUrl}
-              target="_blank"
-              sx={{
-                textDecoration: "none",
-                color: "#333",
-                borderRadius: "16px",
-                border: "2px solid black",
-                p: 1.5,
-                m: 1,
-                width: "50%",
-                fontWeight: 600,
-                textTransform: "none",
+                display: "flex",
+                m: 0,
+                position: "absolute",
+                left: "80%",
               }}
             >
-              <RestaurantRoundedIcon
-                sx={{ mr: 1, textDecoration: "none", color: "#222" }}
-              />{" "}
-              Menu
-            </Button>
+              <Button onClick={() => handleNextClick()}>
+                <KeyboardDoubleArrowRightIcon
+                  sx={{ color: "#C79E34", fontSize: 40 }}
+                />
+              </Button>
+            </Box>
           </Box>
-          {/* View Directions Button - to be decided on */}
-          <Box sx={{ display: "flex" }}>
-            <Button
-              onClick={handleDirectionsClick}
-              variant="outlined"
+          <Divider sx={{ width: "100%", m: 0 }} />
+          {/* Details */}
+          <Box sx={{ pt: 2, mx: 2, alignItems: "center" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, px: 1 }}>
+              Details
+            </Typography>
+            <Box
               sx={{
-                textDecoration: "none",
-                color: "#333",
-                borderRadius: "16px",
-                border: "2px solid black",
-                p: 1.5,
-                m: 1,
-                width: "100%",
-                textTransform: "none",
-                fontWeight: 600,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <LocationOnSharpIcon
-                sx={{ mr: 1, textDecoration: "none", color: "#3492C7" }}
-              />
-              View Directions
-            </Button>
-          </Box>
-          {/* Map */}
-          <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
-          {/* View Polls */}
-          <ThemeProvider theme={theme}>
+              <Button
+                variant="outlined"
+                href={restaurant.yelpRestaurantUrl}
+                target="_blank"
+                sx={{
+                  textDecoration: "none",
+                  color: "#333",
+                  borderRadius: "16px",
+                  border: "2px solid black",
+                  p: 1.5,
+                  m: 1,
+                  width: "50%",
+                  fontWeight: 600,
+                  textTransform: "none",
+                }}
+                startIcon={<FontAwesomeIcon icon={faYelp} color="#c73434" />}
+              >
+                Yelp
+              </Button>
+              <Button
+                variant="outlined"
+                href={restaurant.yelpRestaurantUrl}
+                target="_blank"
+                sx={{
+                  textDecoration: "none",
+                  color: "#333",
+                  borderRadius: "16px",
+                  border: "2px solid black",
+                  p: 1.5,
+                  m: 1,
+                  width: "50%",
+                  fontWeight: 600,
+                  textTransform: "none",
+                }}
+              >
+                <RestaurantRoundedIcon
+                  sx={{ mr: 1, textDecoration: "none", color: "#222" }}
+                />{" "}
+                Menu
+              </Button>
+            </Box>
+            {/* View Directions Button - to be decided on */}
+            <Box sx={{ display: "flex" }}>
+              <Button
+                onClick={handleDirectionsClick}
+                variant="outlined"
+                sx={{
+                  textDecoration: "none",
+                  color: "#333",
+                  borderRadius: "16px",
+                  border: "2px solid black",
+                  p: 1.5,
+                  m: 1,
+                  width: "100%",
+                  textTransform: "none",
+                  fontWeight: 600,
+                }}
+              >
+                <LocationOnSharpIcon
+                  sx={{ mr: 1, textDecoration: "none", color: "#3492C7" }}
+                />
+                View Directions
+              </Button>
+            </Box>
+            {/* Map */}
+            <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
+            {/* View Polls */}
             <Box sx={{ display: "flex" }}>
               <Button
                 onClick={() => setIsPollsDialogOpen(true)}
@@ -768,14 +800,12 @@ const RestaurantDetails = () => {
                 isHost={isHost}
               />
               {isHost && sessionActive && (
-              <EndVoteButton 
-                endVotingSession={endVotingSession}
-              />
+                <EndVoteButton endVotingSession={endVotingSession} />
               )}
             </Box>
-          </ThemeProvider>
-        </Box>
-      </Paper>
+          </Box>
+        </Paper>
+      </ThemeProvider>
     </Container>
   );
 };
