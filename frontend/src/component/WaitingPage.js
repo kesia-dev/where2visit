@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -11,8 +11,8 @@ import useWebSocket from "../hooks/useWebSocket";
 export default function WaitingPage() {
   const navigate = useNavigate();
   const { planCode } = useParams();
-  const { sessionActive } = useWebSocket("ws://localhost:4200");
-  
+  const { sessionActive } = useWebSocket("ws://localhost:4200", planCode, null, true);
+
   // If the session is no longer active (time is up or ended by host), redirect to the final poll results page:
   useEffect(() => {
     if (!sessionActive) {
