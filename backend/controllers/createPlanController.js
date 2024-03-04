@@ -73,7 +73,7 @@ module.exports = (votingTimerService) => {
       await newPlan.save();
 
       // Reset the voting session timer for the plans:
-      votingTimerService.reset();
+      votingTimerService.reset(getRoomId);
       
       return res.status(201).json({ 
         message: 'Plan registered successfully', 

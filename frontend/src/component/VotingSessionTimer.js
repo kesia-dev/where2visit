@@ -35,22 +35,22 @@ const LoadingDots = styled('span')({
 const VotingSessionTimer = ({ timeLeft, sessionActive }) => {
   // Format the remaining time or show a loading indicator:
   const formatTimeOrLoading = (time) => {
-    if (time === null) {
+    if (time === null && sessionActive) {
       // Animated loading text effect while the time is being fetched from the server:
       return (
         <LoadingDots>
           Loading<span>.</span><span>.</span><span>.</span>
         </LoadingDots>
       );
-    }
-
+    } else if (time !== null) {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
     const seconds = Math.floor(time % 60);
     return [hours, minutes, seconds]
       .map(unit => (unit < 10 ? `0${unit}` : unit))
       .join(':');
-  };
+    }
+  }
 
   // Calculate the normalized time left for the progress bar:
   const normalizedTimeLeft = timeLeft !== null ? (timeLeft / totalDuration) * 100 : 100;
@@ -69,7 +69,7 @@ const VotingSessionTimer = ({ timeLeft, sessionActive }) => {
       </Typography>
       {/* Displays the progress bar based on the remaining time */}
       <ThemeProvider theme={theme}>
-      <LinearProgress variant="determinate" color="primary" value={100 - normalizedTimeLeft} sx={{ height: "10px", borderRadius: "10px", color: "#2A759F"}} />
+      <LinearProgress variant="determinate" color="primary" value={sessionActive ? 100 - normalizedTimeLeft : 100} sx={{ height: "10px", borderRadius: "10px", color: "#2A759F"}} />
       </ThemeProvider>
     </Box>
   );

@@ -32,18 +32,24 @@ wss.on('connection', (ws) => {
   ws.on('message', (message) => {
     try {
       const parsedMessage = JSON.parse(message);
+      if (!parsedMessage.action) {
+        console.error('Received a message without an action type:', parsedMessage);
+        return;
+      }
       // Determine the action to take based on the message type:
       switch (parsedMessage.action) {
         case 'start-timer':
           // Start the timer only if it's not already running:
-          if (!votingTimerService.isTimerRunning()) {
-            votingTimerService.startTimer(parsedMessage.duration || 3600 );
+          if (!votingTimerService.isTimerRunning(parsedMessage.planCode)) {
+            votingTimerService.startTimer(parsedMessage.planCode, parsedMessage.duration || 3600 );
           }
           break;
         case 'end-timer':
           // Eventually to End the timer,once login and registration is settled, validation that the sender is the host can be included in the logic below:
           votingTimerService.endTimer(parsedMessage.planCode);
           break;
+          default:
+            console.log('Received an unknown action type in the ws server:', parsedMessage);
       }
     } catch (error) {
       console.error('Error processing message:', error);
