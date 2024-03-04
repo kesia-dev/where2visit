@@ -71,7 +71,7 @@ export default function ViewPollsDialog({ isOpen, onClose, sessionActive, isHost
             <LocationOnSharpIcon sx={{ color: "#2A759F", fontSize: 40, border: "none" }} />
         </Box>
         <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
+            <DialogContentText id="alert-dialog-slide-description" sx={{ textAlign: "center"}}>
                 Let's see what your friends have voted for!
             </DialogContentText>
 

@@ -52,6 +52,10 @@ const theme = createTheme({
       },
     },
   },
+  // set font for the theme
+  typography: {
+    fontFamily: "Inter, sans-serif",
+  },
   // create palette for the theme
   palette: {
     primary: {
@@ -65,9 +69,6 @@ const theme = createTheme({
     },
     rouge: {
       main: "#C73434",
-    },
-    mustard: {
-      main: "#C79E34",
     },
   },
 });
@@ -351,24 +352,54 @@ const RestaurantDetails = () => {
               justifyContent: "space-between",
             }}
           >
-            <Box>
-              <Typography
-                variant="body1"
-                sx={{ fontSize: "18px", color: "#333" }}
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "left",
+                  alignItems: "baseline",
+                }}
               >
-                <strong>{planDetails.planName}</strong> hosted by{" "}
-                {planDetails.hostName}
-              </Typography>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontSize: "22px",
+                    color: "#333",
+                    fontWeight: 700,
+                    lineHeight: "28px",
+                    letterSpacing: "0.35px",
+                  }}
+                >
+                  {planDetails.planName}&nbsp;
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    fontWeight: 400,
+                    color: "#777",
+                    lineHeight: "21px",
+                    letterSpacing: "-0.32px",
+                  }}
+                >
+                  hosted by {planDetails.hostName}
+                </Typography>
+              </Box>
               <Typography
-                variant="body2"
-                sx={{ fontSize: "18px", color: "#777" }}
+                sx={{
+                  fontSize: "16px",
+                  fontWeight: 400,
+                  color: "#777",
+                  lineHeight: "21px",
+                  letterSpacing: "-0.32px",
+                }}
               >
                 {/* Display the formatted date and time  */}
                 {formattedDate} @ {planDetails.timeOfEvent}
               </Typography>
             </Box>
+
             {/* Adjust Selections */}
-            <Button>
+            <Button sx={{ height: "50px", width: "50px" }}>
               <TuneRoundedIcon
                 sx={{
                   bgcolor: "#153A50",
@@ -503,8 +534,13 @@ const RestaurantDetails = () => {
             >
               <Box sx={{ p: 0 }}>
                 <Typography
-                  variant="body1"
-                  sx={{ color: "#fff", fontSize: "0.9rem" }}
+                  sx={{
+                    color: "#fff",
+                    fontSize: "14px",
+                    fontWeight: 400,
+                    lineHeight: "21px",
+                    letterSpacing: "-0.32px",
+                  }}
                 >
                   {currentRestaurantIndex + 1}/
                   {planDetails.restaurants
@@ -513,12 +549,30 @@ const RestaurantDetails = () => {
                   Restaurants
                 </Typography>
                 <Typography
-                  variant="h4"
-                  sx={{ color: "#fff", fontWeight: 600, maxWidth: "88%" }}
+                  variant="h1"
+                  sx={{
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "28px",
+                    lineHeight: "34px",
+                    letterSpacing: "0.36px",
+                    m: 0,
+                    p: 0,
+                    pr: "48px",
+                  }}
                 >
                   {restaurant.name}
                 </Typography>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#fff",
+                    fontWeight: 400,
+                    fontSize: "15px",
+                    lineHeight: "20px",
+                    letterSpacing: "-0.24px",
+                  }}
+                >
                   <Rating
                     readOnly
                     name="restaurant-rating"
@@ -575,7 +629,7 @@ const RestaurantDetails = () => {
                 position: "absolute",
                 width: "100%",
                 p: 2,
-                top: "77%",
+                top: "80%",
                 bottom: "0%",
                 boxSizing: "border-box",
               }}
@@ -585,20 +639,49 @@ const RestaurantDetails = () => {
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "center",
+                    pb: 0.4,
                   }}
                 >
-                  <Typography variant="body1" sx={{ color: "#fff" }}>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "#fff",
+                      fontWeight: 400,
+                      fontSize: "16px",
+                      lineHeight: "13px",
+                      letterSpacing: "0.07px",
+                    }}
+                    gutterBottom
+                  >
                     {restaurant.price} •{" "}
                     {restaurant.categories
                       ? restaurant.categories.join(", ")
                       : ""}
                   </Typography>
-                  <Typography variant="body1" sx={{ color: "#fff" }}>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "#fff",
+                      fontWeight: 400,
+                      fontSize: "16px",
+                      lineHeight: "13px",
+                      letterSpacing: "0.07px",
+                    }}
+                    gutterBottom
+                  >
                     {restaurant.distanceFromUser}
                   </Typography>
                 </Box>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#fff",
+                    fontWeight: 400,
+                    fontSize: "16px",
+                    lineHeight: "13px",
+                    letterSpacing: "0.07px",
+                  }}
+                >
                   {restaurant.address}
                 </Typography>
               </Box>
@@ -648,6 +731,8 @@ const RestaurantDetails = () => {
                 variant="outlined"
                 color="rouge"
                 sx={{
+                    height: "60px",
+                    width: "60px",
                   border: "3px solid #9E2A2A",
                   borderRadius: "50%",
                   p: 1,
@@ -658,7 +743,7 @@ const RestaurantDetails = () => {
               >
                 <ThumbDownTwoToneIcon
                   sx={{
-                    fontSize: 40,
+                    fontSize: 37,
                   }}
                 />
               </IconButton>
@@ -668,6 +753,8 @@ const RestaurantDetails = () => {
                 variant="outlined"
                 color="emerald"
                 sx={{
+                    height: "60px",
+                    width: "60px",
                   border: "3px solid #299F75",
                   borderRadius: "50%",
                   p: 1,
@@ -676,7 +763,7 @@ const RestaurantDetails = () => {
                     "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
                 }}
               >
-                <ThumbUpTwoToneIcon sx={{ fontSize: 40 }} />
+                <ThumbUpTwoToneIcon sx={{ fontSize: 37 }} />
               </IconButton>
             </Box>
 
