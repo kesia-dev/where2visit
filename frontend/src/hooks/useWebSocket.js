@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 
-const useWebSocket = (url, planCode, onSessionEnd) => {
+const useWebSocket = (url, planCode, onSessionEnd, initialSessionActive) => {
   const [timeLeft, setTimeLeft] = useState(null);
   const socket = useRef(null);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
   const maxReconnectAttempts = 2;
-  const [sessionActive, setSessionActive] = useState(null);
+  const [sessionActive, setSessionActive] = useState(initialSessionActive);
 
   const connect = () => {
     if (reconnectAttempts >= maxReconnectAttempts) {
@@ -28,7 +28,9 @@ const useWebSocket = (url, planCode, onSessionEnd) => {
       if (message.planCode === planCode) {   
         switch (message.type) {
           case 'time-left':
-            setTimeLeft(message.duration);
+            if (sessionActive) {
+              setTimeLeft(message.duration);
+            }
           break;
           case 'end-voting':
             // console.log('Received end-voting message for:', planCode);
