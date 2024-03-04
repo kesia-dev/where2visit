@@ -9,7 +9,6 @@ const createPlanSchema = new mongoose.Schema({
     hostName: {
         type: String,
         required: true,
-        unique: true,
     },
     dateOfEvent: {
         type: Date,
