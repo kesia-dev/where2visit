@@ -63,6 +63,7 @@ const RestaurantDetails = () => {
   const [isPollsDialogOpen, setIsPollsDialogOpen] = useState(false);
   const [positiveVote, setPositiveVote] = useState(false);
   const [negativeVote, setNegativeVote] = useState(false);
+  const [sessionActive, setSessionActive] = useState(true);
 
   // Access the code and username parameter from the URL
   const { planCode } = useParams();
@@ -70,10 +71,11 @@ const RestaurantDetails = () => {
   // Event handler for the WebSocket onSessionEnd event:
   const onSessionEnd = useCallback(() => {
     console.log('Voting session ended by the host');
+    setSessionActive(false);
     setIsPollsDialogOpen(true);
   }, []);
   // Use the WebSocket hook to get the time left for the voting session:
-  const { timeLeft, sendMessage, socket, sessionActive } = useWebSocket("ws://localhost:4200", planCode, onSessionEnd);
+  const { timeLeft, sendMessage, socket } = useWebSocket("ws://localhost:4200", planCode, onSessionEnd, sessionActive);
 
   // Fetch the plan details from the server
   useEffect(() => {
@@ -83,6 +85,7 @@ const RestaurantDetails = () => {
           `http://localhost:4200/plan/get-plan?planCode=${planCode}`
         );
         setPlanDetails(res.data);
+        setSessionActive(res.data.isActive);
       } catch (error) {
         console.error("Error getting plan details:", error);
       }
@@ -92,20 +95,20 @@ const RestaurantDetails = () => {
 
   // Sending WebSocket message only when plan details are fetched and the WebSocket connection is open:
   useEffect(() => {
-    const sendStartTimerMessage = () => {
-      if (socket.current && socket.current.readyState === WebSocket.OPEN) {
-        sendMessage({ action: "start-timer", planCode });
-      }
-    };
-
-    if (planDetails && Object.keys(planDetails).length) {
+     // Check if plan is active before starting the timer
+    if (planDetails && Object.keys(planDetails).length && sessionActive) {
+      const sendStartTimerMessage = () => {
+        if (socket.current && socket.current.readyState === WebSocket.OPEN) {
+          sendMessage({ action: "start-timer", planCode });
+        }
+      };
       sendStartTimerMessage();
     }
-  }, [planDetails, sendMessage, socket, planCode]);
+  }, [planDetails, sendMessage, socket, planCode, sessionActive]); 
 
   useEffect(() => {
     // When session ends, show the modal:
-    if (sessionActive === false) {
+    if (!sessionActive) {
       setIsPollsDialogOpen(true);
     } else {
       setIsPollsDialogOpen(false);
@@ -115,6 +118,7 @@ const RestaurantDetails = () => {
   // Handle timer end:
   const onTimerEnd = useCallback(() => {
     console.log('Timer ended on the client side');
+    setSessionActive(false);
     setIsPollsDialogOpen(true);
   }, []);
 
