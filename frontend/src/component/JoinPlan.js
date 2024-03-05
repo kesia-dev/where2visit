@@ -13,6 +13,8 @@ import copy from 'clipboard-copy';
 import PlanDetails from './PlanDetails';
 import axios from 'axios';
 import MuiAlert from '@mui/material/Alert';
+import '../styling/JoinPlan.css';
+import dayjs from 'dayjs';
 
 const JoinPlan = () => {
   const { planCode, planName, hostName, dateOfEvent, timeOfEvent, location } = useParams();
@@ -53,12 +55,31 @@ const JoinPlan = () => {
     }
   };
 
-  const handleJoinPlanClick = () => {
-    if (!userName) {
+  const handleJoinPlanClick = async () => {
+    if (!userName.trim()) {
       setJoinSnackbarOpen(true);
       return;
-    } else {
-      console.log('Navigating to voting page');
+    }
+
+    try {
+      const response = await axios.post('http://localhost:4200/plan/join', {
+        userName: userName.trim(),
+        planCode: planCode,
+      });
+      console.log('Joined plan successfully:', response.data);
+      // Refresh localStorage before setting the new username, purely for development purposes:
+      localStorage.removeItem('userName');
+      localStorage.setItem('userName', userName.trim());
+      // Redirect to the restaurant plan details page:
+      window.location.href = `/restaurant-details/${planCode}`;
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        alert('This plan is no longer active. The session has been ended by the host');
+      } else if (error.response && error.response.status === 409) {
+        alert('Username already exists in this plan. Please choose a different name.');
+      } else {
+        alert('An error occurred while joining the plan.');
+      }
     }
   };
 
@@ -91,7 +112,8 @@ const JoinPlan = () => {
           hostName: data.hostName,
           dateOfEvent: data.dateOfEvent,
           timeOfEvent: data.timeOfEvent,
-          location: data.location,
+          latitude: data.location.latitude,
+          longitude: data.location.longitude,
         });
 
       } catch (error) {
@@ -105,99 +127,103 @@ const JoinPlan = () => {
 
   return (
     <Container component="main"
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      backgroundColor: 'white',
-      width: "440px",  
-      marginRight: 'auto',
-      marginLeft: 'auto',
-      marginTop: '30px'
-    }} >
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        marginTop: '30px'
+      }} >
+      <Typography
+        variant="h4"
+        component="div"
+        sx={{
+          mb: 2,
+          fontFamily: 'Inter',
+          fontWeight: 700,
+          fontSize: '28px',
+          lineHeight: '34px',
+          letterSpacing: '0.36px',
+          color: 'rgba(52, 146, 199, 1)',
+          width: "311px",
+          marginBottom: '20px'
+        }}
+      >
+        <strong>Welcome to the party!</strong>
+      </Typography>
+
+      <Box mb={2} sx={{ width: '385px', textAlign: 'left', color: '#1C1C1C' }}>
+        <div style={{ display: 'flex', alignItems: 'left' }}>
+          <Typography
+            variant="body1"
+            sx={{
+              marginTop: '10px',
+              fontFamily: 'Inter',
+              fontWeight: '700',
+              fontSize: '22px',
+              lineHeight: '28px',
+              textAlign: 'left',
+              letterSpacing: '0.35px'
+            }}
+          >
+            {planDetails?.planName}
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              fontFamily: 'Inter',
+              fontWeight: '400',
+              fontSize: '16px',
+              lineHeight: '23px',
+              marginLeft: '5px',
+              letterSpacing: '-0.32px',
+              alignSelf: 'flex-end'
+            }}
+          >
+            hosted by {planDetails?.hostName}
+          </Typography>
+        </div>
+
         <Typography
-          variant="h4"
-          component="div"
+          variant="body2"
           sx={{
-            mb: 2,
-            fontFamily: 'Inter',
-            fontWeight: 700,
-            fontSize: '28px',
-            letterSpacing: '0.36px',
-            color: 'rgba(52, 146, 199, 1)',
-            width: "311px",
-            marginBottom: '20px'
+            width: '386px',
+            fontSize: '16px',
+            color: '#1C1C1C',
+            letterSpacing: '-0.32px',
+            fontFamily: 'inter',
+            fontWeight: '400',
+            lineHeight: '21px',
           }}
         >
-          <strong>Welcome to the party!</strong>
+          {dayjs(planDetails?.dateOfEvent).format('MMMM D, YYYY')} @ {planDetails?.timeOfEvent}
         </Typography>
 
-        <Box mb={2} sx={{ width: '375px', textAlign: 'left', color: '#1C1C1C' }}>
-            <div style={{ display: 'flex', alignItems: 'left' }}>
-              <Typography
-                variant="body1"
-                sx={{ 
-                  marginTop: '10px',
-                  fontFamily: 'Inter',
-                  fontWeight: '700',
-                  fontSize: '22px',
-                  lineHeight: '28px', 
-                  textAlign: 'left', 
-                  letterSpacing: '0.35px' }}
-              >
-                {planDetails?.planName}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ 
-                  fontFamily: 'Inter',
-                  fontWeight: '400',
-                  fontSize: '16px',
-                  lineHeight: '-10px', 
-                  marginLeft: '5px',
-                  letterSpacing: '-0.32px',
-                  alignSelf: 'flex-end'  }}
-              >
-                hosted by {planDetails?.hostName}
-              </Typography>
-            </div>
+      </Box>
 
-            <Typography
-              variant="body2"
-              sx={{
-                width: '386px',
-                fontSize: '16px',
-                color: '#1C1C1C',
-                letterSpacing: '-0.32px',
-                fontFamily: 'inter',
-                fontWeight: '400',
-                lineHeight: '21px',
-              }}
-            >
-              {planDetails?.dateOfEvent} @ {planDetails?.timeOfEvent}
-            </Typography>
-        </Box>
-        <Grid
-          container
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-          sx={{
-            
-            width: '386px'
-          }}
-        >
-          <Grid item xs={12} md={12}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                textAlign: 'left',
-                justifyContent:"center",
-                width: '100%'
-              }}
-            >
+      <div className='horizontal-line'></div>
+
+      <Grid
+        container
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          margin: '17px',
+          width: '386px'
+        }}
+      >
+        <Grid item xs={12} md={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              textAlign: 'left',
+              justifyContent: "center",
+              width: '100%'
+            }}
+          >
             <Box
               sx={{
                 display: 'flex',
@@ -209,159 +235,196 @@ const JoinPlan = () => {
               <Typography
                 variant="body2"
                 sx={{
+                  fontFamily: 'Inter',
+                  fontWeight: 600,
                   fontSize: '16px',
-                  color: 'black',
-                  width: '170px',
+                  lineHeight: '21px',
+                  letterSpacing: '-0.32px',
+                  color: '#1C1C1C',
+                  width: '150px',
                 }}
               >
-                <strong>Invite your friends!</strong>
+                Invite your friends!
               </Typography>
 
               <Typography
                 variant="body2"
                 sx={{
-                  fontSize: '14px',
-                  color: 'black',
+                  fontFamily: 'Inter',
+                  fontWeight: 400,
+                  fontSize: '16px',
+                  lineHeight: '21px',
                   letterSpacing: '-0.32px',
-                  marginTop: '10px'
+                  color: '#1C1C1C',
+                  marginTop: '11px'
                 }}
               >
                 Tap dotted box to copy your plan code
               </Typography>
-          </Box>
-
-              <Box
-                onClick={handleCopyClick}
-                sx={{
-                  backgroundColor: '#E9D8A3',
-                  padding: '5px',
-                  borderRadius: '8px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  height: '30px',
-                  border: '2px dashed #333',
-                  cursor: 'pointer',
-                  margin: '10px',
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: 600, color: '#333' }}
-                >
-                  {planCode}
-                </Typography>
-              </Box>
-              <Button
-                variant="outlined"
-                style={{
-                  color: '#3492C7',
-                  textTransform: 'none',
-                  border: 'none',
-                  marginTop: '10px',
-                }}
-                onClick={handleShareClick}
-              >
-                Share
-              </Button>
             </Box>
-          </Grid>
+
+            <Box
+              onClick={handleCopyClick}
+              sx={{
+                backgroundColor: '#E9D8A3',
+                padding: '11px 15px',
+                borderRadius: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                border: '2px dashed #1C1C1C',
+                cursor: 'pointer',
+                margin: '10px',
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  fontFamily: 'Montserrat',
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  lineHeight: '19.5px',
+                  color: '#1C1C1C',
+                }}
+              >
+                {planCode}
+              </Typography>
+            </Box>
+            <Button
+              variant="outlined"
+              style={{
+                color: '#3492C7',
+                textTransform: 'none',
+                border: 'none',
+                margin: 0,
+                fontFamily: 'inter',
+                fontWeight: 400,
+                fontSize: '16px',
+                lineHeight: '21px',
+                letterSpacing: '-0.32px',
+                alignItems: 'right',
+              }}
+              onClick={handleShareClick}
+            >
+              Share
+            </Button>
+          </Box>
         </Grid>
+      </Grid>
 
-        <Snackbar
-          open={copySnackbarOpen}
-          autoHideDuration={3000}
+      <Snackbar
+        open={copySnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseCopySnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
           onClose={handleCloseCopySnackbar}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          severity="success"
+          sx={{ width: '100%' }}
         >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={handleCloseCopySnackbar}
-            severity="success"
-            sx={{ width: '100%' }}
-          >
-            Plan code copied to clipboard!
-          </MuiAlert>
-        </Snackbar>
+          Plan code copied to clipboard!
+        </MuiAlert>
+      </Snackbar>
 
+      <div className='horizontal-line'></div>
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <label className='input-label'>Enter Your Name</label>
         <TextField
-          label="Enter Your Name"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           sx={{
             mb: 2,
             width: '386px',
-            marginTop: '20px',
-            '& label': {
-              color: 'black',
-            },
+            marginTop: '10px',
+            backgroundColor: '#E5E5E5',
+            fontFamily: 'inter'
           }}
         />
+      </Box>
 
-        <div>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              height: '53px',
-              padding: '16px 32px 16px 32px',
-              borderRadius: '100px',
-              textTransform: 'none',
-              marginTop: '20px',
-              width: '241px'
-            }}
-            onClick={handleJoinPlanClick}
-          >
-            Join Plan
-          </Button>
-        </div>
 
-        <Snackbar
-          open={joinSnackbarOpen}
-          autoHideDuration={3000}
-          onClose={handleCloseJoinSnackbar}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={handleCloseJoinSnackbar}
-            severity="error"
-            sx={{ width: '100%' }}
-          >
-            Please enter your name before joining.
-          </MuiAlert>
-        </Snackbar>
-
+      <div>
         <Button
-          component={Link}
-          to="/login"
-          variant="text"
-          align="center"
-          className="login"
+          variant="contained"
           sx={{
-            fontFamily: 'Inter',
-            fontSize: '16px',
-            fontWeight: 600,
-            lineHeight: '21px',
-            letterSpacing: '-0.32px',
-            textAlign: 'center',
-            color: '#3492C7',
+            backgroundColor: '#3492C7',
+            height: '53px',
+            padding: '16px 32px',
+            borderRadius: '100px',
             textTransform: 'none',
-            marginTop: '10px',
+            marginTop: '20px',
+            width: '241px'
           }}
+          onClick={handleJoinPlanClick}
         >
-          Already have an account? Log In
+          Join Plan
         </Button>
+      </div>
 
+      <Snackbar
+        open={joinSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseJoinSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseJoinSnackbar}
+          severity="error"
+          sx={{ width: '100%' }}
+        >
+          Please enter your name before joining.
+        </MuiAlert>
+      </Snackbar>
+
+      <Button
+        variant="text"
+        align="center"
+        className="login"
+        sx={{
+          fontFamily: 'Inter',
+          fontSize: '16px',
+          fontWeight: 600,
+          lineHeight: '21px',
+          letterSpacing: '-0.32px',
+          textAlign: 'center',
+          color: '#3492C7',
+          textTransform: 'none',
+          marginTop: '10px',
+        }}
+      >
+        Already have an account? Log In
+      </Button>
+
+      <Box
+        sx={{          
+          marginTop: '30px',          
+          background: '#E9D8A3',          
+          width: '100vw',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
         <PlanDetails
           planName={planDetails?.planName}
           hostName={planDetails?.hostName}
           dateOfEvent={planDetails?.dateOfEvent}
           timeOfEvent={planDetails?.timeOfEvent}
-          location={planDetails?.location}
+          latitude={planDetails?.latitude}
+          longitude={planDetails?.longitude}
         />
+      </Box>
     </Container>
   );
 };

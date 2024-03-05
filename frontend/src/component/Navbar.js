@@ -6,6 +6,8 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { useAlert } from '../context/AlertContext';
 import useNavbar from '../hook/useNavbar';
+import '@fontsource/inter';
+
 
 const Navbar = () => {
   const { handleMenuIconClick, handleAvatarClick, handlePopoverClose, handleMenuClose, popoverAnchorEl, anchorEl } = useNavbar();

@@ -14,35 +14,11 @@ import Badge from "@mui/material/Badge";
 import PersonOutlineTwoToneIcon from "@mui/icons-material/PersonOutlineTwoTone";
 import CloseIcon from "@mui/icons-material/Close";
 
-const poll = {
-    matches: 3,
-    up_votes: 5,
-    member_count: 9,
-    members: [
-        "John",
-        "Jane",
-        "Alice",
-        "Sam",
-        "Tom",
-        "Jake",
-        "Kendal",
-        "Abby",
-        "Liam",
-    ],
-    voted_members: [
-      "John",
-      "Jane",
-      "Alice",
-      "Sam",
-      "Tom",
-    ],
-  };
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function MemberDetailsDialog() {
+export default function MemberDetailsDialog({ members }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -60,7 +36,7 @@ export default function MemberDetailsDialog() {
         sx={{ backgroundColor: "#fff" }}
         size="medium"
       >
-        <Badge badgeContent={poll.members.length} color="info">
+        <Badge badgeContent={members ? members.length : 0} color="info">
           <PersonOutlineTwoToneIcon sx={{ color: "#2A759F", fontSize: 35 }} />
         </Badge>
       </Fab>
@@ -117,14 +93,14 @@ export default function MemberDetailsDialog() {
         </Box>
         <DialogContent>
           <List dense sx={{ justifyContent: "center", p: 0 }}>
-            {poll.members.map(
+            {members && members.length > 0 && members.map(
               (member, index) => (
             <ListItem
               key={index}
               sx={{ textAlign: "center", m: "0 auto", p: 0 }}
             >
               <ListItemText
-                primary={member}
+                primary={member.username}
                 primaryTypographyProps={{
                   fontSize: 16,
                   fontWeight: "medium",

@@ -1,0 +1,61 @@
+.horizontal-line {
+  width: 105vw;
+  height: 0.01vh;  
+  background-color: rgba(189, 189, 189, 1);
+  
+}
+
+.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-md-12.css-1idn90j-MuiGrid-root {
+  padding: 0;
+}
+
+.input-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.32px;
+  color: #979797;
+  align-self: flex-start;
+  margin-top: 25px;
+}
+
+.plan-details-title {
+  color: #1C1C1C;
+  margin-bottom: 17px;
+  font-family: 'inter';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.32px
+}
+
+.plan-details-info {
+  color: #1C1C1C;
+  margin-bottom: 17px;
+  font-family: 'inter';
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.32px
+}
+
+.MuiOutlinedInput-notchedOutline.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  border: 0;
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-formControl.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.24px;
+}
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation0.MuiCard-root.css-kectt7-MuiPaper-root-MuiCard-root {
+  border-radius: 0;
+}
+
+.MuiCardContent-root.css-1h8cki8-MuiCardContent-root {
+  padding-left: 22px
+}

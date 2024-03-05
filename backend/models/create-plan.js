@@ -5,12 +5,10 @@ const createPlanSchema = new mongoose.Schema({
     planName: {
         type: String,
         required: true,
-        unique: true,
     },
     hostName: {
         type: String,
         required: true,
-        unique: true,
     },
     dateOfEvent: {
         type: Date,
@@ -54,7 +52,18 @@ const createPlanSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    participants: [{
+        username: String,
+        isHost: {
+            type: Boolean,
+            default: false,
+        }
+    }],
     restaurants: [restaurantSchema],
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
     roomId: {
         type: String,
         required: true,

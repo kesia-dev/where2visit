@@ -20,7 +20,7 @@ exports.getPlanById = async (req, res) => {
       });
     }
 
-    const { planName, hostName, dateOfEvent, timeOfEvent, location, radius, cuisine, rating, priceRange, numberOfResults, numberOfMatches, restaurants } = plan;
+    const { planName, hostName, dateOfEvent, timeOfEvent, location, radius, cuisine, rating, priceRange, numberOfResults, numberOfMatches, participants, restaurants, isActive } = plan;
 
     console.log(`Plan fetched successfully:`, {
       planName,
@@ -34,6 +34,7 @@ exports.getPlanById = async (req, res) => {
       priceRange,
       numberOfResults,
       numberOfMatches,
+      participants,
       restaurants,
       roomId: planCode,
     });
@@ -50,8 +51,10 @@ exports.getPlanById = async (req, res) => {
       priceRange,
       numberOfResults,
       numberOfMatches,
+      participants,
       restaurants,
       roomId: planCode,
+      isActive
     });
   } catch (error) {
     console.error(`Error fetching plan with code ${planCode}:`, error.message);

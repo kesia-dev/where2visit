@@ -16,6 +16,10 @@ import RestaurantDetails from './component/RestaurantDetails.js';
 import FinalPollResult from './component/FinalPollResult.js';
 import PlanningCard from './component/Planning.js';
 import Instructions from './component/Instructions.js';
+import Footer from './component/Footer.js';
+import '@fontsource/inter';
+import '@fortawesome/fontawesome-free/css/all.css';
+import WaitingPage from './component/WaitingPage';
 
 function App() {
   return (
@@ -34,8 +38,10 @@ function App() {
             <Route path="/join-plan/:planCode" element={<JoinPlan />} />
             <Route path="/restaurant-details/:planCode" element={<RestaurantDetails />} />
             <Route path="/final-poll/:planCode" element={<FinalPollResult />} />
+            <Route path="/waiting-page/:planCode" element={<WaitingPage />} />
             {/* Add other routes as needed */}
           </Routes>
+          <Footer />
         </Router>
       </AlertProvider>
     </AuthProvider>

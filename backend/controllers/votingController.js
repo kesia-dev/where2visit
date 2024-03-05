@@ -1,70 +1,70 @@
 const getPlan = require('../models/create-plan');
-const getUser = require('../models/user');
-const voteRestaurant = require('../models/restaurant');
 
 exports.vote = async (req, res) => {
-  const userId = req.user;
-  const payload = req.body; // Payload containing planId, restaurantId and voteType
+  // The frontend will send the following payload:
+  const { planCode, userName, restaurantId, voteType } = req.body;
+
+  // Check for missing fields:
+  if (!planCode || !userName || !restaurantId || !voteType) {
+    return res.status(400).json({
+      error: 'Missing required fields. Please include planCode, userName, restaurantId, and voteType.'
+    });
+  }
+
+  // Validate voteType:
+  if (!['positive', 'negative'].includes(voteType)) {
+    return res.status(400).json({
+      error: 'Invalid voteType. Expected "positive" or "negative".'
+    });
+  }
 
   try {
-    // Get plan by planId from payload
-    const plan = await getPlan.findOne({ roomId: payload.roomId });
+    // Get plan by roomId from payload:
+    const plan = await getPlan.findOne({ roomId: planCode });
 
-    // Check if plan exists
+    // Check if plan exists:
     if (!plan) {
       return res.status(404).json({
         error: 'Plan not found'
       });
     };
 
-    // Get plan by restaurantId from payload
-    const restaurant = plan.restaurants.id(payload.restaurantId);
+    // Find restaurant by its MongoDB _id within the plan:
+    const restaurant = plan.restaurants.id(restaurantId);
 
-    // Check if restaurant exists
+    // Check if restaurant exists:
     if (!restaurant) {
       return res.status(404).json({
         error: 'Restaurant not found'
       });
     }
 
-    const getUserName = await getUser.findById(userId);
-    // Check if user has already voted for positive or negative
-    if (restaurant.positiveVotes.includes(getUserName.username) || restaurant.negativeVotes.includes(getUserName.username)) {
-      return res.status(400).json({
-        error: 'User has already voted'
-      });
-    };
+    // Check if user has already voted for the specific restaurant within the plan by looking through the memberVotes array:
+    const hasVoted = restaurant.memberVotes.find(vote => vote.username === userName);
 
-    let getVoteField, incrementVote;
-
-    // Check vote field and increment or decrement vote
-    if (payload.voteType === 'positive') {
-      getVoteField = 'positiveVotes';
-      incrementVote = 1;
-
-    } else if (payload.voteType === 'negative') {
-      getVoteField = 'negativeVotes';
-      incrementVote = 1;
-
-    } else {
-      return res.status(400).json({
-        error: 'Invalid vote type'
-      });
+    if (hasVoted) {
+      return res.status(400).json({ error: 'User has already voted for this restaurant' });
     }
 
-    // Update to positive or negative user and vote count
-    restaurant[getVoteField].push(getUserName.username);
-    restaurant.voteCount += incrementVote; // voteCount is a number field
+    // Add the new vote to the memberVotes array:
+    const newVote = { username: userName, voteType: voteType };
+    restaurant.memberVotes.push(newVote);
+
+    // Update vote counts based on vote types:
+    if (voteType === 'positive') {
+      restaurant.positiveVoteCount += 1;
+    } else if (voteType === 'negative') {
+      restaurant.negativeVoteCount += 1;
+    }
+
+    // Update total vote count:
+    restaurant.totalVoteCount += 1;
+
     await plan.save();
 
-    res.json({
-      message: 'Vote posted successfully'
-    });
-
+    res.json({ message: 'Vote successfully recorded', planDetails: plan});
   } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({
-      error: 'Server error'
-    });
+    console.error('Voting Error:', error);
+    res.status(500).json({ error: 'Server error during voting process' });
   }
-}
+};

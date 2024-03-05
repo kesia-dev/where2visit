@@ -80,66 +80,68 @@ const JoinComponents = () => {
           lineHeight: '28px',
           textAlign: 'center',
           color: 'white',
-          marginTop: '15px',
+          marginTop: '44px',
           letterSpacing: '0.35px',
           width: '276px',
         }}
       >
         Joining an Existing Plan?
       </Typography>
-
-      <Box
-        sx={{
-          width: '160px',
-          height: '21px',
-          padding: '16px 32px 16px 32px',
-          borderRadius: '20px',
-          border: '3px dotted #1C1C1C',
-          gap: '12px',
-          background: '#E9D8AE',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: '20px'
-        }}
-      >
-        <Input
-          placeholder="Enter Code"
-          disableUnderline
-          value={enteredCode}
-          onChange={handleCodeChange}
+      <div>
+        <Box
           sx={{
-            fontFamily: 'Inter',
-            fontSize: '16px',
-            fontWeight: 600,
-            color: 'black',
+            width: '175px',
+            height: '19px',
+            padding: '16px 32px 16px 32px',
+            borderRadius: '20px',
+            border: '1px dashed #1C1C1C',
+            gap: '12px',
+            background: '#E9D8AE',
+            display: 'flex',
             alignItems: 'center',
-            letterSpacing: '0.35px',
-            lineHeight: '10',
             justifyContent: 'center',
-            alignContent: 'center',
-            textAlign: 'center',
+            marginTop: '16px'
           }}
-        />
-      </Box>
-
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleJoinPlanClick}
-        sx={{
-          width: '235px',
-          height: '53px',
-          marginTop: '20px',
-          padding: '16px 32px 16px 32px',
-          borderRadius: '100px',
-          gap: '20px',
-          textTransform: 'none',
-        }}
-        disabled={loading}
-      >
-        {loading ? 'Joining...' : 'Join Plan'}
-      </Button>
+        >
+          <Input
+            placeholder="Enter Code"
+            disableUnderline
+            value={enteredCode}
+            onChange={handleCodeChange}
+            sx={{
+              fontFamily: 'Inter',
+              fontSize: '16px',
+              fontWeight: 600,
+              color: 'black',
+              alignItems: 'center',
+              letterSpacing: '0.35px',
+              lineHeight: '21px',
+              justifyContent: 'center',
+              alignContent: 'center'
+            }}
+          />
+        </Box>
+      </div>
+      <div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleJoinPlanClick}
+          sx={{
+            width: '241px',
+            height: '53px',
+            marginTop: '19px',
+            padding: '16px 32px 16px 32px',
+            borderRadius: '100px',
+            gap: '20px',
+            textTransform: 'none',
+            backgroundColor: '#3492C7'
+          }}
+          disabled={loading}
+        >
+          {loading ? 'Joining...' : 'Join Plan'}
+        </Button>
+      </div>
 
       {/* Conditionally render JoinPlan based on code validation */}
       {isCodeValid && <JoinPlan planDetails={planDetails} />}

@@ -1,6 +1,7 @@
 // ReadyToStartText.js
 import React from 'react';
 import { Typography } from '@mui/material';
+import '@fontsource/inter';
 
 const ReadyToStartText = () => {
   return (

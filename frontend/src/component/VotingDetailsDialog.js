@@ -14,32 +14,13 @@ import Badge from "@mui/material/Badge";
 import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
 import CloseIcon from "@mui/icons-material/Close";
 
-const poll = {
-    members: [
-        "John",
-        "Jane",
-        "Alice",
-        "Sam",
-        "Tom",
-        "Jake",
-        "Kendal",
-        "Abby",
-        "Liam",
-    ],
-    voted_members: [
-      "John",
-      "Jane",
-      "Alice",
-      "Sam",
-      "Tom",
-    ],
-  };
+const noVotes = "No votes yet";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function VotingDetailsDialog({ positiveVoteCount }) {
+export default function VotingDetailsDialog({  positiveVoteCount, getPositiveVoters }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -114,7 +95,21 @@ export default function VotingDetailsDialog({ positiveVoteCount }) {
         </Box>
         <DialogContent>
           <List dense sx={{ justifyContent: "center", p: 0 }}>
-            {poll.voted_members.map((member, index) => (
+            {getPositiveVoters.length === 0 && (
+              <ListItem sx={{ textAlign: "center", m: "0 auto", p: 0 }} key={0}>
+                <ListItemText
+                  primary={noVotes}
+                  primaryTypographyProps={{
+                    fontSize: 16,
+                    fontWeight: "medium",
+                    letterSpacing: 0.5,
+                  }}
+                  sx={{ p: 0, m: 0.25 }}
+                />
+              </ListItem>
+            )}
+
+            {getPositiveVoters.map((member, index) => (
               <ListItem
                 key={index}
                 sx={{ textAlign: "center", m: "0 auto", p: 0 }}
@@ -132,7 +127,7 @@ export default function VotingDetailsDialog({ positiveVoteCount }) {
             ))}
           </List>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: "center" }} >
+        <DialogActions sx={{ justifyContent: "center" }}>
           <Button
             variant="contained"
             onClick={handleClose}

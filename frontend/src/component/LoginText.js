@@ -19,7 +19,8 @@ const LoginText = () => {
         letterSpacing: '-0.32px',
         textAlign: 'center',
         color: '#3492C7',
-        textTransform: 'none'
+        textTransform: 'none',
+        marginTop: '16px'
       }}
     >
       Already have an account? Log In
