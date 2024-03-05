@@ -30,16 +30,16 @@ export default function WaitingPage() {
         sx={{
           backgroundColor: "#E9D8AE",
           p: 3,
-          height: "100vh",
+          height: "100vh"
         }}
       >
         <Box
-          sx={{ justifyContent: "center", textAlign: "center", mt: "160px" }}
+          sx={{ display: 'flex', flexDirection: 'column', justifyContent: "center", alignItems: 'center', textAlign: "center", mt: "160px" }}
         >
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" gutterBottom sx={{ fontFamily: 'inter', fontWeight: 700, fontSize: '28px', lineHeight: '34px', letterSpacing: '0.36px'}}>
             { sessionActive ? "Voting still in session!" : "Session has ended!" }
           </Typography>
-          <Typography variant="h6">
+          <Typography variant="h6" sx={{ fontFamily: 'inter', fontWeight: 400, fontSize: '16px', lineHeight: '21px', letterSpacing: '-0.32px', alignItems: 'center', width: '203px' }}>
           {sessionActive
               ? "Please wait a moment for everyone to finish voting."
               : "Redirecting to the final poll results..."}
