@@ -35,13 +35,18 @@ const CreatePlanButton = () => {
           width: '241px',
           height: '53px',
           marginTop: '12px',
-          padding: '16px 32px 16px 32px',
+          padding: '16px 32px',
           borderRadius: '100px',
           gap: '20px',
           textTransform: 'none',
           backgroundColor: '#3492C7',
           display: 'flex', 
-          justifyContent: 'center'
+          justifyContent: 'center',
+          fontFamily: 'inter',
+          fontWeight: 600,
+          fontSize: '16px',
+          lineHeight: '21px',
+          letterSpacing: '-0.32px'
         }}
       >
         Create a Plan

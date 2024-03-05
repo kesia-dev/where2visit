@@ -5,7 +5,7 @@ import HomeImage from './HomeImage';
 import ReadyToStartText from './ReadyToStartText';
 import CreatePlanButton from './CreatePlanButton';
 import LoginText from './LoginText';
-import JoinCompnents from './JoinComponents';
+import JoinComponents from './JoinComponents';
 
 const HomePage = () => {
   useEffect(() => {
@@ -48,7 +48,7 @@ const HomePage = () => {
             <LoginText />
           </Grid>
           <Grid item>
-            <JoinCompnents />
+            <JoinComponents />
           </Grid>
         </div>
       </Grid>

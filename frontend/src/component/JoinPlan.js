@@ -362,7 +362,13 @@ const JoinPlan = () => {
             borderRadius: '100px',
             textTransform: 'none',
             marginTop: '20px',
-            width: '241px'
+            width: '241px',
+            fontFamily: 'Inter',
+            fontSize: '16px',
+            fontWeight: 600,
+            lineHeight: '21px',
+            letterSpacing: '-0.32px',
+            textAlign: 'center',
           }}
           onClick={handleJoinPlanClick}
         >
