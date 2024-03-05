@@ -124,8 +124,7 @@ const JoinComponents = () => {
       </div>
       <div>
         <Button
-          variant="contained"
-          color="primary"
+          variant="contained"          
           onClick={handleJoinPlanClick}
           sx={{
             width: '241px',
@@ -135,7 +134,12 @@ const JoinComponents = () => {
             borderRadius: '100px',
             gap: '20px',
             textTransform: 'none',
-            backgroundColor: '#3492C7'
+            backgroundColor: '#3492C7',
+            fontFamily: 'inter',
+            fontWeight: 600,
+            fontSize: '16px',
+            lineHeight: '21px',
+            letterSpacing: '-0.32px'
           }}
           disabled={loading}
         >
