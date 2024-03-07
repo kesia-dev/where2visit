@@ -18,8 +18,8 @@
 .third.navigation-btn {
   position: static;
   margin: 50px 0;
-  margin-bottom: 70px;
-  margin-left: -50px;
+  margin-bottom: 32px;
+  margin-left: -38px;
   transform: none;
 }
 
@@ -99,7 +99,7 @@ button.css-sghohy-MuiButtonBase-root-MuiButton-root {
   padding: 20px;
   border: 0;
   box-shadow: none;
-  height: 100vh;
+  height: auto;
 
 }
 
@@ -137,6 +137,7 @@ button.css-1rwt2y5-MuiButtonBase-root-MuiButton-root {
     /*main */
     padding-left: 16px;
     padding-right: 16px;
+    min-height: 100vh;
   }
 
   .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation3.css-181ouvw-MuiPaper-root {
@@ -151,6 +152,16 @@ button.css-1rwt2y5-MuiButtonBase-root-MuiButton-root {
     text-transform: none;
     min-width: 15vw;
     min-height: 5vh;
+  }
+
+  .navigation-btn {
+    top: 665px;
+  }
+
+  .third.navigation-btn {
+    margin: 90px 0;
+    margin-bottom: 30px;
+    margin-left: -60px;
   }
 
 }

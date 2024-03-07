@@ -1,25 +1,22 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@mui/material';
-import { Link, useLocation } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar, Popover } from '@mui/material';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useMediaQuery, useTheme } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
+import { useAlert } from '../context/AlertContext';
+import useNavbar from '../hook/useNavbar';
 import '@fontsource/inter';
 
+
 const Navbar = () => {
+  const { handleMenuIconClick, handleAvatarClick, handlePopoverClose, handleMenuClose, popoverAnchorEl, anchorEl } = useNavbar();
+  const { isLoggedIn, clearAuthData, userData } = useAuth();
+  const { AlertComponent } = useAlert(); // the global alert component
+  const navigate = useNavigate();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleMenuIconClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
   // Check if the current path is '/instructions'
   const isInstructionsPage = location.pathname === '/instructions';
 
@@ -29,15 +26,9 @@ const Navbar = () => {
   }
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: 'none' }}>
-      <Toolbar
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div>
+    <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black' }}>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        {isSmallScreen && (
           <IconButton
             size="large"
             edge="start"
@@ -47,7 +38,7 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-        </div>
+        )}
         <div
           style={{
             display: 'flex',
@@ -85,30 +76,85 @@ const Navbar = () => {
             Where2Visit
           </Typography>
         </div>
-        <div>
-          <Button color="inherit" sx={{ textTransform: 'none', marginLeft: '20px', fontSize: '16px',fontFamily: 'Inter',
+        {!isLoggedIn() ?
+          <Button
+            component={Link}
+            to="/login"
+            color="inherit" sx={{
+              textTransform: 'none', marginLeft: '20px', fontSize: '16px', fontFamily: 'Inter',
               fontWeight: 600,
               lineHeight: '21px',
               letterSpacing: '-0.32px',
               textAlign: 'Right',
-              display: 'block', }}>
-            Login
-          </Button>
-          <Menu
-            id="menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            sx={{ marginTop: isSmallScreen ? '0' : '5px' }}
-          >
-            <MenuItem onClick={handleMenuClose} component={Link} to="/create-plan">
-              Create a Plan
-            </MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to="/join-plan">
-              Join a Plan
-            </MenuItem>
-          </Menu>
-        </div>
+              display: 'block',
+            }}
+
+          >Login</Button>
+          : (
+            <div>
+              <IconButton onClick={handleAvatarClick}>
+                <Avatar sx={{ bgcolor: '#3492C7' }} alt={userData?.userName || ''}>
+                  {userData?.userName?.charAt(0).toUpperCase() || ''}
+                </Avatar>
+              </IconButton>
+              <Popover
+                open={Boolean(popoverAnchorEl)}
+                anchorEl={popoverAnchorEl}
+                onClose={handlePopoverClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <Typography sx={{ p: 2 }}>
+                  Username: {userData?.userName || ''}
+                  <br />
+                  Email: {userData?.email || ''}
+                  <br />
+                  {userData?.verified ?
+                    'Email is verified' : 'Email not verified'
+                  }
+                  {/* Add more user information here */}
+                </Typography>
+              </Popover>
+              <Button
+                color="inherit" sx={{
+                  textTransform: 'none', fontSize: '16px', fontFamily: 'Inter',
+                  fontWeight: 600,
+                  lineHeight: '21px',
+                  letterSpacing: '-0.32px',
+                  textAlign: 'Right',
+                  display: 'inline-block',
+                }}
+                onClick={() => {
+                  clearAuthData();
+                  navigate(`/`);
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          )
+        }
+        <Menu
+          id="menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          sx={{ marginTop: isSmallScreen ? '0' : '5px' }}
+        >
+          <MenuItem onClick={handleMenuClose} sx={{ fontFamily: 'inter' }} component={Link} to="/create-plan">
+            Create a Plan
+          </MenuItem>
+          <MenuItem onClick={handleMenuClose} sx={{ fontFamily: 'inter' }} component={Link} to="/join-plan">
+            Join a Plan
+          </MenuItem>
+        </Menu>
+        {AlertComponent}
       </Toolbar>
     </AppBar>
   );

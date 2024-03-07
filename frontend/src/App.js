@@ -3,9 +3,15 @@ import React from 'react';
 import Navbar from './component/Navbar';
 import HomePage from './component/HomePage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Auth0Provider } from '@auth0/auth0-react'; // Import Auth0Provider
 import './App.css';
 import JoinPlan from './component/JoinPlan.js';
+
+import Login from './component/Login.js';
+import SignUp from './component/SignUp.js';
+import { AuthProvider } from './context/AuthContext.js';
+import { AlertProvider } from './context/AlertContext.js';
+import ForgotPassword from './component/ForgotPassword.js';
+import ResetPassword from './component/ResetPassword.js';
 import RestaurantDetails from './component/RestaurantDetails.js';
 import FinalPollResult from './component/FinalPollResult.js';
 import PlanningCard from './component/Planning.js';
@@ -15,21 +21,17 @@ import '@fontsource/inter';
 import '@fortawesome/fontawesome-free/css/all.css';
 import WaitingPage from './component/WaitingPage';
 
-const domain = "dev-rkjah3umfq8c82at.us.auth0.com"
-const clientId = "xbeT4PtSPVwbkexbBRsCKmzveb3aNIE0"
-
 function App() {
   return (
-    <Router>
-      <Auth0Provider
-        domain={domain}
-        clientId={clientId}
-        authorizationParams={{
-          redirect_uri: window.location.origin,
-        }}
-      >
-        <Navbar />
+    <AuthProvider>
+      <AlertProvider>
+        <Router>
+          <Navbar />
           <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:resetCode" element={<ResetPassword />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/create-plan" element={<PlanningCard />} />
             <Route path="/instructions" element={<Instructions />} />
@@ -40,8 +42,9 @@ function App() {
             {/* Add other routes as needed */}
           </Routes>
           <Footer />
-      </Auth0Provider>
-    </Router>
+        </Router>
+      </AlertProvider>
+    </AuthProvider>
   );
 }
 

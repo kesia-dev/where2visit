@@ -1,10 +1,13 @@
 // LoginText.js
 import React from 'react';
 import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const LoginText = () => {
   return (
     <Button
+      component={Link}
+      to="/login"
       variant="text"
       align="center"
       className="login"
