@@ -333,7 +333,7 @@ const RestaurantDetails = () => {
   };
 
   return (
-    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0 }}>
+    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0, mt: 0.5 }}>
       <ThemeProvider theme={theme}>
         <Paper
           elevation={1}
@@ -376,10 +376,10 @@ const RestaurantDetails = () => {
                   sx={{
                     fontSize: "16px",
                     fontWeight: 400,
-                    color: "#777",
                     lineHeight: "21px",
                     letterSpacing: "-0.32px",
                   }}
+                  gutterBottom
                 >
                   hosted by {planDetails.hostName}
                 </Typography>
@@ -388,7 +388,6 @@ const RestaurantDetails = () => {
                 sx={{
                   fontSize: "16px",
                   fontWeight: 400,
-                  color: "#777",
                   lineHeight: "21px",
                   letterSpacing: "-0.32px",
                 }}
@@ -420,14 +419,13 @@ const RestaurantDetails = () => {
               sx={{ width: "50%", display: "flex", flexDirection: "column" }}
             >
               <Typography
-                variant="body1"
-                sx={{ fontSize: "18px", color: "#333" }}
+                sx={{ fontSize: "22px", fontWeight: 600, lineHeight: "21px", letterSpacing: "-0.32px"}}
+                gutterBottom
               >
                 <strong>Invite Your Friends!</strong>
               </Typography>
               <Typography
-                variant="body2"
-                sx={{ fontSize: "16px", color: "#777" }}
+                sx={{ fontSize: "16px", fontWeight: 400, lineHeight: "21px", letterSpacing: "-0.32px"}}
               >
                 Copy & Share Your Code
               </Typography>
