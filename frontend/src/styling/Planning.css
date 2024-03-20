@@ -83,11 +83,10 @@ button.css-sghohy-MuiButtonBase-root-MuiButton-root {
   color: #3492c7;
 }
 
-.MuiContainer-root.MuiContainer-maxWidthMd.css-xdmu94-MuiContainer-root {
+/* .MuiContainer-root.MuiContainer-maxWidthMd.css-xdmu94-MuiContainer-root { */
   /* main */
-  padding: 0;
-
-}
+  /* padding: 0; */
+/* } */
 
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation3.css-181ouvw-MuiPaper-root {
   /* <Paper /> */

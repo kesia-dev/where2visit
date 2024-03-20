@@ -13,7 +13,10 @@ const VotingTimerService = require('./services/votingTimerService');
 const app = express();
 const cors = require('cors');
 app.use(express.json());
-app.use(cors())
+const corsOptions = {
+  origin: ['http://localhost:3000','http://where2visit.com/']
+};
+app.use(cors(corsOptions))
 const port = process.env.PORT || 3000;
 // Create HTTP server:
 const server = http.createServer(app);

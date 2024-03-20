@@ -9,7 +9,7 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import '../styling/PlanningForm.css';
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
-import GOOGLE_MAPS_API_KEY from '../config';
+import {GOOGLE_MAPS_API_KEY} from '../config';
 
 const libraries = ['places'];
 

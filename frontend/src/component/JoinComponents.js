@@ -4,6 +4,7 @@ import MuiAlert from '@mui/material/Alert';
 import JoinPlan from './JoinPlan';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const JoinComponents = () => {
   const [enteredCode, setEnteredCode] = useState('');
@@ -23,7 +24,7 @@ const JoinComponents = () => {
       setLoading(true);
 
       // Make an asynchronous request to your server to get plan details
-      const response = await axios.get('http://http://89.116.187.139:4200/plan/get-plan', {
+      const response = await axios.get(`${API_BASE_URL}/plan/get-plan'`, {
         params: {
           planCode: enteredCode,
         },
@@ -62,7 +63,8 @@ const JoinComponents = () => {
   };
 
   return (
-    <div
+    <div 
+      className='centered-input'
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -77,8 +79,7 @@ const JoinComponents = () => {
           fontFamily: 'Inter',
           fontSize: '22px',
           fontWeight: 700,
-          lineHeight: '28px',
-          textAlign: 'center',
+          lineHeight: '28px', 
           color: 'white',
           marginTop: '44px',
           letterSpacing: '0.35px',

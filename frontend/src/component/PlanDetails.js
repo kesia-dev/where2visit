@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Typography, Box } from '@mui/material';
 import axios from 'axios';
-import GOOGLE_MAPS_API_KEY from '../config';
+import {GOOGLE_MAPS_API_KEY} from '../config';
 import dayjs from 'dayjs';
 
 const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, latitude, longitude }) => {

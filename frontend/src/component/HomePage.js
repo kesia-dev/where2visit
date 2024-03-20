@@ -42,11 +42,6 @@ const HomePage = () => {
             justifyContent: 'center'}}>
             <CreatePlanButton />
           </Grid>
-          <Grid item style={{
-            display: 'flex',
-            justifyContent: 'center'}}>
-            <LoginText />
-          </Grid>
           <Grid item>
             <JoinComponents />
           </Grid>
