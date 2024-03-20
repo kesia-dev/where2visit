@@ -10,6 +10,7 @@ import "../styling/Planning.css";
 import PlanningForm from './PlanningForm';
 import RestaurantOptions from './RestaurantOptions';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const PlanningCard = () => {
   const steps = [
@@ -212,7 +213,7 @@ const PlanningCard = () => {
 
     try {
       // API call to save details to DB and search restaurants
-      const response = await axios.post('http://http://89.116.187.139:4200/plan/create-plan', options);
+      const response = await axios.post(`${API_BASE_URL}/plan/create-plan`, options);
       console.log('Response from server: ', response.data);
       const { roomId } = response.data;
       // Add host username to local storage (purely for development purposes):

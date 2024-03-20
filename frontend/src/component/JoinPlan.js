@@ -15,6 +15,7 @@ import axios from 'axios';
 import MuiAlert from '@mui/material/Alert';
 import '../styling/JoinPlan.css';
 import dayjs from 'dayjs';
+import { API_BASE_URL } from '../config';
 
 const JoinPlan = () => {
   const { planCode, planName, hostName, dateOfEvent, timeOfEvent, location } = useParams();
@@ -62,7 +63,7 @@ const JoinPlan = () => {
     }
 
     try {
-      const response = await axios.post('http://http://89.116.187.139:4200/plan/join', {
+      const response = await axios.post(`${API_BASE_URL}/plan/join`, {
         userName: userName.trim(),
         planCode: planCode,
       });
@@ -91,7 +92,7 @@ const JoinPlan = () => {
       }
 
       try {
-        const response = await axios.get('http://http://89.116.187.139:4200/plan/get-plan', {
+        const response = await axios.get(`${API_BASE_URL}/plan/get-plan`, {
           params: {
             planCode: planCode,
             planName: planName,

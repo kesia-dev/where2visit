@@ -1,6 +1,6 @@
 .horizontal-line {
   width: 105vw;
-  height: 0.01vh;  
+  /* height: 0.01vh;   */
   background-color: rgba(189, 189, 189, 1);
   
 }

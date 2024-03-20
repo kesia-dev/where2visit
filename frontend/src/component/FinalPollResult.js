@@ -28,6 +28,7 @@ import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
 import ThumbDownTwoToneIcon from "@mui/icons-material/ThumbDownTwoTone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYelp } from "@fortawesome/free-brands-svg-icons";
+import { API_BASE_URL } from "../config";
 
 const theme = createTheme({
   typography: {
@@ -81,7 +82,7 @@ const FinalPollResult = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://http://89.116.187.139:4200/plan/get-plan?planCode=${planCode}`
+          `${API_BASE_URL}/plan/get-plan?planCode=${planCode}`
         );
         console.log("Plan details:", res.data);
         setPlanDetails(res.data);

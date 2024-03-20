@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAlert } from "../context/AlertContext";
+import { API_BASE_URL } from "../config";
 
 const useForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ const useForgotPassword = () => {
       const emailInfo = {
         email
       };
-      const response = await fetch('http://http://89.116.187.139:4200/auth/forgot-password', {
+      const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

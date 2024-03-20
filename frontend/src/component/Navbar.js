@@ -24,9 +24,18 @@ const Navbar = () => {
   if (isInstructionsPage) {
     return null;
   }
-
+  const styles = {
+    appBar: {
+      position: 'fixed', // Fix the AppBar to the top
+      top: 0, // Position it at the top of the viewport
+      width: '100%', // Occupy the full width of the screen
+      zIndex: 1000, // Ensure the AppBar appears above other content
+      backgroundColor: 'white',
+      color: 'black',
+    },
+  };
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black' }}>
+    <AppBar position="static" sx={styles.appBar}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {isSmallScreen && (
           <IconButton

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "../context/AlertContext";
+import { API_BASE_URL } from '../config';
 
 const useSignUp = () => {
   const [userName, setUserName] = useState('');
@@ -33,7 +34,7 @@ const useSignUp = () => {
         password
       };
 
-      const response = await fetch('http://http://89.116.187.139:4200/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

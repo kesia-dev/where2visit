@@ -6,9 +6,12 @@
 
 body {
   margin: 0; /* Remove default margin to ensure the content reaches the edges */
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   width: 100%;
-  overflow: scroll;
+  overflow: none;
+}
+
+main {
+  padding: 60px 0px ;
 }

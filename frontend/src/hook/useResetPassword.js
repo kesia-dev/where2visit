@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useAlert } from "../context/AlertContext";
 import { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 const useResetPassword = () => {
   const { resetCode } = useParams();
@@ -19,7 +20,7 @@ const useResetPassword = () => {
         password
       };
       console.log(JSON.stringify(resetData));
-      const response = await fetch(`http://http://89.116.187.139:4200/auth/reset-password/${resetCode}`, {
+      const response = await fetch(`${API_BASE_URL}/auth/reset-password/${resetCode}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

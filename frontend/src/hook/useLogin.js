@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "../context/AlertContext";
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 
 const useLogin = () => {
   //state definition and handling
@@ -28,7 +29,7 @@ const useLogin = () => {
         email,
         password
       };
-      const response = await fetch('http://http://89.116.187.139:4200/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

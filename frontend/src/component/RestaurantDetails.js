@@ -40,6 +40,7 @@ import { faYelp } from "@fortawesome/free-brands-svg-icons";
 
 // Hooks
 import useWebSocket from "../hooks/useWebSocket";
+import { API_BASE_URL } from "../config";
 
 // theme to override the MUI Dialog component
 const theme = createTheme({
@@ -107,7 +108,7 @@ const RestaurantDetails = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://http://89.116.187.139:4200/plan/get-plan?planCode=${planCode}`
+          `${API_BASE_URL}/plan/get-plan?planCode=${planCode}`
         );
         setPlanDetails(res.data);
         setSessionActive(res.data.isActive);
@@ -191,7 +192,7 @@ const RestaurantDetails = () => {
       );
       // Send the vote to the server
       await axios
-        .post(`http://http://89.116.187.139:4200/plan/vote-restaurant`, {
+        .post(`${API_BASE_URL}/plan/vote-restaurant`, {
           planCode,
           userName: voterName,
           restaurantId: restaurant._id,
