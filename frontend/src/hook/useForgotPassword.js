@@ -16,7 +16,7 @@ const useForgotPassword = () => {
       const emailInfo = {
         email
       };
-      const response = await fetch('http://localhost:4200/auth/forgot-password', {
+      const response = await fetch('http://http://89.116.187.139:4200/auth/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -23,7 +23,7 @@ const JoinComponents = () => {
       setLoading(true);
 
       // Make an asynchronous request to your server to get plan details
-      const response = await axios.get('http://localhost:4200/plan/get-plan', {
+      const response = await axios.get('http://http://89.116.187.139:4200/plan/get-plan', {
         params: {
           planCode: enteredCode,
         },

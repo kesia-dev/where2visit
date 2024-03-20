@@ -28,7 +28,7 @@ const useLogin = () => {
         email,
         password
       };
-      const response = await fetch('http://localhost:4200/auth/login', {
+      const response = await fetch('http://http://89.116.187.139:4200/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

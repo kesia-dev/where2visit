@@ -19,7 +19,7 @@ const useResetPassword = () => {
         password
       };
       console.log(JSON.stringify(resetData));
-      const response = await fetch(`http://localhost:4200/auth/reset-password/${resetCode}`, {
+      const response = await fetch(`http://http://89.116.187.139:4200/auth/reset-password/${resetCode}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

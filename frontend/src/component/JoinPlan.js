@@ -62,7 +62,7 @@ const JoinPlan = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:4200/plan/join', {
+      const response = await axios.post('http://http://89.116.187.139:4200/plan/join', {
         userName: userName.trim(),
         planCode: planCode,
       });
@@ -91,7 +91,7 @@ const JoinPlan = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:4200/plan/get-plan', {
+        const response = await axios.get('http://http://89.116.187.139:4200/plan/get-plan', {
           params: {
             planCode: planCode,
             planName: planName,

@@ -81,7 +81,7 @@ const FinalPollResult = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4200/plan/get-plan?planCode=${planCode}`
+          `http://http://89.116.187.139:4200/plan/get-plan?planCode=${planCode}`
         );
         console.log("Plan details:", res.data);
         setPlanDetails(res.data);

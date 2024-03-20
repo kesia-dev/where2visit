@@ -33,7 +33,7 @@ const useSignUp = () => {
         password
       };
 
-      const response = await fetch('http://localhost:4200/auth/register', {
+      const response = await fetch('http://http://89.116.187.139:4200/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

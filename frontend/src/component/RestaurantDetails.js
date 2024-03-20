@@ -96,7 +96,7 @@ const RestaurantDetails = () => {
   }, []);
   // Use the WebSocket hook to get the time left for the voting session:
   const { timeLeft, sendMessage, socket } = useWebSocket(
-    "ws://localhost:4200",
+    "ws://http://89.116.187.139:4200",
     planCode,
     onSessionEnd,
     sessionActive
@@ -107,7 +107,7 @@ const RestaurantDetails = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4200/plan/get-plan?planCode=${planCode}`
+          `http://http://89.116.187.139:4200/plan/get-plan?planCode=${planCode}`
         );
         setPlanDetails(res.data);
         setSessionActive(res.data.isActive);
@@ -191,7 +191,7 @@ const RestaurantDetails = () => {
       );
       // Send the vote to the server
       await axios
-        .post(`http://localhost:4200/plan/vote-restaurant`, {
+        .post(`http://http://89.116.187.139:4200/plan/vote-restaurant`, {
           planCode,
           userName: voterName,
           restaurantId: restaurant._id,
