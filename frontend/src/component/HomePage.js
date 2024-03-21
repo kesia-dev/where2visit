@@ -27,7 +27,8 @@ const HomePage = () => {
         alignItems="center"
         height="auto"
         sx={{
-          marginTop: '40px',
+          paddingTop: '100px',
+          paddingBottom: '50%',
         }}
       >
         <Grid item>
