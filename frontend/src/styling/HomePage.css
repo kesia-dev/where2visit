@@ -1,0 +1,13 @@
+/* HomePage.css */
+.homePage-image {
+    width: 100%;
+    height: 265px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  
+  .centered-input input {
+    text-align: center !important;
+  }
