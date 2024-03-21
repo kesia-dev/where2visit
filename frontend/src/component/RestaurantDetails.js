@@ -40,7 +40,7 @@ import { faYelp } from "@fortawesome/free-brands-svg-icons";
 
 // Hooks
 import useWebSocket from "../hooks/useWebSocket";
-import { API_BASE_URL } from "../config";
+import { API_BASE_URL, SHARE_URL } from "../config";
 
 // theme to override the MUI Dialog component
 const theme = createTheme({
@@ -76,6 +76,7 @@ const theme = createTheme({
 
 const RestaurantDetails = () => {
   const [copyFeedback, setCopyFeedback] = useState("");
+  const [shareCopyFeedback, setShareCopyFeedback] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [planDetails, setPlanDetails] = useState({});
   const [currentRestaurantIndex, setCurrentRestaurantIndex] = useState(0);
@@ -318,23 +319,20 @@ const RestaurantDetails = () => {
   const id = open ? "simple-popper" : undefined;
 
   const handleShareClick = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: "Join the Party",
-          text: `Join the party with code: ${planCode}`,
-          url: window.open(`http://localhost:3000/join-plan/${planCode}`),
-        })
-        .then(() => console.log("Successfully shared"))
-        .catch((error) => console.error("Error sharing:", error));
-    } else {
-      alert(`Share the code: ${planCode}`);
-      console.log("Web Share API not supported");
+    try {
+      copy(`${SHARE_URL}/join-plan/${planCode}`);
+      setShareCopyFeedback("URL Copied to clipboard!");
+    } catch (error) {
+      console.error("Error copying to clipboard:", error);
+      setShareCopyFeedback("Error copying URL to clipboard");
     }
+    setTimeout(() => {
+      setShareCopyFeedback("");
+    }, 1500);
   };
 
   return (
-    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0, mt: 0.5 }}>
+    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0, pt:8, pb:5, mt: 0.5 }}>
       <ThemeProvider theme={theme}>
         <Paper
           elevation={1}
@@ -497,9 +495,30 @@ const RestaurantDetails = () => {
                     "0px 2px 4px -1px rgba(0,0,0,0.1),0px 4px 5px 0px rgba(0,0,0,0.1),0px 1px 10px 0px rgba(0,0,0,0.12)",
                 }}
                 onClick={handleShareClick}
+                aria-describedby={id}
               >
                 Share
               </Button>
+              {shareCopyFeedback && (
+                <Popper id={id} open={open} anchorEl={anchorEl} placement="top">
+                  <Box
+                    sx={{
+                      border: 1,
+                      p: 1,
+                      mb: 1,
+                      bgcolor: "background.paper",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: "12px", color: "black" }}
+                    >
+                      {shareCopyFeedback}
+                    </Typography>
+                  </Box>
+                </Popper>
+              )}
             </Box>
           </Box>
           <Divider sx={{ width: "100%", m: 0 }} />

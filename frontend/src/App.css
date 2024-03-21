@@ -15,3 +15,7 @@ body {
 main {
   padding: 60px 0px ;
 }
+
+.MuiPaper-root.MuiPaper-elevation  .MuiBox-root.css-dtdmk9 {
+  z-index: 0;
+}

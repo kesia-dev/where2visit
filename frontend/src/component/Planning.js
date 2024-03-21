@@ -41,13 +41,14 @@ const PlanningCard = () => {
       buttonLabel4: "15",
     },
     {
-      title: `<span class="title-star">*</span> How many <span class="title-color"> matches </span> do you want?`,
+      title: ``,
       subtitle: "Matches refer to the number of restaurants your group has agreed on.",
       buttonLabel1: "1",
       buttonLabel2: "3",
       buttonLabel3: "5",
     },
   ];
+  // <span class="title-star">*</span> How many <span class="title-color"> matches </span> do you want?
 
   const options = useSelector(state => state.options);
   const { term, numberOfResults: results, numberOfMatches: matches, cuisine, priceRange: price } = options;
