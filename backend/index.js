@@ -14,10 +14,10 @@ const app = express();
 const cors = require('cors');
 app.use(express.json());
 const corsOptions = {
-  origin: ['http://localhost:3000','http://where2visit.com/']
+  origin: ['http://localhost:4200','http://where2visit.com/']
 };
-app.use(cors(corsOptions))
-const port = process.env.PORT || 3000;
+app.use(cors())
+const port = process.env.PORT || 4200;
 // Create HTTP server:
 const server = http.createServer(app);
 // Add WebSocket support:
@@ -75,6 +75,10 @@ app.use('/plan', joinPlan);
 app.use('/maps', restaurants);
 app.use('/yelp', restaurantsSearchFromYelp);
 
+
+app.get('/', function (req, res) {
+  res.status(200).send("Welcome!");
+});
 // Start the server to ensure both HTTP and WebSocket requests are handled:
 server.listen(port, () => {
   console.log(`Server is running on port # ${port}`);

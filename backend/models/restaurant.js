@@ -4,7 +4,7 @@ const { memberVoteSchema } = require('./member-votes');
 const photoSchema = new mongoose.Schema({
     url: {
         type: String,
-        required: true,
+        required: false,
     }
 });
 
