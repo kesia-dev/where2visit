@@ -57,6 +57,15 @@ button.css-2rdw6z-MuiButtonBase-root-MuiButton-root {
   letter-spacing: -0.24px;
 }
 
+.create-plan-items {
+  border: none !important;
+  font-family: inter !important;
+  font-weight: 400 !important;
+  font-size: 15px !important;
+  line-height: 20px !important;
+  letter-spacing: -0.24px !important;
+}
+
 button.css-sghohy-MuiButtonBase-root-MuiButton-root {
 
   width: 241px;

@@ -10,6 +10,10 @@
   padding-top: 0;
 }
 
+.create-plan-items-padding-top{
+  padding-top: 0 !important;
+}
+
 .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.css-1idn90j-MuiGrid-root {
   padding-top: 25px;
 }

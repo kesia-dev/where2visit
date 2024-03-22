@@ -152,8 +152,8 @@ const RestaurantOptions = () => {
             height: '53px'
           }}
           onClick={() => handleClick(item)}
-        >         
-          {category === "Rating (Optional)" && item !== "Any star rating" && <StarIcon />} 
+        >
+          {category === "Rating (Optional)" && item !== "Any star rating" && <StarIcon />}
           {item}
         </Button>
       );
@@ -168,12 +168,12 @@ const RestaurantOptions = () => {
 
     return (
       <>
-        <Grid item xs={6}>
+        <Grid className='create-plan-items-padding-top' item xs={6}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {renderButtons(firstColumn, category)}
           </div>
         </Grid>
-        <Grid item xs={6}>
+        <Grid className='create-plan-items-padding-top' item xs={6}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {renderButtons(secondColumn, category)}
           </div>

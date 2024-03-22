@@ -144,7 +144,7 @@ const PlanningCard = () => {
       return (
         <Button
           key={index}
-          className = "last-step-btn-row"
+          className="last-step-btn-row"
           variant="outlined"
           onClick={() => onClickHandler(label)}
           style={{
@@ -296,6 +296,7 @@ const PlanningCard = () => {
                       .map(key => (
                         <Button
                           key={key}
+                          className='create-plan-items'
                           variant="outlined"
                           // onClick={() => handleTerm(steps[step][key])}                          
                           style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50' }}
@@ -312,6 +313,7 @@ const PlanningCard = () => {
                       .map(key => (
                         <Button
                           key={key}
+                          className='create-plan-items'
                           variant="outlined"
                           // onClick={() => handleTerm(steps[step][key])}                          
                           style={{ backgroundColor: isAdded(term, steps[step][key]) ? '#153a50' : '#aed3e9', color: isAdded(term, steps[step][key]) ? '#aed3e9' : '#153a50' }}
