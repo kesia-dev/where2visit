@@ -126,7 +126,7 @@ const PlanningCard = () => {
   };
 
   const handleMatches = (value) => {
-    if (value <= Number(results) ) {
+    if (value <= Number(results)) {
       dispatch(addNumberOfMatches(value));
     }
   };
@@ -144,13 +144,14 @@ const PlanningCard = () => {
       return (
         <Button
           key={index}
+          className = "last-step-btn-row"
           variant="outlined"
           onClick={() => onClickHandler(label)}
           style={{
             backgroundColor: disabled ? '#E0E0E0' : isAdded(state, label) ? '#153a50' : '#aed3e9',
             color: disabled ? '#BDBDBD' : isAdded(state, label) ? '#aed3e9' : '#153a50',
           }}
-          disabled={disabled} 
+          disabled={disabled}
         >
           {label}
         </Button>
@@ -230,7 +231,7 @@ const PlanningCard = () => {
   return (
     <>
       <Container component="main" maxWidth="md">
-        <Paper elevation={3} sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px', minHeight: '80vh' }}>
+        <Paper elevation={3} className="create-a-plan-upper-side" sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px', minHeight: '80vh' }}>
           {/* MobileStepper for navigation */}
           <MobileStepper
             variant="dots"
@@ -328,6 +329,7 @@ const PlanningCard = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className='create-a-plan-btn'
                     onClick={handleNext}
                     style={{ backgroundColor: '#3492c7' }}
                   >
@@ -349,6 +351,7 @@ const PlanningCard = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className='create-a-plan-btn'
                     style={{ backgroundColor: '#3492c7' }}
                     onClick={handleClickNextButtonForm}
                   >
@@ -379,6 +382,7 @@ const PlanningCard = () => {
                   <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
 
                   <Button
+                    className='create-a-plan-btn'
                     variant="contained"
                     color="primary"
                     style={{ backgroundColor: '#3492c7' }}
@@ -536,6 +540,7 @@ const PlanningCard = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className='create-a-plan-btn'
                     style={{ backgroundColor: '#3492c7' }}
                     onClick={completePlan}
                   >

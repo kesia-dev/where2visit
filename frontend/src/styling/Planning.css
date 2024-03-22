@@ -75,6 +75,23 @@ button.css-sghohy-MuiButtonBase-root-MuiButton-root {
 
 }
 
+.create-a-plan-btn {
+  width: 241px !important;
+  height: 53px !important;
+  border-radius: 100px !important;
+  padding: 16px 32px !important;
+  text-transform: none !important;
+  font-family: inter !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  line-height: 21px !important;
+  letter-spacing: -0.32px !important;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
+  box-sizing: border-box !important;
+  border: 0 !important;
+  color: #fff !important;
+}
+
 .MuiBox-root.css-dvxtzn {
   position: relative;
 }
@@ -84,8 +101,8 @@ button.css-sghohy-MuiButtonBase-root-MuiButton-root {
 }
 
 /* .MuiContainer-root.MuiContainer-maxWidthMd.css-xdmu94-MuiContainer-root { */
-  /* main */
-  /* padding: 0; */
+/* main */
+/* padding: 0; */
 /* } */
 
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation3.css-181ouvw-MuiPaper-root {
@@ -102,10 +119,38 @@ button.css-sghohy-MuiButtonBase-root-MuiButton-root {
 
 }
 
+.create-a-plan-upper-side {
+  margin: -1px !important;
+  margin: -1px !important;
+  padding: 20px !important;
+  border: 0 !important;
+  margin: -1px !important;
+  padding: 20px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  height: auto !important;
+}
+
 .last-step-btn {
   display: flex;
   align-items: center;
   gap: 22px;
+}
+
+.last-step-btn-row {
+  border: none !important;
+  margin-top: 11px !important;
+  margin-bottom: 25px !important;
+  border-radius: 10px !important;
+  height: 53px !important;
+  width: 80px !important;
+  padding: 16px 35px !important;
+  text-transform: none !important;
+  font-family: inter !important;
+  font-weight: 400 !important;
+  font-size: 15px !important;
+  line-height: 20px !important;
+  letter-spacing: -0.24px !important;
 }
 
 button.css-1rwt2y5-MuiButtonBase-root-MuiButton-root {
