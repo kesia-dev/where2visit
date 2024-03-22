@@ -11,7 +11,7 @@ import useWebSocket from "../hooks/useWebSocket";
 export default function WaitingPage() {
   const navigate = useNavigate();
   const { planCode } = useParams();
-  const { sessionActive } = useWebSocket("ws://http://89.116.187.139:4200", planCode, null, true);
+  const { sessionActive } = useWebSocket("ws://https://89.116.187.139", planCode, null, true);
 
   // If the session is no longer active (time is up or ended by host), redirect to the final poll results page:
   useEffect(() => {

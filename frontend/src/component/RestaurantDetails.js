@@ -98,7 +98,7 @@ const RestaurantDetails = () => {
   }, []);
   // Use the WebSocket hook to get the time left for the voting session:
   const { timeLeft, sendMessage, socket } = useWebSocket(
-    "ws://http://89.116.187.139:4200",
+    "ws://https://89.116.187.139",
     planCode,
     onSessionEnd,
     sessionActive
