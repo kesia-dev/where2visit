@@ -558,7 +558,7 @@ const PlanningCard = () => {
           </div>}
 
           {
-            step === 3 && <div className='third-navigation-btn' >
+            step >= 3 && <div className='third-navigation-btn' >
               <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
 
               <Button
