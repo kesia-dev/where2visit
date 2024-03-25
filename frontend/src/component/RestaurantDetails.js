@@ -123,7 +123,7 @@ const RestaurantDetails = () => {
   // Sending WebSocket message only when plan details are fetched and the WebSocket connection is open:
   useEffect(() => {
     // Check if plan is active before starting the timer
-    if (planDetails && Object.keys(planDetails).length && sessionActive) {
+    if (planDetails && Object.keys(planDetails)?.length && sessionActive) {
       const sendStartTimerMessage = () => {
         if (socket.current && socket.current.readyState === WebSocket.OPEN) {
           sendMessage({ action: "start-timer", planCode });
@@ -185,7 +185,7 @@ const RestaurantDetails = () => {
         "by user:",
         voterName,
         "for restaurant:",
-        restaurant.name,
+        restaurant?.name,
         "with id:",
         restaurant._id,
         "in plan:",
@@ -231,18 +231,18 @@ const RestaurantDetails = () => {
     positiveVote,
     negativeVote,
     restaurant?.positiveVoteCount,
-    restaurant.memberVotes,
+    restaurant?.memberVotes,
     planCode,
     userName,
-    restaurant._id,
-    restaurant.name,
-    planDetails.hostName,
+    restaurant?._id,
+    restaurant?.name,
+    planDetails?.hostName,
   ]);
 
   // View Directions button
   const handleDirectionsClick = () => {
     window.open(
-      `https://www.google.com/maps/dir//${restaurant.name},${restaurant.address}`,
+      `https://www.google.com/maps/dir//${restaurant?.name},${restaurant?.address}`,
       "_blank"
     );
   };
@@ -264,13 +264,13 @@ const RestaurantDetails = () => {
 
   // Filter memberVotes to return only positive votes
   const filterPositiveVotes = planDetails.restaurants
-    ? planDetails.restaurants[currentRestaurantIndex].memberVotes.filter(
+    ? planDetails.restaurants[currentRestaurantIndex]?.memberVotes.filter(
         (memberVote) => memberVote.voteType === "positive"
       )
     : [];
 
   // Get the usernames of the members who voted positively
-  const getPositiveVoters = filterPositiveVotes.map(
+  const getPositiveVoters = filterPositiveVotes?.map(
     (memberVote) => memberVote.username
   );
   // console.log("positive voters:", getPositiveVoters);
@@ -278,7 +278,7 @@ const RestaurantDetails = () => {
   // Event handlers for the arrow buttons
   const handleNextClick = () => {
     setCurrentRestaurantIndex((prevIndex) => {
-      const nextIndex = (prevIndex + 1) % planDetails.restaurants.length;
+      const nextIndex = (prevIndex + 1) % planDetails.restaurants?.length;
       return nextIndex;
     });
     // Clear the alert message:
@@ -289,8 +289,8 @@ const RestaurantDetails = () => {
   const handlePrevClick = () => {
     setCurrentRestaurantIndex((prevIndex) => {
       const nextIndex =
-        (prevIndex - 1 + planDetails.restaurants.length) %
-        planDetails.restaurants.length;
+        (prevIndex - 1 + planDetails.restaurants?.length) %
+        planDetails.restaurants?.length;
       return nextIndex;
     });
     // Clear the alert message:
@@ -562,7 +562,7 @@ const RestaurantDetails = () => {
                 >
                   {currentRestaurantIndex + 1}/
                   {planDetails.restaurants
-                    ? planDetails.restaurants.length
+                    ? planDetails.restaurants?.length
                     : planDetails.numberOfResults}{" "}
                   Restaurants
                 </Typography>
@@ -579,7 +579,7 @@ const RestaurantDetails = () => {
                     pr: "48px",
                   }}
                 >
-                  {restaurant.name}
+                  {restaurant?.name}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -594,11 +594,11 @@ const RestaurantDetails = () => {
                   <Rating
                     readOnly
                     name="restaurant-rating"
-                    value={restaurant.rating ? restaurant.rating : 0}
+                    value={restaurant?.rating ? restaurant?.rating : 0}
                     precision={0.1}
                     sx={{ verticalAlign: "bottom", mr: 1 }}
                   />
-                  {restaurant.rating} ({restaurant.reviewCount} Reviews)
+                  {restaurant?.rating} ({restaurant?.reviewCount} Reviews)
                 </Typography>
               </Box>
             </CardContent>
@@ -634,8 +634,8 @@ const RestaurantDetails = () => {
               height="400px"
               width="100%"
               resize="cover"
-              image={restaurant.photos ? restaurant.photos[0].url : ""}
-              alt={restaurant.name}
+              image={restaurant?.photos ? restaurant?.photos[0]?.url : ""}
+              alt={restaurant?.name}
               padding="0"
               position="absolute"
             />
@@ -671,9 +671,9 @@ const RestaurantDetails = () => {
                     }}
                     gutterBottom
                   >
-                    {restaurant.price} •{" "}
-                    {restaurant.categories
-                      ? restaurant.categories.join(", ")
+                    {restaurant?.price} •{" "}
+                    {restaurant?.categories
+                      ? restaurant?.categories.join(", ")
                       : ""}
                   </Typography>
                   <Typography
@@ -687,7 +687,7 @@ const RestaurantDetails = () => {
                     }}
                     gutterBottom
                   >
-                    {restaurant.distanceFromUser}
+                    {restaurant?.distanceFromUser}
                   </Typography>
                 </Box>
                 <Typography
@@ -700,7 +700,7 @@ const RestaurantDetails = () => {
                     letterSpacing: "0.07px",
                   }}
                 >
-                  {restaurant.address}
+                  {restaurant?.address}
                 </Typography>
               </Box>
             </CardContent>
@@ -815,7 +815,7 @@ const RestaurantDetails = () => {
             >
               <Button
                 variant="outlined"
-                href={restaurant.yelpRestaurantUrl}
+                href={restaurant?.yelpRestaurantUrl}
                 target="_blank"
                 sx={{
                   textDecoration: "none",
@@ -834,7 +834,7 @@ const RestaurantDetails = () => {
               </Button>
               <Button
                 variant="outlined"
-                href={restaurant.yelpRestaurantUrl}
+                href={restaurant?.yelpRestaurantUrl}
                 target="_blank"
                 sx={{
                   textDecoration: "none",
@@ -878,7 +878,7 @@ const RestaurantDetails = () => {
               </Button>
             </Box>
             {/* Map */}
-            <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
+            <GoogleMapEmbed googleEmbedMapUrl={restaurant?.googleEmbedMapUrl} />
             {/* View Polls */}
             <Box sx={{ display: "flex" }}>
               <Button

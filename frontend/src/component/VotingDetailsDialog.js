@@ -95,7 +95,7 @@ export default function VotingDetailsDialog({  positiveVoteCount, getPositiveVot
         </Box>
         <DialogContent>
           <List dense sx={{ justifyContent: "center", p: 0 }}>
-            {getPositiveVoters.length === 0 && (
+            {getPositiveVoters?.length === 0 && (
               <ListItem sx={{ textAlign: "center", m: "0 auto", p: 0 }} key={0}>
                 <ListItemText
                   primary={noVotes}
@@ -109,7 +109,7 @@ export default function VotingDetailsDialog({  positiveVoteCount, getPositiveVot
               </ListItem>
             )}
 
-            {getPositiveVoters.map((member, index) => (
+            {getPositiveVoters?.map((member, index) => (
               <ListItem
                 key={index}
                 sx={{ textAlign: "center", m: "0 auto", p: 0 }}

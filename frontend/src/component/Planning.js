@@ -201,7 +201,6 @@ const PlanningCard = () => {
   const completePlan = async (hostName) => {
     console.log("Plan complete: Save info to DB and do API call");
     console.log("States to be shared: ", options);
-
     if (step > 2) {
       if (!results) {
         handleSnackbar('Please select Number of Results.');
@@ -218,12 +217,14 @@ const PlanningCard = () => {
       const response = await axios.post(`${API_BASE_URL}/plan/create-plan`, options);
       console.log('Response from server: ', response.data);
       const { roomId } = response.data;
+
       // Add host username to local storage (purely for development purposes):
       localStorage.setItem('userName', options.hostName);
       // navigate to Poll-options/Voting screen
       navigate(`/restaurant-details/${roomId}`);
     }
     catch (error) {
+      alert(error?.message)
       console.error('Error saving plan to DB: ', error);
     }
   };
