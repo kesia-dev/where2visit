@@ -47,7 +47,7 @@ const Instructions = () => {
         borderRadius: '100%',
       },
       buttonLabel1: 'Create a Plan',
-      linkLabel: 'Already have an account? Login'
+      // linkLabel: 'Already have an account? Login'
     },
   ];
 
