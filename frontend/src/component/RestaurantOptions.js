@@ -148,7 +148,7 @@ const RestaurantOptions = () => {
             marginTop: 2,
             borderRadius: '10px',
             textTransform: 'none',
-            width: '180px',
+            width: '170px',
             height: '53px'
           }}
           onClick={() => handleClick(item)}
@@ -168,12 +168,12 @@ const RestaurantOptions = () => {
 
     return (
       <>
-        <Grid className='create-plan-items-padding-top' item xs={6}>
+        <Grid className='create-plan-items-padding-top create-plan-item-desktop' item xs={6}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {renderButtons(firstColumn, category)}
           </div>
         </Grid>
-        <Grid className='create-plan-items-padding-top' item xs={6}>
+        <Grid className='create-plan-items-padding-top create-plan-item-desktop' item xs={6}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {renderButtons(secondColumn, category)}
           </div>

@@ -9,8 +9,8 @@
   justify-content: center;
   margin-top: auto;
   gap: 12px;
-  position: absolute;
-  top: 700px;
+  position: relative;
+  margin: 20px;
   left: 50%;
   transform: translateX(-55%);
 }
@@ -181,6 +181,38 @@ button.css-1rwt2y5-MuiButtonBase-root-MuiButton-root {
   font-size: 15px;
   line-height: 20px;
   letter-spacing: -0.24px;
+}
+
+.items-create-plan-first {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-items-create-plan-first {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+}
+
+@media (max-width: 600px) {
+  .items-create-plan-first {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .last-step-btn{
+    gap: 12px;
+  }
+
+  .left-items-create-plan-first {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
 }
 
 

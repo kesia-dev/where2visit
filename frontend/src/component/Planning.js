@@ -288,8 +288,8 @@ const PlanningCard = () => {
                   letterSpacing={'-0.32px'}
                 />
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', margin: 15 }}>
+                <div className='items-create-plan-first'>
+                  <div className='left-items-create-plan-first'>
                     {Object.keys(steps[step])
                       .filter(key => key.startsWith('buttonLabel') && key !== 'buttonLabel1')
                       .slice(0, 3)
@@ -306,7 +306,7 @@ const PlanningCard = () => {
                         </Button>
                       ))}
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', margin: 15 }}>
+                  <div className='left-items-create-plan-first'>
                     {Object.keys(steps[step])
                       .filter(key => key.startsWith('buttonLabel'))
                       .slice(4)

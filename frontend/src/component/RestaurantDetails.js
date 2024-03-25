@@ -230,7 +230,7 @@ const RestaurantDetails = () => {
   }, [
     positiveVote,
     negativeVote,
-    restaurant.positiveVoteCount,
+    restaurant?.positiveVoteCount,
     restaurant.memberVotes,
     planCode,
     userName,
@@ -259,7 +259,7 @@ const RestaurantDetails = () => {
 
   // Get the number of positive votes for the current restaurant
   const positiveVoteCount = planDetails.restaurants
-    ? planDetails.restaurants[currentRestaurantIndex].positiveVoteCount
+    ? planDetails.restaurants[currentRestaurantIndex]?.positiveVoteCount
     : 0;
 
   // Filter memberVotes to return only positive votes

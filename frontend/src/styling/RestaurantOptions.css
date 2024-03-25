@@ -10,7 +10,7 @@
   padding-top: 0;
 }
 
-.create-plan-items-padding-top{
+.create-plan-items-padding-top {
   padding-top: 0 !important;
 }
 
@@ -34,4 +34,8 @@
     justify-content: center;
   }
 
+  .create-plan-item-desktop {
+    display: flex;
+    justify-content: center;
+  }
 }
