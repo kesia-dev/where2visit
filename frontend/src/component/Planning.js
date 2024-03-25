@@ -230,8 +230,10 @@ const PlanningCard = () => {
 
   return (
     <>
-      <Container component="main" maxWidth="md">
-        <Paper elevation={3} className="create-a-plan-upper-side" sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px', minHeight: '80vh' }}>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+      <Container component="main" maxWidth="md" style={{ maxWidth: '100%' }}>
+        <Paper elevation={3} className="create-a-plan-upper-side" sx={{ maxWidth: '100%', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px', minHeight: '80vh' }}>
           {/* MobileStepper for navigation */}
           <MobileStepper
             variant="dots"
@@ -324,20 +326,6 @@ const PlanningCard = () => {
                       ))}
                   </div>
                 </div>
-
-                <div className='first navigation-btn'  >
-                  <KeyboardDoubleArrowLeftIcon className='backArrows' fontSize='large' onClick={goBackHistory} />
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className='create-a-plan-btn'
-                    onClick={handleNext}
-                    style={{ backgroundColor: '#3492c7' }}
-                  >
-                    Create a Plan
-                  </Button>
-                </div>
               </>
             )}
 
@@ -347,19 +335,6 @@ const PlanningCard = () => {
                   formData={formData}
                   setFormData={setFormData}
                 />
-                <div className='second navigation-btn' >
-                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className='create-a-plan-btn'
-                    style={{ backgroundColor: '#3492c7' }}
-                    onClick={handleClickNextButtonForm}
-                  >
-                    Next
-                  </Button>
-                </div>
               </>
             )}
 
@@ -535,20 +510,6 @@ const PlanningCard = () => {
                     matches
                   )}
                 </div>
-
-                <div className='fourth navigation-btn' >
-                  <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className='create-a-plan-btn'
-                    style={{ backgroundColor: '#3492c7' }}
-                    onClick={completePlan}
-                  >
-                    Create Plan
-                  </Button>
-                </div>
               </>
             )}
 
@@ -569,6 +530,48 @@ const PlanningCard = () => {
               </MuiAlert>
             </Snackbar>
           </Box>
+          {step === 0 && <div className='first-navigation-btn'  >
+            <KeyboardDoubleArrowLeftIcon className='backArrows' fontSize='large' onClick={goBackHistory} />
+
+            <Button
+              variant="contained"
+              color="primary"
+              className='create-a-plan-btn'
+              onClick={handleNext}
+              style={{ backgroundColor: '#3492c7' }}
+            >
+              Create a Plan
+            </Button>
+          </div>}
+          {step === 1 && <div className='second navigation-btn' >
+            <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
+
+            <Button
+              variant="contained"
+              color="primary"
+              className='create-a-plan-btn'
+              style={{ backgroundColor: '#3492c7' }}
+              onClick={handleClickNextButtonForm}
+            >
+              Next
+            </Button>
+          </div>}
+
+          {
+            step === 3 && <div className='third-navigation-btn' >
+              <KeyboardDoubleArrowLeftIcon onClick={handlePrevious} className='backArrows' fontSize='large' />
+
+              <Button
+                variant="contained"
+                color="primary"
+                className='create-a-plan-btn'
+                style={{ backgroundColor: '#3492c7' }}
+                onClick={completePlan}
+              >
+                Create Plan
+              </Button>
+            </div>
+          }
         </Paper>
       </Container>
     </>
