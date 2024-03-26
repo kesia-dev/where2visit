@@ -43,11 +43,11 @@
 }
 
 .third.navigation-btn {
-  position: static;
+  /* position: static; */
   margin: 50px 0;
   margin-bottom: 32px;
-  margin-left: -38px;
-  transform: none;
+  /* margin-left: -38px; */
+  /* transform: none; */
 }
 
 .backArrows {

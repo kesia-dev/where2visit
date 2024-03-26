@@ -340,7 +340,7 @@ const PlanningCard = () => {
             )}
 
             {step === 2 && (
-              <>
+              <div className='2nd-section' style={{marginBottom:"30px"}}>
                 <Typography
                   variant="p"
                   noWrap={false}
@@ -369,7 +369,7 @@ const PlanningCard = () => {
                     Next
                   </Button>
                 </div>
-              </>
+              </div>
             )}
 
             {step >= 3 && (

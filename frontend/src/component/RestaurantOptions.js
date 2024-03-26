@@ -139,7 +139,7 @@ const RestaurantOptions = () => {
       return (
         <Button
           key={index}
-          variant="outlined"
+          // variant="outlined"
           style={{
             backgroundColor: isAdded ? '#153a50' : '#aed3e9',
             color: isAdded ? '#aed3e9' : '#153a50'
