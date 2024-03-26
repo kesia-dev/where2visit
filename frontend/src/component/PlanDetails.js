@@ -22,9 +22,10 @@ const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, latitude, l
         alignItems: 'center',
         textAlign: 'left',
         justifyContent: "center",
-        width: '385px',
-        margin: '18px',
-        alignItems: 'flex-start'
+        width: '100%',
+        // margin: '18px',
+        alignItems: 'flex-start',
+        
       }}>
 
       <Typography variant="h6" gutterBottom
@@ -35,7 +36,8 @@ const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, latitude, l
           fontWeight: 600,
           fontSize: '20px',
           lineHeight: '25px',
-          letterSpacing: '0.38px'
+          letterSpacing: '0.38px',
+          padding:"10px"
         }}>
         Plan Details
       </Typography>
@@ -47,7 +49,8 @@ const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, latitude, l
           alignItems: 'flex-start',
           textAlign: 'left',
           justifyContent: "center",
-          width: '100%'
+          width: 'auto',
+          padding:"10px"
         }}
       >
         <Box
@@ -55,7 +58,7 @@ const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, latitude, l
             display: 'flex',
             flexDirection: 'column',
             textAlign: 'Left',
-            width: '35%'
+            width: 'auto'
           }}
         >
           <p className='plan-details-title'>Room Name:</p>
@@ -70,7 +73,7 @@ const PlanDetails = ({ planName, hostName, dateOfEvent, timeOfEvent, latitude, l
             display: 'flex',
             flexDirection: 'column',
             textAlign: 'Left',
-            width: '328px'
+            width: 'auto'
           }}
         >
           <p className='plan-details-info'>{planName}</p>

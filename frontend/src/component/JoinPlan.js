@@ -153,8 +153,8 @@ const JoinPlan = () => {
         <strong>Welcome to the party!</strong>
       </Typography>
 
-      <Box mb={2} sx={{ width: '385px', textAlign: 'left', color: '#1C1C1C' }}>
-        <div style={{ display: 'flex', alignItems: 'left' }}>
+      <Box mb={2} sx={{ width: '100%', textAlign: 'left', color: '#1C1C1C' }}>
+        <div style={{ display: 'flex', alignItems: 'left',width:"100%" }}>
           <Typography
             variant="body1"
             sx={{
@@ -188,7 +188,7 @@ const JoinPlan = () => {
         <Typography
           variant="body2"
           sx={{
-            width: '386px',
+            width: 'auto',
             fontSize: '16px',
             color: '#1C1C1C',
             letterSpacing: '-0.32px',
@@ -211,7 +211,7 @@ const JoinPlan = () => {
         alignItems="center"
         sx={{
           margin: '17px',
-          width: '386px'
+          width: '100%'
         }}
       >
         <Grid item xs={12} md={12}>
@@ -230,7 +230,7 @@ const JoinPlan = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 textAlign: 'Left',
-                width: '328px'
+                width: 'auto'
               }}
             >
               <Typography
@@ -336,6 +336,7 @@ const JoinPlan = () => {
           display: 'flex',
           flexDirection: 'column',
           textAlign: 'center',
+          width:'100%'
         }}
       >
         <label className='input-label'>Enter Your Name</label>
@@ -344,7 +345,7 @@ const JoinPlan = () => {
           onChange={(e) => setUserName(e.target.value)}
           sx={{
             mb: 2,
-            width: '386px',
+            width: 'auto',
             marginTop: '10px',
             backgroundColor: '#E5E5E5',
             fontFamily: 'inter'
@@ -397,10 +398,11 @@ const JoinPlan = () => {
         sx={{          
           marginTop: '30px',          
           background: '#E9D8A3',          
-          width: '100vw',
+          width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center'
+          alignItems: 'center',
+          marginBottom:"70px"
         }}
       >
         <PlanDetails
