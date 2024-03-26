@@ -41,8 +41,8 @@ module.exports = (votingTimerService) => {
 
       // Fetch restaurant from Yelp based on user's input:
       const restaurants = await fetchYelpRestaurants({
-        latitude: location.latitude,
-        longitude: location.longitude,
+        latitude: location?.latitude,
+        longitude: location?.longitude,
         radius,
         categories: [cuisine],
         limit: numberOfResults,
