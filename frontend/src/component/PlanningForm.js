@@ -5,11 +5,11 @@ import { styled } from '@mui/system';
 import clsx from 'clsx';
 import { DatePicker, TimePicker } from 'antd';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import '../styling/PlanningForm.css';
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
-import {GOOGLE_MAPS_API_KEY} from '../config';
+import { GOOGLE_MAPS_API_KEY } from '../config';
 
 const libraries = ['places'];
 
@@ -73,6 +73,29 @@ const PlanningForm = ({ formData, setFormData }) => {
     );
   };
 
+  const checkGeolocationPermission = async () => {
+    try {
+      console.log("permissiton");
+      const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+      if (permissionStatus.state === 'granted') {
+        console.log('Geolocation permission granted');
+      } else if (permissionStatus.state === 'prompt') {
+        console.log('Geolocation permission prompt');
+        // You can prompt the user to grant permission here if needed
+      } else {
+        console.log('Geolocation permission denied');
+        // You can handle denied permission here
+      }
+    } catch (error) {
+      console.error('Error checking geolocation permission:', error);
+      console.log("permissiton");
+
+    }
+  };
+
+  useEffect(() => {
+    checkGeolocationPermission();
+  }, []);
   // Function to handle manual input of location from Autocomplete:
   const handlePlaceChanged = async (e) => {
     setLocationInput(e.target.value);
@@ -93,29 +116,36 @@ const PlanningForm = ({ formData, setFormData }) => {
   // Function to get user's live current location and convert to readable address (Reverse Geocoding):
   const getLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
-        try {
-          const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_API_KEY}`);
-          const address = response.data.results.at(-4).formatted_address;
-          if (!address) {
+      try {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const { latitude, longitude } = position.coords;
+
+          try {
+            const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_API_KEY}`);
+            const address = response.data.results.at(-4).formatted_address;
+            if (!address) {
+              handleSnackbar("Geolocation couldn't be found. Please, try searching by city.");
+              return;
+            }
+            setLocationInput(address);
+            setFormData({
+              ...formData,
+              location: {
+                latitude,
+                longitude
+              },
+              locationName: address
+            });
+          } catch (error) {
+            console.error("Reverse geocoding error:", error);
             handleSnackbar("Geolocation couldn't be found. Please, try searching by city.");
-            return;
+            alert(error);
           }
-          setLocationInput(address);
-          setFormData({
-            ...formData,
-            location: {
-              latitude,
-              longitude
-            },
-            locationName: address
-          });
-        } catch (error) {
-          console.error("Reverse geocoding error:", error);
-          handleSnackbar("Geolocation couldn't be found. Please, try searching by city.");
-        }
-      });
+        });
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
     } else {
       alert("Geolocation is not supported by this browser.");
     }

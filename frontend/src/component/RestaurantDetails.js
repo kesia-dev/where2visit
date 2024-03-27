@@ -331,6 +331,11 @@ const RestaurantDetails = () => {
     }, 1500);
   };
 
+  const handlePossitiveVoteClick = () =>{
+    setPositiveVote(true);
+    handleNextClick();
+  }
+
   return (
     <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0, pt:8, pb:5, mt: 0.5 }}>
       <ThemeProvider theme={theme}>
@@ -766,7 +771,7 @@ const RestaurantDetails = () => {
                 />
               </IconButton>
               <IconButton
-                onClick={() => setPositiveVote(true)}
+                onClick={() =>handlePossitiveVoteClick()}
                 disabled={sessionActive ? false : true}
                 variant="outlined"
                 color="emerald"
