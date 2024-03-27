@@ -187,7 +187,7 @@ const RestaurantDetails = () => {
         "for restaurant:",
         restaurant?.name,
         "with id:",
-        restaurant._id,
+        restaurant?._id,
         "in plan:",
         planCode
       );
@@ -196,7 +196,7 @@ const RestaurantDetails = () => {
         .post(`${API_BASE_URL}/plan/vote-restaurant`, {
           planCode,
           userName: voterName,
-          restaurantId: restaurant._id,
+          restaurantId: restaurant?._id,
           voteType,
         })
         .then((res) => {

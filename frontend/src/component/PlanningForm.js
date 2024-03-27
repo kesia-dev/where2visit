@@ -73,28 +73,31 @@ const PlanningForm = ({ formData, setFormData }) => {
     );
   };
 
-  const checkGeolocationPermission = async () => {
+  const requestGeolocationPermission = async () => {
     try {
-      console.log("permissiton");
       const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
       if (permissionStatus.state === 'granted') {
         console.log('Geolocation permission granted');
+        getLocation();
       } else if (permissionStatus.state === 'prompt') {
         console.log('Geolocation permission prompt');
-        // You can prompt the user to grant permission here if needed
+        const requestPermission = await navigator.permissions.request({ name: 'geolocation' });
+        if (requestPermission.state === 'granted') {
+          console.log('Geolocation permission granted after prompt');
+          getLocation();
+        } else {
+          console.log('Geolocation permission denied after prompt');
+        }
       } else {
         console.log('Geolocation permission denied');
-        // You can handle denied permission here
       }
     } catch (error) {
-      console.error('Error checking geolocation permission:', error);
-      console.log("permissiton");
-
+      console.error('Error requesting geolocation permission:', error);
     }
   };
 
   useEffect(() => {
-    checkGeolocationPermission();
+    requestGeolocationPermission();
   }, []);
   // Function to handle manual input of location from Autocomplete:
   const handlePlaceChanged = async (e) => {
@@ -118,6 +121,7 @@ const PlanningForm = ({ formData, setFormData }) => {
     if (navigator.geolocation) {
       try {
         navigator.geolocation.getCurrentPosition(async (position) => {
+          alert(position)
           const { latitude, longitude } = position.coords;
 
           try {
@@ -150,7 +154,7 @@ const PlanningForm = ({ formData, setFormData }) => {
       alert("Geolocation is not supported by this browser.");
     }
   };
-
+  
   return (
     <>
       <Box display="flex" flexDirection="column" alignItems="center" marginTop={3}>
