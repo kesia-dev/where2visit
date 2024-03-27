@@ -274,7 +274,7 @@ const FinalPollResult = () => {
                 letterSpacing: "0.37px",
               }}
             >
-              {restaurant.name}
+              {restaurant?.name}
             </Typography>
           </Box>
           {/* Restaurant details */}
@@ -313,7 +313,7 @@ const FinalPollResult = () => {
                     pr: "48px",
                   }}
                 >
-                  {restaurant.name}
+                  {restaurant?.name}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -327,12 +327,12 @@ const FinalPollResult = () => {
                 >
                   <Rating
                     name="restaurant-rating"
-                    value={restaurant.rating ? restaurant.rating : 0}
+                    value={restaurant?.rating ? restaurant?.rating : 0}
                     precision={0.1}
                     readOnly
                     sx={{ verticalAlign: "bottom", mr: 1 }}
                   />
-                  {restaurant.rating} ({restaurant.reviewCount} Reviews)
+                  {restaurant?.rating} ({restaurant?.reviewCount} Reviews)
                 </Typography>
               </Box>
             </CardContent>
@@ -360,8 +360,8 @@ const FinalPollResult = () => {
               height="400px"
               width="100%"
               resize="cover"
-              image={restaurant.photos ? restaurant.photos[0].url : ""}
-              alt={restaurant.name}
+              image={restaurant?.photos ? restaurant?.photos[0]?.url : ""}
+              alt={restaurant?.name}
               padding="0"
               position="absolute"
             />
@@ -397,9 +397,9 @@ const FinalPollResult = () => {
                     }}
                     gutterBottom
                   >
-                    {restaurant.price} •{" "}
-                    {restaurant.categories
-                      ? restaurant.categories.join(", ")
+                    {restaurant?.price} •{" "}
+                    {restaurant?.categories
+                      ? restaurant?.categories.join(", ")
                       : ""}
                   </Typography>
                   <Typography
@@ -413,7 +413,7 @@ const FinalPollResult = () => {
                     }}
                     gutterBottom
                   >
-                    {restaurant.distanceFromUser}
+                    {restaurant?.distanceFromUser}
                   </Typography>
                 </Box>
                 <Typography
@@ -426,7 +426,7 @@ const FinalPollResult = () => {
                     letterSpacing: "0.07px",
                   }}
                 >
-                  {restaurant.address}
+                  {restaurant?.address}
                 </Typography>
               </Box>
             </CardContent>
@@ -445,7 +445,7 @@ const FinalPollResult = () => {
             >
               <Button
                 variant="outlined"
-                href={restaurant.yelpRestaurantUrl}
+                href={restaurant?.yelpRestaurantUrl}
                 target="_blank"
                 sx={{
                   textDecoration: "none",
@@ -464,7 +464,7 @@ const FinalPollResult = () => {
               </Button>
               <Button
                 variant="outlined"
-                href={restaurant.yelpRestaurantUrl}
+                href={restaurant?.yelpRestaurantUrl}
                 target="_blank"
                 sx={{
                   textDecoration: "none",
@@ -507,7 +507,7 @@ const FinalPollResult = () => {
               </Button>
             </Box>
             {/* Map */}
-            <GoogleMapEmbed googleEmbedMapUrl={restaurant.googleEmbedMapUrl} />
+            <GoogleMapEmbed googleEmbedMapUrl={restaurant?.googleEmbedMapUrl} />
           </Box>
           <Box sx={{ mx: 2, mt: 0.5, alignItems: "center" }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: -1, px: 1 }}>
