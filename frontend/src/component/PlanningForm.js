@@ -147,11 +147,21 @@ const PlanningForm = ({ formData, setFormData }) => {
       } catch (error) {
         console.log(error);
       }
-    } else {
+    }
+    else if (navigator.permissions === undefined && navigator.webkitGetUserMedia) {
+      // Safari-specific permission API
+      navigator.webkitGetUserMedia({ video: false, audio: false }, () => {
+        // Permissions granted
+        getLocation();
+      }, () => {
+        // Permissions denied
+      });
+    }
+    else {
       alert("Geolocation is not supported by this browser.");
     }
   };
-  
+
   return (
     <>
       <Box display="flex" flexDirection="column" alignItems="center" marginTop={3}>
