@@ -98,7 +98,7 @@ const RestaurantDetails = () => {
   }, []);
   // Use the WebSocket hook to get the time left for the voting session:
   const { timeLeft, sendMessage, socket } = useWebSocket(
-    "wss://89.116.187.139",
+    "wss://api.where2visit.com",
     planCode,
     onSessionEnd,
     sessionActive
@@ -333,7 +333,12 @@ const RestaurantDetails = () => {
 
   const handlePossitiveVoteClick = () =>{
     setPositiveVote(true);
-    handleNextClick();
+    console.log(planDetails?.restaurants.length, '  restaurants length  ', currentRestaurantIndex);
+    if (planDetails?.restaurants.length-1 == currentRestaurantIndex) {
+      setIsPollsDialogOpen(true);
+    }else{
+      handleNextClick();
+    }
   }
 
   return (
