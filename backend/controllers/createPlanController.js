@@ -50,6 +50,9 @@ module.exports = (votingTimerService) => {
         minRating: rating
       });
 
+      if (restaurants && restaurants.length == 0) {
+        return res.status(404).json({ error: 'No restaurant found', message: "Please choose a different location" });
+      }
       // Add host to participants list:
       const participants = [{ username: hostName, isHost: true }]
 
@@ -74,9 +77,9 @@ module.exports = (votingTimerService) => {
 
       // Reset the voting session timer for the plans:
       votingTimerService.reset(getRoomId);
-      
-      return res.status(201).json({ 
-        message: 'Plan registered successfully', 
+
+      return res.status(201).json({
+        message: 'Plan registered successfully',
         roomId: getRoomId,
         // THis is to include the restaurantIds in the response for the frontend to use for voting:
         restaurantIds: newPlan.restaurants.map(restaurant => restaurant._id)

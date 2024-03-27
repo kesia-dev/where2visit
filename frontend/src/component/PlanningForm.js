@@ -89,13 +89,9 @@ const PlanningForm = ({ formData, setFormData }) => {
           console.log('Geolocation permission denied after prompt');
         }
       } else {
-        alert('Please allow location access.');
-        window.location.href = "App-Prefs:root=Privacy&path=LOCATION";
         console.log('Geolocation permission denied');
       }
     } catch (error) {
-      alert('Please allow location access.');
-      window.location.href = "App-Prefs:root=Privacy&path=LOCATION";
       console.error('Error requesting geolocation permission:', error);
     }
   };
@@ -123,7 +119,6 @@ const PlanningForm = ({ formData, setFormData }) => {
   // Function to get user's live current location and convert to readable address (Reverse Geocoding):
   const getLocation = () => {
     if (navigator.geolocation) {
-      window.location.href = "App-Prefs:root=Privacy&path=LOCATION";
       try {
         navigator.geolocation.getCurrentPosition(async (position) => {
           const { latitude, longitude } = position.coords;

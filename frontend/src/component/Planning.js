@@ -224,14 +224,18 @@ const PlanningCard = () => {
       navigate(`/restaurant-details/${roomId}`);
     }
     catch (error) {
-      alert(error?.message)
+      if (error && error.response && error.response.data && error.response.data.message) {
+        alert(error.response.data.message)
+      } else {
+        alert(error?.message)
+      }
       console.error('Error saving plan to DB: ', error);
     }
   };
 
   return (
     <>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
       <Container component="main" maxWidth="md" style={{ maxWidth: '100%' }}>
         <Paper elevation={3} className="create-a-plan-upper-side" sx={{ maxWidth: '100%', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px', minHeight: '80vh' }}>
@@ -340,7 +344,7 @@ const PlanningCard = () => {
             )}
 
             {step === 2 && (
-              <div className='2nd-section' style={{marginBottom:"30px"}}>
+              <div className='2nd-section' style={{ marginBottom: "30px" }}>
                 <Typography
                   variant="p"
                   noWrap={false}
