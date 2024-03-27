@@ -121,7 +121,6 @@ const PlanningForm = ({ formData, setFormData }) => {
     if (navigator.geolocation) {
       try {
         navigator.geolocation.getCurrentPosition(async (position) => {
-          alert(position)
           const { latitude, longitude } = position.coords;
 
           try {
@@ -143,11 +142,9 @@ const PlanningForm = ({ formData, setFormData }) => {
           } catch (error) {
             console.error("Reverse geocoding error:", error);
             handleSnackbar("Geolocation couldn't be found. Please, try searching by city.");
-            alert(error);
           }
         });
       } catch (error) {
-        alert(error);
         console.log(error);
       }
     } else {
