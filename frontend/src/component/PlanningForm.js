@@ -10,6 +10,7 @@ import axios from 'axios';
 import '../styling/PlanningForm.css';
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { GOOGLE_MAPS_API_KEY } from '../config';
+import moment from 'moment';
 
 const libraries = ['places'];
 
@@ -181,7 +182,10 @@ const PlanningForm = ({ formData, setFormData }) => {
 
         <FormControl defaultValue="" required className='inputForm' >
           <Label>Date of Event</Label>
-          <DatePicker className='dateTimePicker' onChange={(date, dateString) => setFormData({ ...formData, date: dateString })} placeholder={formData.date} />
+          <DatePicker disabledDate={(current) => {
+            return moment().add(-1, 'days') >= current ||
+              moment().add(1, 'month') <= current;
+          }} className='dateTimePicker' onChange={(date, dateString) => setFormData({ ...formData, date: dateString })} placeholder={formData.date} />
           <HelperText />
         </FormControl>
 
