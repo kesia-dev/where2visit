@@ -209,7 +209,7 @@ const RestaurantDetails = () => {
             error.response &&
             error.response.status === 400 &&
             error.response.data.error ===
-              "User has already voted for this restaurant"
+            "User has already voted for this restaurant"
           ) {
             setAlertMessage("You have already voted for this restaurant");
             setShowAlert(true);
@@ -265,8 +265,8 @@ const RestaurantDetails = () => {
   // Filter memberVotes to return only positive votes
   const filterPositiveVotes = planDetails.restaurants
     ? planDetails.restaurants[currentRestaurantIndex]?.memberVotes.filter(
-        (memberVote) => memberVote.voteType === "positive"
-      )
+      (memberVote) => memberVote.voteType === "positive"
+    )
     : [];
 
   // Get the usernames of the members who voted positively
@@ -331,18 +331,27 @@ const RestaurantDetails = () => {
     }, 1500);
   };
 
-  const handlePossitiveVoteClick = () =>{
+  const handlePossitiveVoteClick = () => {
     setPositiveVote(true);
     console.log(planDetails?.restaurants.length, '  restaurants length  ', currentRestaurantIndex);
-    if (planDetails?.restaurants.length-1 == currentRestaurantIndex) {
+    if (planDetails?.restaurants.length - 1 == currentRestaurantIndex) {
       setIsPollsDialogOpen(true);
-    }else{
+    } else {
+      handleNextClick();
+    }
+  }
+
+  const handleNegativeVoteClick = () => {
+    setNegativeVote(true);
+    if (planDetails?.restaurants.length - 1 == currentRestaurantIndex) {
+      setIsPollsDialogOpen(true);
+    } else {
       handleNextClick();
     }
   }
 
   return (
-    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0, pt:8, pb:5, mt: 0.5 }}>
+    <Container component="main" maxWidth="md" sx={{ m: "0 auto", p: 0, pt: 8, pb: 5, mt: 0.5 }}>
       <ThemeProvider theme={theme}>
         <Paper
           elevation={1}
@@ -428,13 +437,13 @@ const RestaurantDetails = () => {
               sx={{ width: "50%", display: "flex", flexDirection: "column" }}
             >
               <Typography
-                sx={{ fontSize: "22px", fontWeight: 600, lineHeight: "21px", letterSpacing: "-0.32px"}}
+                sx={{ fontSize: "22px", fontWeight: 600, lineHeight: "21px", letterSpacing: "-0.32px" }}
                 gutterBottom
               >
                 <strong>Invite Your Friends!</strong>
               </Typography>
               <Typography
-                sx={{ fontSize: "16px", fontWeight: 400, lineHeight: "21px", letterSpacing: "-0.32px"}}
+                sx={{ fontSize: "16px", fontWeight: 400, lineHeight: "21px", letterSpacing: "-0.32px" }}
               >
                 Copy & Share Your Code
               </Typography>
@@ -754,13 +763,13 @@ const RestaurantDetails = () => {
               }}
             >
               <IconButton
-                onClick={() => setNegativeVote(true)}
+                onClick={() => handleNegativeVoteClick()}
                 disabled={sessionActive ? false : true}
                 variant="outlined"
                 color="rouge"
                 sx={{
-                    height: "60px",
-                    width: "60px",
+                  height: "60px",
+                  width: "60px",
                   border: "3px solid #9E2A2A",
                   borderRadius: "50%",
                   p: 1,
@@ -776,13 +785,13 @@ const RestaurantDetails = () => {
                 />
               </IconButton>
               <IconButton
-                onClick={() =>handlePossitiveVoteClick()}
+                onClick={() => handlePossitiveVoteClick()}
                 disabled={sessionActive ? false : true}
                 variant="outlined"
                 color="emerald"
                 sx={{
-                    height: "60px",
-                    width: "60px",
+                  height: "60px",
+                  width: "60px",
                   border: "3px solid #299F75",
                   borderRadius: "50%",
                   p: 1,

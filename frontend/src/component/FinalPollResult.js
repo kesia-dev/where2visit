@@ -155,11 +155,13 @@ const FinalPollResult = () => {
             flexDirection: "column",
             borderRadius: 0,
             pb: 6,
+            marginTop:"60px",
           }}
         >
           {/* Details about the event */}
           <Box
             sx={{
+              marginTop:"60px",
               m: "1rem",
               justifyContent: "left",
             }}

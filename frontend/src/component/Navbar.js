@@ -149,7 +149,7 @@ const Navbar = () => {
             </div>
           )
         }
-        <Menu
+        {/* <Menu
           id="menu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
@@ -162,7 +162,7 @@ const Navbar = () => {
           <MenuItem onClick={handleMenuClose} sx={{ fontFamily: 'inter' }} component={Link} to="/join-plan">
             Join a Plan
           </MenuItem>
-        </Menu>
+        </Menu> */}
         {AlertComponent}
       </Toolbar>
     </AppBar>

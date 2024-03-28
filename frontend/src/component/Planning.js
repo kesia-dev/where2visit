@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTerm, addNumberOfMatches, addNumberOfResults, addPlanName, addHostName, addDate, addTime, addLocation, addRadius } from '../features/userOptions/optionsSlice';
 import { useNavigate } from 'react-router-dom';
@@ -124,7 +124,9 @@ const PlanningCard = () => {
     dispatch(addNumberOfResults(value));
     handleNext();
   };
-
+  useEffect(() => {
+    dispatch(addNumberOfMatches(3));
+  }, [])
   const handleMatches = (value) => {
     if (value <= Number(results)) {
       dispatch(addNumberOfMatches(value));
@@ -449,7 +451,7 @@ const PlanningCard = () => {
                   )}
                 </div>
 
-                <Typography
+                {/* <Typography
                   color="text.secondary"
                   noWrap={true}
                   align="center"
@@ -482,9 +484,9 @@ const PlanningCard = () => {
                     height: '42px',
                     color: 'black',
                   }}
-                />
+                /> */}
 
-                <Grid container spacing={0}>
+                {/* <Grid container spacing={0}>
                   <Typography
                     variant="p"
                     color="text.secondary"
@@ -514,7 +516,7 @@ const PlanningCard = () => {
                     handleMatches,
                     matches
                   )}
-                </div>
+                </div> */}
               </>
             )}
 

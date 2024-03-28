@@ -79,13 +79,13 @@ const PlanningForm = ({ formData, setFormData }) => {
       const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
       if (permissionStatus.state === 'granted') {
         console.log('Geolocation permission granted');
-        getLocation();
+        // getLocation();
       } else if (permissionStatus.state === 'prompt') {
         console.log('Geolocation permission prompt');
         const requestPermission = await navigator.permissions.request({ name: 'geolocation' });
         if (requestPermission.state === 'granted') {
           console.log('Geolocation permission granted after prompt');
-          getLocation();
+          // getLocation();
         } else {
           console.log('Geolocation permission denied after prompt');
         }
